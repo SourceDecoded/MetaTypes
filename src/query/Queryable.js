@@ -1,13 +1,13 @@
 import { Expression, ValueExpression, OperationExpression } from "./Expression";
-import ExpressionBuilder from "./ExpressionBuilder";
+import { ExpressionBuilder, OperationExpressionBuilder } from "./ExpressionBuilder";
 
-const assertHasProvider = (queryable) => {
+const assertHasProvider = queryable => {
     if (typeof queryable.provider === "undefined") {
         throw new Error("No provider found.");
     }
 };
 
-const copyQuery = (query) => {
+const copyQuery = query => {
     var copy = {};
 
     copy.where = query.where.copy();
@@ -73,7 +73,7 @@ export default class Queryable {
         var query = copyQuery(this.getQuery());
 
         if (typeof lambda === "function") {
-            lambda = lambda || function () { };
+            lambda = lambda || function() {};
             rightExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type));
         } else if (lambda instanceof Expression) {
             rightExpression = lambda;
@@ -96,12 +96,12 @@ export default class Queryable {
         var query = copyQuery(this.getQuery());
 
         if (typeof lambda === "function") {
-            lambda = lambda || function () { };
+            lambda = lambda || function() {};
             rightExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type));
         } else if (lambda instanceof Expression) {
             rightExpression = lambda;
         } else {
-            return;
+            throw new Error("Expected an expression to be supplied.");
         }
 
         if (query.where.children.length === 0) {
@@ -142,9 +142,7 @@ export default class Queryable {
 
     orderByDesc(lambda) {
         var query = copyQuery(this.getQuery());
-        var propertyExpression = lambda.call(
-            ExpressionBuilder, new ExpressionBuilder(this.Type)
-        ).getExpression();
+        var propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
 
         var descendingExpression = Expression.descending(propertyExpression);
 
@@ -157,10 +155,17 @@ export default class Queryable {
     }
 
     orderBy(lambda) {
+        var propertyExpression;
         var query = copyQuery(this.getQuery());
-        var propertyExpression = lambda.call(
-            ExpressionBuilder, new ExpressionBuilder(this.Type)
-        ).getExpression();
+
+        if (typeof lambda === "function") {
+            lambda = lambda || function() {};
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+        } else if (lambda instanceof OperationExpressionBuilder) {
+            propertyExpression = lambda.getExpression();
+        } else {
+            throw new Error("Expected a property to orderBy.");
+        }
 
         var ascendingExpression = Expression.ascending(propertyExpression);
 
@@ -178,7 +183,7 @@ export default class Queryable {
         }
         var parameters = this.query.parameters;
 
-        Object.keys(params).forEach(function (key) {
+        Object.keys(params).forEach(function(key) {
             parameters[key] = params[key];
         });
         return this;
@@ -189,31 +194,32 @@ export default class Queryable {
             return;
         }
 
-        var parameters = this.query.parameters = {};
-        Object.keys(params).forEach(function (key) {
+        var parameters = (this.query.parameters = {});
+        Object.keys(params).forEach(function(key) {
             parameters[key] = params[key];
         });
         return this;
     }
 
     include(lambda) {
+        var propertyExpression;
         var query = copyQuery(this.getQuery());
 
-        var operationExpressionBuilder = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type));
-
-        if (typeof operationExpressionBuilder.getExpression !== "function") {
+        if (typeof lambda === "function") {
+            lambda = lambda || function() {};
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+        } else if (lambda instanceof OperationExpressionBuilder) {
+            propertyExpression = lambda.getExpression();
+        } else {
             throw new Error("Expected a property to include.");
         }
 
-        var queryableExpression = operationExpressionBuilder.getExpression();
-
-        if (queryableExpression.nodeName !== "queryable") {
-            queryableExpression = Expression.queryable(queryableExpression, Expression.expression(Expression.where()));
+        if (propertyExpression.nodeName !== "queryable") {
+            propertyExpression = Expression.queryable(propertyExpression, Expression.expression(Expression.where()));
         }
 
-        query.include.children.push(queryableExpression);
+        query.include.children.push(propertyExpression);
         return this.copy(query);
-
     }
 
     merge(queryable) {
@@ -234,11 +240,11 @@ export default class Queryable {
             }
         }
 
-        query.include.children.forEach(function (expression) {
+        query.include.children.forEach(function(expression) {
             cloneQuery.include.children.push(expression.copy());
         });
 
-        query.orderBy.children.forEach(function (expression) {
+        query.orderBy.children.forEach(function(expression) {
             if (!cloneQuery.orderBy.contains(expression)) {
                 cloneQuery.orderBy.children.push(expression.copy());
             }
@@ -257,7 +263,7 @@ export default class Queryable {
     }
 
     forEach(onEach) {
-        this.toArrayAsync().then(function (results) {
+        this.toArrayAsync().then(function(results) {
             results.forEach(onEach);
         });
     }
@@ -311,10 +317,10 @@ export default class Queryable {
     contains(lambda) {
         assertHasProvider(this);
         return this.provider.contains(this, lambda);
-    };
+    }
 
     ifNone(callback) {
-        this.count().then(function (count) {
+        this.count().then(function(count) {
             if (count === 0) {
                 callback();
             }
@@ -324,7 +330,7 @@ export default class Queryable {
     }
 
     ifAny(callback) {
-        this.toArray(function (a) {
+        this.toArray(function(a) {
             if (a.length > 0) {
                 callback(a);
             }
@@ -353,4 +359,3 @@ export default class Queryable {
         return queryable;
     }
 }
-

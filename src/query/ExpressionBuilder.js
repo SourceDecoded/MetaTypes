@@ -2,7 +2,7 @@ import { Expression } from "./Expression";
 
 const returnExpression = () => {
     return expression;
-}
+};
 
 class OperationExpressionBuilder {
     constructor(getLeftExpression) {
@@ -18,7 +18,7 @@ class OperationExpressionBuilder {
     where(fn) {
         var propertyAccessExpression = this.getLeftExpression();
 
-        this.getLeftExpression = function () {
+        this.getLeftExpression = function() {
             var expressionBuilder = new ExpressionBuilder(Object);
             var expression = fn(expressionBuilder);
 
@@ -99,7 +99,7 @@ class OperationExpressionBuilder {
     }
 
     property(value) {
-        return new OperationExpressionBuilder(function () {
+        return new OperationExpressionBuilder(function() {
             return Expression.propertyAccess(this.getLeftExpression(), value);
         });
     }
@@ -107,16 +107,14 @@ class OperationExpressionBuilder {
     getExpression() {
         return this.getLeftExpression();
     }
-
 }
 
-export default class ExpressionBuilder {
+class ExpressionBuilder {
     constructor(Type) {
         this.Type = Type || Object;
-
     }
     property(property) {
-        return new OperationExpressionBuilder(function () {
+        return new OperationExpressionBuilder(function() {
             return Expression.propertyAccess(Expression.type(this.Type), property);
         });
     }
@@ -142,8 +140,10 @@ export default class ExpressionBuilder {
     }
 
     value() {
-        return new OperationExpressionBuilder(function () {
+        return new OperationExpressionBuilder(function() {
             return Expression.type(this.Type);
         });
     }
 }
+
+export { ExpressionBuilder, OperationExpressionBuilder };
