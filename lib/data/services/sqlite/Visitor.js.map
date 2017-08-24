@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/data/services/sqlite/Visitor.js"],"names":["Visitor"],"mappings":";;;;;;;;IAAqBA,O,GACjB,mBAAa;AAAA;AAAE,C;;kBADEA,O","file":"Visitor.js","sourcesContent":["export default class Visitor {\n    constructor(){}\n}"]}
