@@ -1,5 +1,8 @@
-import { Expression, ValueExpression, OperationExpression } from "./Expression";
-import { ExpressionBuilder, OperationExpressionBuilder } from "./ExpressionBuilder";
+import Expression from "./Expression";
+import ValueExpression from "./ValueExpression";
+import OperationExpression from "./OperationExpression";
+import ExpressionBuilder from "./ExpressionBuilder";
+import OperationExpressionBuilder from "./OperationExpressionBuilder";
 
 const assertHasProvider = queryable => {
     if (typeof queryable.provider === "undefined") {
