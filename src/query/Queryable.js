@@ -2,7 +2,7 @@ import { Expression, ValueExpression, OperationExpression } from "./Expression";
 import { ExpressionBuilder, OperationExpressionBuilder } from "./ExpressionBuilder";
 
 const assertHasProvider = queryable => {
-    if (typeof queryable.provider === "undefined") {
+    if (!queryable.provider) {
         throw new Error("No provider found.");
     }
 };
@@ -78,7 +78,7 @@ export default class Queryable {
         } else if (lambda instanceof Expression) {
             rightExpression = lambda;
         } else {
-            return;
+            throw new Error("Expected an expression to be supplied.");
         }
 
         if (query.where.children.length === 0) {
@@ -141,8 +141,17 @@ export default class Queryable {
     }
 
     orderByDesc(lambda) {
+        var propertyExpression;
         var query = copyQuery(this.getQuery());
-        var propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+
+        if (typeof lambda === "function") {
+            lambda = lambda || function() {};
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+        } else if (lambda instanceof OperationExpressionBuilder) {
+            propertyExpression = lambda.getExpression();
+        } else {
+            throw new Error("Expected a property to orderByDesc.");
+        }
 
         var descendingExpression = Expression.descending(propertyExpression);
 
@@ -179,7 +188,7 @@ export default class Queryable {
 
     setParameters(params) {
         if (!params) {
-            return;
+            throw new Error("Expected parameters to be passed in.");
         }
         var parameters = this.query.parameters;
 
@@ -191,7 +200,7 @@ export default class Queryable {
 
     withParameters(params) {
         if (!params) {
-            return;
+            throw new Error("Expected parameters to be passed in.");
         }
 
         var parameters = (this.query.parameters = {});
@@ -223,6 +232,10 @@ export default class Queryable {
     }
 
     merge(queryable) {
+        if (!(queryable instanceof Queryable)) {
+            throw new Error("Expected a queryable to be passed in.");
+        }
+
         var clone = this.copy();
         var cloneQuery = clone.getQuery();
         var query = queryable.getQuery();
@@ -263,7 +276,7 @@ export default class Queryable {
     }
 
     forEach(onEach) {
-        this.toArrayAsync().then(function(results) {
+        return this.toArrayAsync().then(function(results) {
             results.forEach(onEach);
         });
     }
