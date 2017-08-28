@@ -1,6 +1,7 @@
 import Expression from "./Expression";
 
-export default class Visitor {
+export default class {
+
     parse(expression) {
         let children = [];
 
@@ -8,7 +9,7 @@ export default class Visitor {
             return null;
         }
 
-        expression.children.forEach(expression => {
+        expression.children.forEach((expression) => {
             if (!expression.children) {
                 children.push(expression);
             } else {
@@ -17,16 +18,16 @@ export default class Visitor {
         });
 
         let func = this[expression.nodeName];
-
+        
         if (!func) {
-            throw new Error("The builder doesn't support the \"" + expression.nodeName + '" expression.');
+            throw new Error("The builder doesn't support the \"" + expression.nodeName + "\" expression.");
         }
 
         children.forEach((child, index) => {
-            if (child instanceof Expression) {
+            if (child instanceof BASE.query.Expression) {
                 var func = this[child.nodeName];
                 if (!func) {
-                    throw new Error("The builder doesn't support the \"" + child.nodeName + '" expression.');
+                    throw new Error("The builder doesn't support the \"" + child.nodeName + "\" expression.");
                 }
                 children[index] = func.call(this, child);
             }
@@ -34,4 +35,5 @@ export default class Visitor {
 
         return func.apply(this, children);
     }
+
 }
