@@ -504,14 +504,14 @@ exports["Queryable: Constructor with query (merge: w/o a queryable passed in)"] 
 
 exports["Queryable: Constructor with toArrayAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { execute: () => Promise.resolve() };
+    queryable.provider = { executeAsync: () => Promise.resolve([]) };
 
     queryable.toArrayAsync().then(() => {
         assert.ok(true);
     });
 };
 
-exports["Queryable: Constructor method called w/o provider."] = function() {
+exports["Queryable: Constructor with toArrayAsync method called w/o provider."] = function() {
     let queryable = new Queryable();
 
     assert.throws(() => {
@@ -521,98 +521,177 @@ exports["Queryable: Constructor method called w/o provider."] = function() {
 
 exports["Queryable: Constructor with toGuid called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { execute: () => Promise.resolve() };
+    queryable.provider = { executeAsync: () => Promise.resolve([]) };
 
     const guidExpression = queryable.toGuid(12345);
 
     assert.equal(12345, guidExpression.children[0].value);
 };
 
-exports["Queryable: Constructor with forEach called."] = function() {
+exports["Queryable: Constructor with forEachAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { execute: () => Promise.resolve([]) };
+    queryable.provider = { executeAsync: () => Promise.resolve([]) };
 
-    queryable.forEach(() => {}).then(() => {
+    queryable.forEachAsync(() => {}).then(() => {
         assert.ok(true);
     });
 };
 
-exports["Queryable: Constructor with count called."] = function() {
+exports["Queryable: Constructor with countAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { count: queryable => 1 };
+    queryable.provider = { countAsync: queryable => Promise.resolve() };
 
-    const count = queryable.count();
-    assert.equal(1, count);
+    queryable.countAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with toArrayWithCount called."] = function() {
+exports["Queryable: Constructor with toArrayWithCountAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { toArrayWithCount: queryable => 1 };
+    queryable.provider = { toArrayWithCountAsync: queryable => Promise.resolve() };
 
-    const count = queryable.toArrayWithCount();
-    assert.equal(1, count);
+    queryable.toArrayWithCountAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with all called."] = function() {
+exports["Queryable: Constructor with allAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { all: lambda => true };
+    queryable.provider = { allAsync: lambda => Promise.resolve() };
 
-    const all = queryable.all();
-    assert.ok(all);
+    queryable.allAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with any called."] = function() {
+exports["Queryable: Constructor with anyAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { any: lambda => true };
+    queryable.provider = { anyAsync: lambda => Promise.resolve() };
 
-    const any = queryable.any();
-    assert.ok(any);
+    queryable.anyAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with firstOrDefault called."] = function() {
+exports["Queryable: Constructor with firstOrDefaultAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { firstOrDefault: lambda => true };
+    queryable.provider = { firstOrDefaultAsync: lambda => Promise.resolve() };
 
-    const firstOrDefault = queryable.firstOrDefault();
-    assert.ok(firstOrDefault);
+    queryable.firstOrDefaultAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with lastOrDefault called."] = function() {
+exports["Queryable: Constructor with firstAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { lastOrDefault: lambda => true };
+    queryable.provider = { firstAsync: lambda => Promise.resolve() };
 
-    const lastOrDefault = queryable.lastOrDefault();
-    assert.ok(lastOrDefault);
+    queryable.firstAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with first called."] = function() {
+exports["Queryable: Constructor with lastAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { first: lambda => true };
+    queryable.provider = { lastAsync: lambda => Promise.resolve() };
 
-    const first = queryable.first();
-    assert.ok(first);
+    queryable.lastAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with last called."] = function() {
+exports["Queryable: Constructor with selectAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { last: lambda => true };
+    queryable.provider = { selectAsync: lambda => Promise.resolve() };
 
-    const last = queryable.last();
-    assert.ok(last);
+    queryable.selectAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with select called."] = function() {
+exports["Queryable: Constructor with containsAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { select: lambda => true };
+    queryable.provider = { containsAsync: lambda => Promise.resolve() };
 
-    const select = queryable.select();
-    assert.ok(select);
+    queryable.containsAsync().then(() => {
+        assert.ok(true);
+    });
 };
 
-exports["Queryable: Constructor with contains called."] = function() {
+exports["Queryable: Constructor with ifNone called (with value === 0)"] = function() {
     let queryable = new Queryable();
-    queryable.provider = { contains: lambda => true };
+    queryable.provider = { countAsync: lambda => Promise.resolve(0) };
 
-    const contains = queryable.contains();
-    assert.ok(contains);
+    queryable.ifNone(() => assert.ok(true));
+};
+
+exports["Queryable: Constructor with ifNone called (with value === 1)"] = function() {
+    let queryable = new Queryable();
+    queryable.provider = { countAsync: lambda => Promise.resolve(1) };
+
+    queryable.ifNone();
+    assert.ok(true);
+};
+
+exports["Queryable: Constructor with ifAny called (with value.length === 0)"] = function() {
+    let queryable = new Queryable();
+    queryable.provider = { executeAsync: lambda => Promise.resolve([]) };
+
+    queryable.ifAny();
+    assert.ok(true);
+};
+
+exports["Queryable: Constructor with ifAny called (with value.length === 1)"] = function() {
+    let queryable = new Queryable();
+    queryable.provider = { executeAsync: lambda => Promise.resolve(["item"]) };
+
+    queryable.ifAny(() => {
+        assert.ok(true);
+    });
+};
+
+exports["Queryable: Constructor with intersects called with queryable passed in."] = function() {
+    let queryable1 = new Queryable();
+    let queryable2 = new Queryable();
+    queryable1.provider = { intersectsAsync: () => Promise.resolve() };
+
+    queryable1.intersectsAsync(queryable2).then(() => {
+        assert.ok(true);
+    });
+};
+
+exports["Queryable: Constructor with intersects called with array passed in."] = function() {
+    let queryable = new Queryable();
+    queryable.provider = { intersectsAsync: () => Promise.resolve() };
+
+    Array.prototype.asQueryable = () => {
+        return;
+    };
+
+    let compareToQueryable = [];
+
+    queryable.intersectsAsync(compareToQueryable).then(() => {
+        assert.ok(true);
+    });
+};
+
+exports["Queryable: Constructor with ofType called."] = function() {
+    let queryable = new Queryable();
+    const testType = { test: "test" };
+    queryable = queryable.ofType(testType);
+    assert.deepEqual(queryable.Type, testType);
+};
+
+exports["Queryable: Constructor with ofType called."] = function() {
+    let queryable = new Queryable();
+    const testType = { test: "test" };
+    queryable = queryable.ofType(testType);
+    assert.deepEqual(queryable.Type, testType);
+};
+
+exports["Queryable: Constructor with copy called."] = function() {
+    let queryable = new Queryable();
+    let copiedQueryable = queryable.copy();
+
+    assert.deepEqual(queryable, copiedQueryable);
 };

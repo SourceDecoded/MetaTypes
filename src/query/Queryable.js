@@ -268,72 +268,67 @@ export default class Queryable {
 
     toArrayAsync() {
         assertHasProvider(this);
-        return this.provider.execute(this);
+        return this.provider.executeAsync(this);
     }
 
     toGuid(value) {
         return Expression.guid(Expression.constant(value));
     }
 
-    forEach(onEach) {
+    forEachAsync(onEach) {
         return this.toArrayAsync().then(function(results) {
             results.forEach(onEach);
+            return results;
         });
     }
 
-    count() {
+    countAsync() {
         assertHasProvider(this);
-        return this.provider.count(this);
+        return this.provider.countAsync(this);
     }
 
-    toArrayWithCount() {
+    toArrayWithCountAsync() {
         assertHasProvider(this);
-        return this.provider.toArrayWithCount(this);
+        return this.provider.toArrayWithCountAsync(this);
     }
 
-    all(lambda) {
+    allAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.all(this, lambda);
+        return this.provider.allAsync(this, lambda);
     }
 
-    any(lambda) {
+    anyAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.any(this, lambda);
+        return this.provider.anyAsync(this, lambda);
     }
 
-    firstOrDefault(lambda) {
+    firstOrDefaultAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.firstOrDefault(this, lambda);
+        return this.provider.firstOrDefaultAsync(this, lambda);
     }
 
-    lastOrDefault(lambda) {
-        console.log("Deprecated. Use orderBy and firstOrDefault");
+    firstAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.lastOrDefault(this, lambda);
+        return this.provider.firstAsync(this, lambda);
     }
 
-    first(lambda) {
+    lastAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.first(this, lambda);
+        return this.provider.lastAsync(this, lambda);
     }
 
-    last(lambda) {
+    selectAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.last(this, lambda);
+        return this.provider.selectAsync(this, lambda);
     }
 
-    select(lambda) {
+    containsAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.select(this, lambda);
-    }
-
-    contains(lambda) {
-        assertHasProvider(this);
-        return this.provider.contains(this, lambda);
+        return this.provider.containsAsync(this, lambda);
     }
 
     ifNone(callback) {
-        this.count().then(function(count) {
+        this.countAsync().then(function(count) {
             if (count === 0) {
                 callback();
             }
@@ -343,7 +338,7 @@ export default class Queryable {
     }
 
     ifAny(callback) {
-        this.toArray(function(a) {
+        this.toArrayAsync(function(a) {
             if (a.length > 0) {
                 callback(a);
             }
@@ -352,12 +347,12 @@ export default class Queryable {
         return this;
     }
 
-    intersects(compareToQueryable) {
+    intersectsAsync(compareToQueryable) {
         assertHasProvider(this);
         if (compareToQueryable instanceof Array) {
             compareToQueryable = compareToQueryable.asQueryable();
         }
-        return this.provider.intersects(this, compareToQueryable);
+        return this.provider.intersectsAsync(this, compareToQueryable);
     }
 
     ofType(Type) {
