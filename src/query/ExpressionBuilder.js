@@ -18,7 +18,7 @@ class OperationExpressionBuilder {
     where(fn) {
         var propertyAccessExpression = this.getLeftExpression();
 
-        this.getLeftExpression = function() {
+        this.getLeftExpression = () => {
             var expressionBuilder = new ExpressionBuilder(Object);
             var expression = fn(expressionBuilder);
 
@@ -93,9 +93,8 @@ class OperationExpressionBuilder {
         return Expression.startsWith(this.getLeftExpression(), Expression.string(value));
     }
 
-    //TODO: Test this method...
     property(value) {
-        return new OperationExpressionBuilder(function() {
+        return new OperationExpressionBuilder(() => {
             return Expression.propertyAccess(this.getLeftExpression(), value);
         });
     }
@@ -109,8 +108,9 @@ class ExpressionBuilder {
     constructor(Type) {
         this.Type = Type || Object;
     }
+
     property(property) {
-        return new OperationExpressionBuilder(function() {
+        return new OperationExpressionBuilder(() => {
             return Expression.propertyAccess(Expression.type(this.Type), property);
         });
     }
@@ -123,22 +123,8 @@ class ExpressionBuilder {
         return Expression.or.apply(Expression, arguments);
     }
 
-    any(filter) {
-        var expressionBuilder = new ExpressionBuilder();
-        var expression = filter(expressionBuilder);
-        //TODO: Where is this setExpression coming from?
-        return setExpression(Expression.any("", expression));
-    }
-
-    all(filter) {
-        var expressionBuilder = new ExpressionBuilder();
-        var expression = filter(expressionBuilder);
-        //TODO: Where is this setExpression coming from?
-        return setExpression(Expression.all("", expression));
-    }
-
     value() {
-        return new OperationExpressionBuilder(function() {
+        return new OperationExpressionBuilder(() => {
             return Expression.type(this.Type);
         });
     }

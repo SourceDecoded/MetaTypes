@@ -201,3 +201,9 @@ exports["OperationExpressionBuilder: Constructor with all."] = function() {
     assert.equal("firstName", expression.children[1].value.children[0].children[1].value);
     assert.equal("Jared", expression.children[1].value.children[1].value);
 };
+
+exports["OperationExpressionBuilder: Constructor with property."] = function() {
+    const expressionBuilder = new ExpressionBuilder();
+
+    const expression = expressionBuilder.property("propertyOne").property("propertyTwo").getExpression();
+};
