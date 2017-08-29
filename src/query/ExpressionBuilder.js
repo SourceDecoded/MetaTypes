@@ -1,8 +1,8 @@
 import { Expression } from "./Expression";
 
-const returnExpression = () => {
+const returnExpression = expression => {
     return expression;
-}
+};
 
 class OperationExpressionBuilder {
     constructor(getLeftExpression) {
@@ -18,7 +18,7 @@ class OperationExpressionBuilder {
     where(fn) {
         var propertyAccessExpression = this.getLeftExpression();
 
-        this.getLeftExpression = function () {
+        this.getLeftExpression = () => {
             var expressionBuilder = new ExpressionBuilder(Object);
             var expression = fn(expressionBuilder);
 
@@ -65,11 +65,6 @@ class OperationExpressionBuilder {
         }
     }
 
-    isSubstringOf(value) {
-        console.warn("isSubstringOf is deprecated, please us contains.");
-        return Expression.substringOf(this.getLeftExpression(), Expression.string(value));
-    }
-
     isGreaterThan(value) {
         var constant = Expression.getExpressionType(value);
         return Expression.greaterThan(this.getLeftExpression(), constant);
@@ -99,7 +94,7 @@ class OperationExpressionBuilder {
     }
 
     property(value) {
-        return new OperationExpressionBuilder(function () {
+        return new OperationExpressionBuilder(() => {
             return Expression.propertyAccess(this.getLeftExpression(), value);
         });
     }
@@ -107,16 +102,15 @@ class OperationExpressionBuilder {
     getExpression() {
         return this.getLeftExpression();
     }
-
 }
 
-export default class ExpressionBuilder {
+class ExpressionBuilder {
     constructor(Type) {
         this.Type = Type || Object;
-
     }
+
     property(property) {
-        return new OperationExpressionBuilder(function () {
+        return new OperationExpressionBuilder(() => {
             return Expression.propertyAccess(Expression.type(this.Type), property);
         });
     }
@@ -129,21 +123,11 @@ export default class ExpressionBuilder {
         return Expression.or.apply(Expression, arguments);
     }
 
-    any(filter) {
-        var expressionBuilder = new ExpressionBuilder();
-        var expression = filter(expressionBuilder);
-        return setExpression(Expression.any("", expression));
-    }
-
-    all(filter) {
-        var expressionBuilder = new ExpressionBuilder();
-        var expression = filter(expressionBuilder);
-        return setExpression(Expression.all("", expression));
-    }
-
     value() {
-        return new OperationExpressionBuilder(function () {
+        return new OperationExpressionBuilder(() => {
             return Expression.type(this.Type);
         });
     }
 }
+
+export { ExpressionBuilder, OperationExpressionBuilder };

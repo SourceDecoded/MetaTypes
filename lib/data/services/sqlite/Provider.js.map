@@ -1,1 +1,1 @@
-{"version":3,"sources":["../../../../src/data/services/sqlite/Provider.js"],"names":["Provider"],"mappings":";;;;;;;;IAAqBA,Q,GACjB,oBAAc;AAAA;AAEb,C;;kBAHgBA,Q","file":"Provider.js","sourcesContent":["export default class Provider {\n    constructor() {\n\n    }\n}"]}
+{"version":3,"sources":["../../../../src/data/services/sqlite/Provider.js"],"names":["Provider"],"mappings":";;;;;;;;IAAqBA,Q,GACjB,oBAAc;AAAA;AAEb,C;;kBAHgBA,Q","file":"Provider.js","sourcesContent":["export default class Provider {\r\n    constructor() {\r\n\r\n    }\r\n}"]}
