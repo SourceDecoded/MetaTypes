@@ -1,13 +1,13 @@
 import { Expression, ValueExpression, OperationExpression } from "./Expression";
-import ExpressionBuilder from "./ExpressionBuilder";
+import { ExpressionBuilder, OperationExpressionBuilder } from "./ExpressionBuilder";
 
-const assertHasProvider = (queryable) => {
-    if (typeof queryable.provider === "undefined") {
+const assertHasProvider = queryable => {
+    if (!queryable.provider) {
         throw new Error("No provider found.");
     }
 };
 
-const copyQuery = (query) => {
+const copyQuery = query => {
     var copy = {};
 
     copy.where = query.where.copy();
@@ -73,12 +73,12 @@ export default class Queryable {
         var query = copyQuery(this.getQuery());
 
         if (typeof lambda === "function") {
-            lambda = lambda || function () { };
+            lambda = lambda || function() {};
             rightExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type));
         } else if (lambda instanceof Expression) {
             rightExpression = lambda;
         } else {
-            return;
+            throw new Error("Expected an expression to be supplied.");
         }
 
         if (query.where.children.length === 0) {
@@ -96,12 +96,12 @@ export default class Queryable {
         var query = copyQuery(this.getQuery());
 
         if (typeof lambda === "function") {
-            lambda = lambda || function () { };
+            lambda = lambda || function() {};
             rightExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type));
         } else if (lambda instanceof Expression) {
             rightExpression = lambda;
         } else {
-            return;
+            throw new Error("Expected an expression to be supplied.");
         }
 
         if (query.where.children.length === 0) {
@@ -141,10 +141,17 @@ export default class Queryable {
     }
 
     orderByDesc(lambda) {
+        var propertyExpression;
         var query = copyQuery(this.getQuery());
-        var propertyExpression = lambda.call(
-            ExpressionBuilder, new ExpressionBuilder(this.Type)
-        ).getExpression();
+
+        if (typeof lambda === "function") {
+            lambda = lambda || function() {};
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+        } else if (lambda instanceof OperationExpressionBuilder) {
+            propertyExpression = lambda.getExpression();
+        } else {
+            throw new Error("Expected a property to orderByDesc.");
+        }
 
         var descendingExpression = Expression.descending(propertyExpression);
 
@@ -157,10 +164,17 @@ export default class Queryable {
     }
 
     orderBy(lambda) {
+        var propertyExpression;
         var query = copyQuery(this.getQuery());
-        var propertyExpression = lambda.call(
-            ExpressionBuilder, new ExpressionBuilder(this.Type)
-        ).getExpression();
+
+        if (typeof lambda === "function") {
+            lambda = lambda || function() {};
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+        } else if (lambda instanceof OperationExpressionBuilder) {
+            propertyExpression = lambda.getExpression();
+        } else {
+            throw new Error("Expected a property to orderBy.");
+        }
 
         var ascendingExpression = Expression.ascending(propertyExpression);
 
@@ -174,11 +188,11 @@ export default class Queryable {
 
     setParameters(params) {
         if (!params) {
-            return;
+            throw new Error("Expected parameters to be passed in.");
         }
         var parameters = this.query.parameters;
 
-        Object.keys(params).forEach(function (key) {
+        Object.keys(params).forEach(function(key) {
             parameters[key] = params[key];
         });
         return this;
@@ -186,37 +200,42 @@ export default class Queryable {
 
     withParameters(params) {
         if (!params) {
-            return;
+            throw new Error("Expected parameters to be passed in.");
         }
 
-        var parameters = this.query.parameters = {};
-        Object.keys(params).forEach(function (key) {
+        var parameters = (this.query.parameters = {});
+        Object.keys(params).forEach(function(key) {
             parameters[key] = params[key];
         });
         return this;
     }
 
     include(lambda) {
+        var propertyExpression;
         var query = copyQuery(this.getQuery());
 
-        var operationExpressionBuilder = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type));
-
-        if (typeof operationExpressionBuilder.getExpression !== "function") {
+        if (typeof lambda === "function") {
+            lambda = lambda || function() {};
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+        } else if (lambda instanceof OperationExpressionBuilder) {
+            propertyExpression = lambda.getExpression();
+        } else {
             throw new Error("Expected a property to include.");
         }
 
-        var queryableExpression = operationExpressionBuilder.getExpression();
-
-        if (queryableExpression.nodeName !== "queryable") {
-            queryableExpression = Expression.queryable(queryableExpression, Expression.expression(Expression.where()));
+        if (propertyExpression.nodeName !== "queryable") {
+            propertyExpression = Expression.queryable(propertyExpression, Expression.expression(Expression.where()));
         }
 
-        query.include.children.push(queryableExpression);
+        query.include.children.push(propertyExpression);
         return this.copy(query);
-
     }
 
     merge(queryable) {
+        if (!(queryable instanceof Queryable)) {
+            throw new Error("Expected a queryable to be passed in.");
+        }
+
         var clone = this.copy();
         var cloneQuery = clone.getQuery();
         var query = queryable.getQuery();
@@ -234,11 +253,11 @@ export default class Queryable {
             }
         }
 
-        query.include.children.forEach(function (expression) {
+        query.include.children.forEach(function(expression) {
             cloneQuery.include.children.push(expression.copy());
         });
 
-        query.orderBy.children.forEach(function (expression) {
+        query.orderBy.children.forEach(function(expression) {
             if (!cloneQuery.orderBy.contains(expression)) {
                 cloneQuery.orderBy.children.push(expression.copy());
             }
@@ -249,72 +268,67 @@ export default class Queryable {
 
     toArrayAsync() {
         assertHasProvider(this);
-        return this.provider.execute(this);
+        return this.provider.executeAsync(this);
     }
 
     toGuid(value) {
         return Expression.guid(Expression.constant(value));
     }
 
-    forEach(onEach) {
-        this.toArrayAsync().then(function (results) {
+    forEachAsync(onEach) {
+        return this.toArrayAsync().then(function(results) {
             results.forEach(onEach);
+            return results;
         });
     }
 
-    count() {
+    countAsync() {
         assertHasProvider(this);
-        return this.provider.count(this);
+        return this.provider.countAsync(this);
     }
 
-    toArrayWithCount() {
+    toArrayWithCountAsync() {
         assertHasProvider(this);
-        return this.provider.toArrayWithCount(this);
+        return this.provider.toArrayWithCountAsync(this);
     }
 
-    all(lambda) {
+    allAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.all(this, lambda);
+        return this.provider.allAsync(this, lambda);
     }
 
-    any(lambda) {
+    anyAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.any(this, lambda);
+        return this.provider.anyAsync(this, lambda);
     }
 
-    firstOrDefault(lambda) {
+    firstOrDefaultAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.firstOrDefault(this, lambda);
+        return this.provider.firstOrDefaultAsync(this, lambda);
     }
 
-    lastOrDefault(lambda) {
-        console.log("Deprecated. Use orderBy and firstOrDefault");
+    firstAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.lastOrDefault(this, lambda);
+        return this.provider.firstAsync(this, lambda);
     }
 
-    first(lambda) {
+    lastAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.first(this, lambda);
+        return this.provider.lastAsync(this, lambda);
     }
 
-    last(lambda) {
+    selectAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.last(this, lambda);
+        return this.provider.selectAsync(this, lambda);
     }
 
-    select(lambda) {
+    containsAsync(lambda) {
         assertHasProvider(this);
-        return this.provider.select(this, lambda);
+        return this.provider.containsAsync(this, lambda);
     }
-
-    contains(lambda) {
-        assertHasProvider(this);
-        return this.provider.contains(this, lambda);
-    };
 
     ifNone(callback) {
-        this.count().then(function (count) {
+        this.countAsync().then(function(count) {
             if (count === 0) {
                 callback();
             }
@@ -324,7 +338,7 @@ export default class Queryable {
     }
 
     ifAny(callback) {
-        this.toArray(function (a) {
+        this.toArrayAsync(function(a) {
             if (a.length > 0) {
                 callback(a);
             }
@@ -333,12 +347,12 @@ export default class Queryable {
         return this;
     }
 
-    intersects(compareToQueryable) {
+    intersectsAsync(compareToQueryable) {
         assertHasProvider(this);
         if (compareToQueryable instanceof Array) {
             compareToQueryable = compareToQueryable.asQueryable();
         }
-        return this.provider.intersects(this, compareToQueryable);
+        return this.provider.intersectsAsync(this, compareToQueryable);
     }
 
     ofType(Type) {
@@ -353,4 +367,3 @@ export default class Queryable {
         return queryable;
     }
 }
-
