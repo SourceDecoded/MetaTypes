@@ -1,6 +1,6 @@
 import { Expression } from "./Expression";
 
-const returnExpression = () => {
+const returnExpression = expression => {
     return expression;
 };
 
@@ -65,11 +65,6 @@ class OperationExpressionBuilder {
         }
     }
 
-    isSubstringOf(value) {
-        console.warn("isSubstringOf is deprecated, please us contains.");
-        return Expression.substringOf(this.getLeftExpression(), Expression.string(value));
-    }
-
     isGreaterThan(value) {
         var constant = Expression.getExpressionType(value);
         return Expression.greaterThan(this.getLeftExpression(), constant);
@@ -98,6 +93,7 @@ class OperationExpressionBuilder {
         return Expression.startsWith(this.getLeftExpression(), Expression.string(value));
     }
 
+    //TODO: Test this method...
     property(value) {
         return new OperationExpressionBuilder(function() {
             return Expression.propertyAccess(this.getLeftExpression(), value);
@@ -130,12 +126,14 @@ class ExpressionBuilder {
     any(filter) {
         var expressionBuilder = new ExpressionBuilder();
         var expression = filter(expressionBuilder);
+        //TODO: Where is this setExpression coming from?
         return setExpression(Expression.any("", expression));
     }
 
     all(filter) {
         var expressionBuilder = new ExpressionBuilder();
         var expression = filter(expressionBuilder);
+        //TODO: Where is this setExpression coming from?
         return setExpression(Expression.all("", expression));
     }
 
