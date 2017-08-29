@@ -1,39 +1,62 @@
+/*
+this.dataTypeMapping = {
+            "String": "TEXT",
+            "Number": "NUMERIC",
+            "Boolean": "NUMERIC",
+            "Float": "REAL",
+            "Decimal": "REAL",
+            "Double": "REAL",
+            "Integer": "INTEGER",
+            "Date": "NUMERIC",
+            "Enum": "NUMERIC"
+        };
+*/
 {
-    "id": "7670421a-e4e1-4d83-94a5-d98bc33f79bd",
     "name": "Leavitt Home",
-    "alias": "leavitt_home", // Default null
-    "models": [
+    "version": "0.0.1", // Defaults to 0.0.1
+    "tables": [
         {
-            "id": "d11946bc-5a54-43f6-b329-5a7d5caefc58",
-            "name": "Post",
-            "entityLabel": "Post",
-            "collectionLabel": "Posts",
+            "name": "Source",
+            "label": "Source",
+            "pluralLabel": "Sources",
             "decorators": [
                 "Authorizable",
                 "Governance",
                 "Expirable",
                 "Auditable"
             ],
-            "properties": [
+            "columns": [
                 {
-                    "id": "82f61839-0a75-4e74-9be4-07de2e9bdf5e",
-                    "type": "Number", // Possible types: String, Number, Date, Binary
+                    "type": "Integer", // Possible types: String, Integer, Date, Binary
                     "name": "id",
+                    "label": "Identifier",
                     "isPrimaryKey": true, // Defaults to false
                     "isAutoIncrement": true, // Default to false
-                    "defaultValue": 10, // Default to NULL
                     "isNullable": true // Default to true
                 },
                 {
-                    "id": "e67259ce-ae7a-45ee-bf41-f4992e76645d",
                     "type": "String",
-                    "name": "message"
+                    "name": "string",
+                    "label": "String",
+                    "defaultStringValue": "This is a string."
                 },
                 {
-                    "id": "bb852466-7056-4ad0-9e13-11597d5389ee",
+                    "type": "Integer",
+                    "name": "integer",
+                    "label": "Integer",
+                    "defaultIntegerValue": 1
+                },
+                {
+                    "type": "Float",
+                    "name": "float",
+                    "label": "Float",
+                    "defaultFloatValue": 0.10
+                },
+                {
                     "type": "Boolean",
-                    "defaultValue": false,
-                    "isNullable": true
+                    "name": "boolean",
+                    "label": "Boolean",
+                    "defaultBooleanValue": 0.10
                 }
             ]
         }
@@ -41,26 +64,28 @@
     "relationships": {
         "oneToOne": [
             {
-                "id": "76d56563-f033-4f14-8e6b-12fa57424f9c",
                 "type": "Post",
                 "hasKey": "id",
                 "hasOne": "createdBy",
+                "hasOneLabel": "Created By",
                 "ofType": "Person",
                 "withKey": "id",
                 "withForeignKey": "postId",
-                "withOne": "post"
+                "withOne": "post",
+                "withOneLabel": "Post"
             }
         ],
         "oneToMany": [
             {
-                "id": "76d56563-f033-4f14-8e6b-12fa57424f9c",
                 "type": "Post",
                 "hasKey": "id",
                 "hasMany": "comments",
+                "hasManyLabel": "Comments",
                 "ofType": "Comment",
                 "withKey": "id",
                 "withForeignKey": "postId",
-                "withOne": "post"
+                "withOne": "post",
+                "withOneLabel": "Post"
             }
         ]
     }
