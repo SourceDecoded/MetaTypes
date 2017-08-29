@@ -1,4 +1,3 @@
-
 class Expression {
     constructor() {
         this.nodeName = "expression";
@@ -61,7 +60,7 @@ class Expression {
         var expression = new ValueExpression("number");
         expression.value = value;
         return expression;
-    };
+    }
 
     static object(value) {
         var expression = new ValueExpression("object");
@@ -117,7 +116,7 @@ class Expression {
 
     static equalTo() {
         var expression = new OperationExpression("equalTo");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -125,7 +124,7 @@ class Expression {
 
     static notEqualTo() {
         var expression = new OperationExpression("notEqualTo");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -133,7 +132,7 @@ class Expression {
 
     static or() {
         var expression = new OperationExpression("or");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -141,7 +140,7 @@ class Expression {
 
     static and() {
         var expression = new OperationExpression("and");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -149,7 +148,7 @@ class Expression {
 
     static where() {
         var expression = new OperationExpression("where");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -157,7 +156,7 @@ class Expression {
 
     static greaterThan() {
         var expression = new OperationExpression("greaterThan");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -165,7 +164,7 @@ class Expression {
 
     static lessThan() {
         var expression = new OperationExpression("lessThan");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -173,7 +172,7 @@ class Expression {
 
     static greaterThanOrEqualTo() {
         var expression = new OperationExpression("greaterThanOrEqualTo");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -181,7 +180,7 @@ class Expression {
 
     static lessThanOrEqualTo() {
         var expression = new OperationExpression("lessThanOrEqualTo");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -189,7 +188,7 @@ class Expression {
 
     static orderBy() {
         var expression = new OperationExpression("orderBy");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -197,7 +196,7 @@ class Expression {
 
     static descending() {
         var expression = new OperationExpression("descending");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -205,7 +204,7 @@ class Expression {
 
     static ascending() {
         var expression = new OperationExpression("ascending");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -230,7 +229,7 @@ class Expression {
     static buildOperatorExpression(name) {
         var expression = new OperationExpression(name);
         var args = Array.prototype.slice.call(arguments, 1);
-        args.forEach((arg) => {
+        args.forEach(arg => {
             expression.children.push(arg);
         });
 
@@ -239,7 +238,7 @@ class Expression {
 
     static guid() {
         var expression = new OperationExpression("guid");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -247,7 +246,7 @@ class Expression {
 
     static substring() {
         var expression = new OperationExpression("substring");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -255,7 +254,7 @@ class Expression {
 
     static substringOf() {
         var expression = new OperationExpression("substringOf");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -263,7 +262,7 @@ class Expression {
 
     static startsWith() {
         var expression = new OperationExpression("startsWith");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -271,7 +270,7 @@ class Expression {
 
     static endsWith() {
         var expression = new OperationExpression("endsWith");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -279,7 +278,7 @@ class Expression {
 
     static isIn(property, array) {
         var expression = new OperationExpression("isIn");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -287,7 +286,7 @@ class Expression {
 
     static isNotIn(property, array) {
         var expression = new OperationExpression("isNotIn");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -295,7 +294,7 @@ class Expression {
 
     static include() {
         var expression = new OperationExpression("include");
-        Array.prototype.slice.call(arguments, 0).forEach((arg) => {
+        Array.prototype.slice.call(arguments, 0).forEach(arg => {
             expression.children.push(arg);
         });
         return expression;
@@ -350,7 +349,6 @@ class Expression {
 
         return intersectsExpression;
     }
-
 }
 
 class ValueExpression extends Expression {
@@ -361,7 +359,7 @@ class ValueExpression extends Expression {
     }
 
     copy() {
-        return new ValueExpression(nodeName, this.value);
+        return new ValueExpression(this.nodeName, this.value);
     }
 
     isEqualTo(node) {
@@ -388,7 +386,7 @@ class OperationExpression extends Expression {
         var children = [];
         var copy = new OperationExpression(this.nodeName);
 
-        this.children.forEach((expression) => {
+        this.children.forEach(expression => {
             copy.children.push(expression.copy());
         });
 
@@ -420,10 +418,9 @@ class OperationExpression extends Expression {
             }
         }
 
-        return this.children.some((childNode) => {
+        return this.children.some(childNode => {
             return childNode.contains(node);
         });
-
     }
 
     getMatchingNodes(node, matchedNodes) {
@@ -439,7 +436,7 @@ class OperationExpression extends Expression {
             }
         }
 
-        this.children.forEach((childNode) => {
+        this.children.forEach(childNode => {
             if (Array.isArray(childNode.children)) {
                 childNode.getMatchingNodes(node, matchedNodes);
             }
@@ -449,8 +446,4 @@ class OperationExpression extends Expression {
     }
 }
 
-export {
-    Expression,
-    ValueExpression,
-    OperationExpression
-}
+export { Expression, ValueExpression, OperationExpression };
