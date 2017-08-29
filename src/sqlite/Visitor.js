@@ -42,7 +42,7 @@ export default class Visitor {
         }
     }
 
-    _escape = function (value) {
+    _escape (value) {
         return `'${value.replace(/'/g, "''")}'`;
     }
 
