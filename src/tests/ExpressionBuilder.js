@@ -20,24 +20,6 @@ exports["ExpressionBuilder: Constructor with or."] = function() {
     assert.equal("or", expression.nodeName);
 };
 
-exports["ExpressionBuilder: Constructor with any."] = function() {
-    const expressionBuilder = new ExpressionBuilder();
-    const expression = expressionBuilder.any(expBuilder => {
-        expBuilder.property("firstName").isEqualTo("Jared");
-    });
-
-    assert.equal("any", expression.nodeName);
-};
-
-exports["ExpressionBuilder: Constructor with all."] = function() {
-    const expressionBuilder = new ExpressionBuilder();
-    const expression = expressionBuilder.all(expBuilder => {
-        expBuilder.property("firstName").isEqualTo("Jared");
-    });
-
-    assert.equal("all", expression.nodeName);
-};
-
 exports["ExpressionBuilder: Constructor with value."] = function() {
     const expressionBuilder = new ExpressionBuilder();
     const value = expressionBuilder.value();
@@ -204,6 +186,7 @@ exports["OperationExpressionBuilder: Constructor with all."] = function() {
 
 exports["OperationExpressionBuilder: Constructor with property."] = function() {
     const expressionBuilder = new ExpressionBuilder();
-
     const expression = expressionBuilder.property("propertyOne").property("propertyTwo").getExpression();
+
+    assert.equal("propertyTwo", expression.children[1].value);
 };
