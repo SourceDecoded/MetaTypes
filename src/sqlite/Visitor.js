@@ -1,7 +1,8 @@
-import ExpressionVisitor from "./../query/Visitor";
+import ExpressionVisitor from "./../query/ExpressionVisitor";
 
-export default class Visitor {
+export default class Visitor extends ExpressionVisitor {
     constructor(name, edm) {
+        super();
         this.name = name;
         this.edm = edm;
         this.table = this._getTable(name);
@@ -11,7 +12,7 @@ export default class Visitor {
 
         this.dataConverter = {
             convertString: (value) => {
-                return "'" + this._escape(value) + "'";
+                return this._escape(value);
             },
             convertContainsString: (value) => {
                 return "'%" + this._escape(value) + "%'";
@@ -42,7 +43,7 @@ export default class Visitor {
         }
     }
 
-    _escape (value) {
+    _escape(value) {
         return `'${value.replace(/'/g, "''")}'`;
     }
 
@@ -99,7 +100,7 @@ export default class Visitor {
         return oneToOneRelationships.concat(oneToManyRelationships);
     }
 
-    _getRelationshipsAsTarget() {
+    _getRelationshipsAsTarget(table, relationships) {
         const filter = (relationship) => {
             return relationship.ofType === table.name;
         }
@@ -227,6 +228,7 @@ export default class Visitor {
         let skip = this.parse(query.skip);
         let take = this.parse(query.take);
         let columnAliases = this.makeColumnAliases(this.tableTypes);
+        let joinClause = this.joinClauses.length > 0 ? this.joinClauses.join(" ") : "";
 
         if (where && include) {
             where = where + " AND " + include;
@@ -236,14 +238,16 @@ export default class Visitor {
 
         queryParts.push(
             "SELECT " + columnAliases + " FROM " + this._escape(this.table.name),
-            this.joinClauses.join(" "),
+            joinClause,
             where,
             orderBy,
             take,
             skip
         );
 
-        return queryParts.join(" ");
+        return queryParts.filter((part) => {
+            return part != null && part != "";
+        }).join(" ");
     };
 
     date(expression) {
@@ -312,15 +316,18 @@ export default class Visitor {
     makeColumnAliases(map) {
         let columns = [];
 
-        return map.forEach((table) => {
+        map.forEach((table) => {
             let tableName = table.name;
 
-            Object.keys(table.columns).forEach((columnName) => {
-                columns.push(_escape(tableName) + "." + _escape(columnName) + " AS " + _escape(tableName + "___" + columnName));
+            table.columns.forEach((column) => {
+                let columnName = column.name;
+
+                columns.push(this._escape(tableName) + "." + this._escape(columnName) + " AS " + this._escape(tableName + "___" + columnName));
             });
 
-            return columns;
-        }, []).join(", ");
+        });
+
+        return columns.join(", ");
     }
 
     not(left, right) {
@@ -388,7 +395,7 @@ export default class Visitor {
             this.tableTypes.set(propertyTable.name, propertyTable);
             this._addJoinClause(propertyData.joinClause);
             this.currentNavigationTable = propertyTable;
-            navigationProperties = getNavigationProperties(this.edm, propertyTable);
+            navigationProperties = this._getNavigationProperties(this.edm, propertyTable);
         }
 
         return {
@@ -406,7 +413,7 @@ export default class Visitor {
     };
 
     skip(value) {
-        return " OFFSET " + value;
+        return "OFFSET " + value;
     }
 
     startsWith(propertyAccessor, value) {
@@ -428,9 +435,9 @@ export default class Visitor {
 
     take(value) {
         if (value === Infinity) {
-            return " LIMIT -1";
+            return "LIMIT -1";
         } else {
-            return " LIMIT " + value;
+            return "LIMIT" + value;
         }
     }
 

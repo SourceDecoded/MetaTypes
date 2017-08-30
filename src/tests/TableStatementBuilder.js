@@ -9,7 +9,7 @@ var sourceTable = {
     "columns": [
         {
             "id": 1,
-            "type": "Number", // Possible types: String, Number, Date, Boolean
+            "type": "Integer", // Possible types: String, Number, Date, Boolean
             "name": "id",
             "isPrimaryKey": true, // Defaults to false
             "isAutoIncrement": true, // Default to false
@@ -56,7 +56,7 @@ const foreignTable = {
     "columns": [
         {
             "id": 100,
-            "type": "Number", // Possible types: String, Number, Date, Boolean
+            "type": "Integer", // Possible types: String, Number, Date, Boolean
             "name": "id",
             "isPrimaryKey": true, // Defaults to false
             "isAutoIncrement": true, // Default to false
@@ -95,7 +95,7 @@ exports["TableStatementBuilder.createTableStatement: Without Relationships."] = 
 
     assert.equal(
         tableStatement,
-        "CREATE TABLE 'Source' ('id' NUMERIC PRIMARY KEY AUTOINCREMENT, 'string' TEXT, 'number' NUMERIC, 'date' NUMERIC, 'boolean' NUMERIC, 'float' REAL)"
+        "CREATE TABLE 'Source' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'string' TEXT, 'number' NUMERIC, 'date' NUMERIC, 'boolean' NUMERIC, 'float' REAL)"
     )
 }
 
@@ -106,7 +106,7 @@ exports["TableStatementBuilder.createTableStatement: With Relationships."] = () 
 
     assert.equal(
         tableStatement,
-        "CREATE TABLE 'Foreign' ('id' NUMERIC PRIMARY KEY AUTOINCREMENT, 'foreignKey' INTEGER) FOREIGN KEY ('foreignKey') REFERENCES 'Source' ('id')"
+        "CREATE TABLE 'Foreign' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'foreignKey' INTEGER) FOREIGN KEY ('foreignKey') REFERENCES 'Source' ('id')"
     )
 }
 

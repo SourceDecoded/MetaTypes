@@ -1,4 +1,4 @@
-const mockEdm = {
+const edm = {
     "name": "Mock Data",
     "version": "0.0.1",
     "tables": [
@@ -6,6 +6,9 @@ const mockEdm = {
             "name": "Source",
             "label": "Source",
             "pluralLabel": "Sources",
+            "decorators": [
+                "Authorization"
+            ],
             "columns": [
                 {
                     "type": "Integer",
@@ -84,6 +87,11 @@ const mockEdm = {
                     "type": "Integer",
                     "name": "foreignKey",
                     "label": "ForeignKey"
+                },
+                {
+                    "type": "String",
+                    "name": "string",
+                    "label": "String"
                 }
             ]
         }
@@ -117,4 +125,4 @@ const mockEdm = {
 };
 
 
-export default mockEdm;
+export default edm;

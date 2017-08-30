@@ -24,7 +24,7 @@ export default class Queryable {
     constructor(Type, query) {
         query = query || {};
 
-        this.Type = Type || Object;
+        this.Type = Type || "Object";
         this.provider = null;
         this.query = {};
         this.query.parameters = (query && query.parameters) || {};
@@ -270,18 +270,7 @@ export default class Queryable {
         assertHasProvider(this);
         return this.provider.executeAsync(this);
     }
-
-    toGuid(value) {
-        return Expression.guid(Expression.constant(value));
-    }
-
-    forEachAsync(onEach) {
-        return this.toArrayAsync().then(function(results) {
-            results.forEach(onEach);
-            return results;
-        });
-    }
-
+    
     countAsync() {
         assertHasProvider(this);
         return this.provider.countAsync(this);
@@ -290,69 +279,6 @@ export default class Queryable {
     toArrayWithCountAsync() {
         assertHasProvider(this);
         return this.provider.toArrayWithCountAsync(this);
-    }
-
-    allAsync(lambda) {
-        assertHasProvider(this);
-        return this.provider.allAsync(this, lambda);
-    }
-
-    anyAsync(lambda) {
-        assertHasProvider(this);
-        return this.provider.anyAsync(this, lambda);
-    }
-
-    firstOrDefaultAsync(lambda) {
-        assertHasProvider(this);
-        return this.provider.firstOrDefaultAsync(this, lambda);
-    }
-
-    firstAsync(lambda) {
-        assertHasProvider(this);
-        return this.provider.firstAsync(this, lambda);
-    }
-
-    lastAsync(lambda) {
-        assertHasProvider(this);
-        return this.provider.lastAsync(this, lambda);
-    }
-
-    selectAsync(lambda) {
-        assertHasProvider(this);
-        return this.provider.selectAsync(this, lambda);
-    }
-
-    containsAsync(lambda) {
-        assertHasProvider(this);
-        return this.provider.containsAsync(this, lambda);
-    }
-
-    ifNone(callback) {
-        this.countAsync().then(function(count) {
-            if (count === 0) {
-                callback();
-            }
-        });
-
-        return this;
-    }
-
-    ifAny(callback) {
-        this.toArrayAsync(function(a) {
-            if (a.length > 0) {
-                callback(a);
-            }
-        });
-
-        return this;
-    }
-
-    intersectsAsync(compareToQueryable) {
-        assertHasProvider(this);
-        if (compareToQueryable instanceof Array) {
-            compareToQueryable = compareToQueryable.asQueryable();
-        }
-        return this.provider.intersectsAsync(this, compareToQueryable);
     }
 
     ofType(Type) {
