@@ -184,7 +184,7 @@ export default class TableStatementBuilder {
     }
 
     createIndexStatement(table, column) {
-        return `CREATE INDEX IF NOT EXIST ${this._escapeName(column)} ON ${this._escapeName(table)} (${this._escapeName(column)})`;
+        return `CREATE INDEX IF NOT EXISTS ${this._escapeName(column)} ON ${this._escapeName(table)} (${this._escapeName(column)})`;
     }
 
     createTableIndexesStatements(table, relationships) {
@@ -279,7 +279,7 @@ export default class TableStatementBuilder {
         const filter = (relationship) => {
             const key = relationship.hasKey;
 
-            if (relationship.type === table.name && foreignKeyNames[key] == null) {
+            if (relationship.type === table.name && keyNames[key] == null) {
                 keyNames[key];
                 return true;
             }

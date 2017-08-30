@@ -197,6 +197,6 @@ exports["TableStatementBuilder.createTableIndexesStatements"] = () => {
 
     var indexStatements = builder.createTableIndexesStatements(foreignTable, relationships);
 
-    assert.equal(indexStatements[0], "CREATE INDEX IF NOT EXIST 'id' ON 'Foreign' ('id')");
-    assert.equal(indexStatements[1], "CREATE INDEX IF NOT EXIST 'foreignKey' ON 'Foreign' ('foreignKey')");
+    assert.equal(indexStatements[0], "CREATE INDEX IF NOT EXISTS 'id' ON 'Foreign' ('id')");
+    assert.equal(indexStatements[1], "CREATE INDEX IF NOT EXISTS 'foreignKey' ON 'Foreign' ('foreignKey')");
 }

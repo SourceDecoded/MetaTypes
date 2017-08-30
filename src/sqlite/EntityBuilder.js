@@ -172,7 +172,7 @@ export default class EntityBuilder {
     }
 
     _getTable(name) {
-        return this.edm.table.columns.find((table) => {
+        return this.edm.tables.find((table) => {
             return table.name === name;
         });
     }
@@ -202,7 +202,7 @@ export default class EntityBuilder {
         const filter = (relationship) => {
             const key = relationship.hasKey;
 
-            if (relationship.type === table.name && foreignKeyNames[key] == null) {
+            if (relationship.type === table.name && keyNames[key] == null) {
                 keyNames[key];
                 return true;
             }

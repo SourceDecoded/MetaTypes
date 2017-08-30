@@ -21,6 +21,11 @@ export default class Table {
         }
 
         this.table = this._getTable(name);
+
+        if (this.table == null) {
+            throw new Error(`Cannot find table called '${name}' with-in ${this.edm.name}.`);
+        }
+
         this.tableStatementBuilder = new TableStatementBuilder(name, options);
         this.provider = new Provider(name, {
             edm: this.edm,
@@ -36,9 +41,9 @@ export default class Table {
 
 
     addEntityAsync(entity) {
-        var statement = this.tableStatementBuilder.createInsertStatement(this.table, entity);
+        var sql = this.tableStatementBuilder.createInsertStatement(this.table, entity);
 
-        return this.sqlite.run(statement);
+        return this.sqlite.run(sql.statement, sql.values);
     }
 
     createAsync() {
@@ -47,7 +52,7 @@ export default class Table {
 
         indexesStatements.unshift(tableStatement);
 
-        return this.sqlite.exec(indexesStatments.join(";"));
+        return this.sqlite.exec(indexesStatements.join(";"));
     }
 
     dropAsync() {
@@ -57,11 +62,15 @@ export default class Table {
     }
 
     removeEntityAsync(entity) {
-        var statement = this.tableStatementBuilder.createDeleteStatement(this.table.name, entity);
+        var sql = this.tableStatementBuilder.createDeleteStatement(this.table.name, entity);
+
+        return this.sqlite.run(sql.statement, sql.values);
     }
 
     updateEntityAsync(entity, delta) {
-        var statement = this.tableStatementBuilder.createUpdateStatement(this.table.name, entity, delta);
+        var sql = this.tableStatementBuilder.createUpdateStatement(this.table.name, entity, delta);
+
+        return this.sqlite.run(sql.statement, sql.values);
     }
 
     asQueryable() {
