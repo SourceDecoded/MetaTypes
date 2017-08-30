@@ -106,7 +106,7 @@ exports["TableStatementBuilder.createTableStatement: With Relationships."] = () 
 
     assert.equal(
         tableStatement,
-        "CREATE TABLE IF NOT EXISTS 'Foreign' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'foreignKey' INTEGER) FOREIGN KEY ('foreignKey') REFERENCES 'Source' ('id')"
+        "CREATE TABLE IF NOT EXISTS 'Foreign' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'foreignKey' INTEGER, FOREIGN KEY ('foreignKey') REFERENCES 'Source' ('id'))"
     )
 }
 

@@ -1,7 +1,10 @@
 import Table from "./Table";
 
 export default class Database {
-    constructor(sqlite, edm) {
+    constructor(options = {}) {
+        let sqlite = options.sqlite;
+        let edm = options.edm;
+
         if (sqlite == null) {
             throw new Error("Database needs to have a sqlite.");
         }
@@ -28,8 +31,47 @@ export default class Database {
         });
     }
 
+    _getTableFromEdm(name) {
+        return this.edm.tables.find((table) => {
+            return table.name = name;
+        });
+    }
+
+    _getTableBuildOrder() {
+        let walkedTables = [];
+
+        this.edm.tables.forEach((table) => {
+            this._walkRelationships(table, walkedTables);
+        });
+
+        return walkedTables;
+    }
+
+    _walkRelationships(table, tablesWalked) {
+        if (tablesWalked.indexOf(table) > -1) {
+            return;
+        }
+
+        let forEachRelationship = (relationship) => {
+            let sourceTable = this._getTableFromEdm(relationship.type);
+            this._walkRelationships(sourceTable, tablesWalked);
+        }
+
+        this.edm.relationships.oneToOne.filter((relationship) => {
+            relationship.ofType === table.name;
+        }).forEach(forEachRelationship);
+
+        this.edm.relationships.oneToMany.filter((relationship) => {
+            relationship.ofType === table.name;
+        }).forEach(forEachRelationship);
+
+        tablesWalked.push(table);
+    }
+
     createAsync() {
-        return this.tables.reduce((promise, table) => {
+        let buildOrder = this._getTableBuildOrder();
+
+        return buildOrder.reduce((promise, table) => {
             return promise.then(() => {
                 return table.createAsync();
             });
@@ -37,7 +79,9 @@ export default class Database {
     }
 
     dropAsync() {
-        return his.tables.reduce((promise, table) => {
+        let buildOrder = this._getTableBuildOrder().reverse();
+
+        return buildOrder.reduce((promise, table) => {
             return promise.then(() => {
                 return table.dropAsync();
             });

@@ -180,7 +180,7 @@ export default class TableStatementBuilder {
             return value != null;
         }).join(", ")
 
-        return `(${columnsDefinition})`;
+        return columnsDefinition;
     }
 
     createIndexStatement(table, column) {
@@ -239,9 +239,9 @@ export default class TableStatementBuilder {
         const foreignKeysStatement = this.createForeignKeysStatement(table, relationships);
 
         if (columnDefinitionsStatement && foreignKeysStatement) {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} ${columnDefinitionsStatement} ${foreignKeysStatement}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} (${columnDefinitionsStatement}, ${foreignKeysStatement})`;
         } else if (columnDefinitionsStatement) {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} ${columnDefinitionsStatement}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} (${columnDefinitionsStatement})`;
         } else {
             return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)}`;
         }
