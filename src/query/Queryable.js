@@ -268,7 +268,7 @@ export default class Queryable {
 
     toArrayAsync() {
         assertHasProvider(this);
-        return this.provider.executeAsync(this);
+        return this.provider.toArrayAsync(this);
     }
 
     countAsync() {

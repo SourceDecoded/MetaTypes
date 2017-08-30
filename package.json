@@ -16,5 +16,7 @@
     "istanbul": "^0.4.5",
     "jsdoc": "^3.4.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "sqlite": "^2.8.0"
+  }
 }

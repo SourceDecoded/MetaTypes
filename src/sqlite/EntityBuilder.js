@@ -1,140 +1,244 @@
 
-var flattenMultiKeyMap = function (multiKeyMap) {
-    var keys = multiKeyMap.getKeys();
+let flattenMultiKeyMap = function (multiKeyMap) {
+    let keys = multiKeyMap.getKeys();
     return keys.reduce(function (array, key) {
         return array.concat(multiKeyMap.get(key).getValues());
     }, []);
 }
 
-var EntityBuilder = BASE.sql.EntityBuilder = function (type, edm) {
-    this.type = type;
-    this.edm = edm;
-    this.model = this.edm.getModelByType(Type);
-    this.delimiter = "___";
-};
+export default class EntityBuilder {
+    constructor(name, edm) {
+        this.name = name;
+        this.edm = edm;
+        this.relationships = this.edm.relationships;
+        this.table = this._getTable(name);
+        this.delimiter = "___";
+    }
 
-EntityBuilder.prototype.attachEntityWithRelationships = function (entity, entityMap) {
-    var edm = this.edm;
-    var oneToOneRelationships = edm.getOneToOneRelationships(entity);
-    var oneToOneAsTargetRelationships = edm.getOneToOneAsTargetRelationships(entity);
-    var oneToManyRelationships = edm.getOneToManyRelationships(entity);
-    var oneToManyAsTargetRelationships = edm.getOneToManyAsTargetRelationships(entity);
-    var manyToManyRelationships = edm.getManyToManyRelationships(entity);
-    var manyToManyAsTargetRelationships = edm.getManyToManyAsTargetRelationships(entity);
+    _attachEntityRelationships(tableName, entity, entityMap, attachedEntities) {
+        let table = this._getTable(tableName);
 
-    oneToOneAsTargetRelationships.forEach(function (relationship) {
-        var sourceEntity = entityMap.get(relationship.type, entity[relationship.withForeignKey]);
+        let sourceRelationships = this._getTablesRelationshipsAsSources(table, this.relationships);
+        let targetRelationships = this._getTablesRelationshipsAsTargets(table, this.relationships);
 
-        if (sourceEntity != null) {
-            sourceEntity[relationship.hasOne] = entity;
-            entity[relationship.withOne] = sourceEntity;
-        }
-    });
+        let oneToOneRelationships = sourceRelationships.filter((relationship) => {
+            return relationship.hasOne != null;
+        });
 
-    oneToManyAsTargetRelationships.forEach(function (relationship) {
-        var sourceEntity = entityMap.get(relationship.type, entity[relationship.withForeignKey]);
+        let oneToManyRelationships = sourceRelationships.filter((relationship) => {
+            return relationship.hasMany != null;
+        });
 
-        if (sourceEntity != null) {
-            sourceEntity[relationship.hasMany].push(entity);
-            entity[relationship.withOne] = sourceEntity;
-        }
-    });
+        oneToOneRelationships.forEach((relationship) => {
+            let foreignTableName = relationship.ofType;
+            let foreignKey = relationship.withForeignKey;
+            let key = relationship.hasKey;
+            let hasOne = relationship.hasOne;
 
-    manyToManyAsTargetRelationships.forEach(function (relationship) {
-        var mappingEntities = entityMap.get(relationship.usingMappingType);
+            let target = Object.values(entityMap[foreignTableName]).find((target) => {
+                return target[foreignKey] === entity[key];
+            });
 
-        if (mappingEntities != null) {
-            mappingEntities.getValues().forEach(function (mappingEntity) {
-                if (mappingEntity[relationship.hasForeignKey] !== entity[relationship.withKey]) {
-                    return;
-                }
+            if (target != null && attachedEntities.indexOf(target) === -1) {
+                entity[hasOne] = target;
 
-                var source = entityMap.get(relationship.type, mappingEntity[relationship.withForeignKey]);
-                if (source != null) {
-                    var index = source[relationship.hasMany].indexOf(entity);
-                    if (index === -1) {
-                        source[relationship.hasMany].push(entity);
-                    }
+                attachedEntities(foreignTableName, target, entityMap, attachedEntities.concat([entity]));
+            }
+        });
 
-                    index = entity[relationship.withMany].indexOf(source);
+        oneToManyRelationships.forEach((relationship) => {
+            let foreignTableName = relationship.ofType;
+            let foreignKey = relationship.withForeignKey;
+            let key = relationship.hasKey;
+            let hasMany = relationship.hasMany;
 
-                    if (index === -1) {
-                        entity[relationship.withMany].push(source);
-                    }
+            let targets = Object.values(entityMap[foreignTableName]).filter((target) => {
+                return target[foreignKey] === entity[key];
+            });
+
+            entity[hasOne] = [];
+
+            targets.forEach((target) => {
+                if (attachedEntities.indexOf(target) === -1) {
+                    entity[hasOne].push(target);
+                    attachedEntities(foreignTableName, target, entityMap, attachedEntities.concat([entity]));
                 }
             });
-        }
-    });
-};
+        });
 
-EntityBuilder.prototype.getPrimaryKeyValueByType = function (Type, row) {
-    var keys = this.edm.getPrimaryKeyProperties(Type);
-    var model = this.edm.getModelByType(Type);
-    var delimiter = this.delimiter;
+        targetRelationships.forEach((relationship) => {
+            let sourceTableName = relationship.type;
+            let foreignKey = relationship.withForeignKey;
+            let key = relationship.hasKey;
+            let withOne = relationship.withOne;
 
-    return keys.map(function (key) {
-        return row[model.collectionName + delimiter + key]
-    }).join("|");
-};
+            let source = Object.values(entityMap[sourceTableName]).find((source) => {
+                return source[key] === entity[foreignKey];
+            });
 
-EntityBuilder.prototype.convertRow = function (row, entityMap) {
-    var self = this;
-    var edm = this.edm;
-    var Type = this.Type;
-    var key = this.getPrimaryKeyValueByType(Type, row);
-    var entity = entityMap.get(Type, key);
+            if (source != null && attachedEntities.indexOf(source) === -1) {
+                entity[withOne] = source;
 
-    if (!entity) {
-        var entity = new Type();
-        entityMap.add(Type, key, entity);
+                attachedEntities(sourceTableName, source, entityMap, attachedEntities.concat([entity]));
+            }
+        });
     }
 
-    Object.keys(row).forEach(function (key) {
-        var parts = key.split("___");
-        var collectionName = parts[0];
-        var propertyName = parts[1];
-        var model = edm.getModel(collectionName);
-        var type = model.type;
-        var primaryKey = self.getPrimaryKeyValueByType(type, row);
-        var entity = entityMap.get(type, primaryKey);
-        var properties = model.properties;
-        var propertyType = properties[propertyName].type;
+    _convertRow(row, entityMap) {
+        let edm = this.edm;
+        let name = this.name;
+        let entity = this._createEntity(name, row);
+        let key = this._getKeyForEntity(entity);
+        let entity = entityMap[this.name][key];
 
-        if (!entity) {
-            var entity = new type();
-            entityMap.add(type, primaryKey, entity);
+        if (entity == null) {
+            entityMap[this.name][key] = entity;
         }
 
-        if ((propertyType === Date || propertyType === DateTimeOffset) && row[key] !== null) {
-            entity[propertyName] = new Date(row[key]);
-        } else if (propertyType === Boolean) {
-            entity[propertyName] = row[key] ? true : false;
+        Object.keys(row).forEach((key) => {
+            let parts = key.split("___");
+            let tableName = parts[0];
+            let columnName = parts[1];
+
+            let entity = this._createEntity(tableName, row);
+
+            if (entity == null) {
+                entityMap[tableName][key] = entity;
+            }
+
+        });
+
+        return entity;
+    }
+
+    _convertValue(type, value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (type === "String") {
+            return value;
+        } else if (type === "Numeric") {
+            return parseFloat(value);
+        } else if (type === "Boolean") {
+            return type == "1" ? true : false;
+        } else if (type === "Float") {
+            return parseFloat(value);
+        } else if (type === "Decimal") {
+            return parseFloat(value);
+        } else if (type === "Double") {
+            return parseFloat(value);
+        } else if (type === "Integer") {
+            return parseInt(value, 10);
+        } else if (type === "Date") {
+            return new Date(value);
+        } else if (type === "Enum") {
+            return parseInt(value, 10);
         } else {
-            entity[propertyName] = row[key];
+            throw new Error("Unknown type.");
+        }
+    }
+
+    _createEntity(type, row) {
+        let entity = {};
+        let columns = this._getTable(type).columns;
+        let delimiter = this.delimiter;
+
+        columns.forEach((column) => {
+            entity[column.name] = this._convertValue(row[`${type}${delimiter}${column.name}`]);
+        });
+
+        return entity;
+    }
+
+    _createEntityMap() {
+        return this.edm.tables.reduce((accumulator, table) => {
+            accumulator[table.name] = {};
+            return accumulator;
+        }, {});
+    }
+
+    _getKeyForEntity(entity) {
+        return this._getPrimaryKeys(type).map((key) => {
+            return entity[key];
+        }).join("|");
+    }
+
+    _getPrimaryKeys(type) {
+        return this._getTable(type).columns.filter((column) => {
+            return column.isPrimaryKey;
+        }).map((column) => {
+            return column.name;
+        });
+    }
+
+    _getTable(name) {
+        return this.edm.table.columns.find((table) => {
+            return table.name === name;
+        });
+    }
+
+    _getTablesRelationshipsAsTargets(table, relationships) {
+        const foreignKeyNames = {};
+
+        const filter = (relationship) => {
+            const foreignKey = relationship.withForeignKey;
+
+            if (relationship.ofType === table.name && foreignKeyNames[foreignKey] == null) {
+                foreignKeyNames[foreignKey];
+                return true;
+            }
+            return false;
         }
 
-    });
+        const oneToOne = relationships.oneToOne.filter(filter);
+        const oneToMany = relationships.oneToMany.filter(filter);
 
-    return entity;
-};
-
-EntityBuilder.prototype.convert = function (sqlResults) {
-    var self = this;
-    var Type = this.Type;
-
-    if (sqlResults.length > 0) {
-        var entityMap = new MultiKeyMap();
-        var results = sqlResults.map(function (row) {
-            return self.convertRow(row, entityMap);
-        });
-
-        var entities = flattenMultiKeyMap(entityMap);
-        entities.forEach(function (entity) {
-            self.attachEntityWithRelationships(entity, entityMap);
-        });
-
-        return results;
-    } else {
-        return [];
+        return oneToOne.concat(oneToMany);
     }
-};
+
+    _getTablesRelationshipsAsSources(table, relationships) {
+        const keyNames = {};
+
+        const filter = (relationship) => {
+            const key = relationship.hasKey;
+
+            if (relationship.type === table.name && foreignKeyNames[key] == null) {
+                keyNames[key];
+                return true;
+            }
+            return false;
+        }
+
+        const oneToOne = relationships.oneToOne.filter(filter);
+        const oneToMany = relationships.oneToMany.filter(filter);
+
+        return oneToOne.concat(oneToMany);
+    }
+
+    convert(sqlResults) {
+        let name = this.name;
+
+        if (sqlResults.length > 0) {
+            let entityMap = this._createEntityMap();
+
+            let results = sqlResults.map((row) => {
+                return this.convertRow(row, entityMap);
+            });
+
+            Object.keys(entityMap).forEach((key) => {
+                let parts = key.split("_|_");
+                let tableName = parts[0];
+                let entity = entityMap[key];
+
+                this._attachEntityRelationships(tableName, entity, entityMap, []);
+            });
+
+            return results;
+        } else {
+            return [];
+        }
+    }
+
+
+}

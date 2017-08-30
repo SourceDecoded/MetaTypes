@@ -13,14 +13,6 @@ export default class Database {
         this.sqlite = sqlite;
     }
 
-    _createTableAsync(type) {
-
-    }
-
-    _getTableAsync(type) {
-
-    }
-
     activateAsync() {
 
     }
@@ -29,11 +21,19 @@ export default class Database {
 
     }
 
+    createAsync() {
+
+    }
+
     deactivateAsync() {
 
     }
 
-    getQueryableAsync(type) {
+    dropAsync() {
+
+    }
+
+    asQueryable(type) {
 
     }
 
