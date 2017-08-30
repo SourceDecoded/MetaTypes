@@ -21,10 +21,10 @@ const copyQuery = query => {
 };
 
 export default class Queryable {
-    constructor(Type, query) {
+    constructor(type, query) {
         query = query || {};
 
-        this.Type = Type || "Object";
+        this.type = type || "Object";
         this.provider = null;
         this.query = {};
         this.query.parameters = (query && query.parameters) || {};
@@ -74,7 +74,7 @@ export default class Queryable {
 
         if (typeof lambda === "function") {
             lambda = lambda || function() {};
-            rightExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type));
+            rightExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.type));
         } else if (lambda instanceof Expression) {
             rightExpression = lambda;
         } else {
@@ -97,7 +97,7 @@ export default class Queryable {
 
         if (typeof lambda === "function") {
             lambda = lambda || function() {};
-            rightExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type));
+            rightExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.type));
         } else if (lambda instanceof Expression) {
             rightExpression = lambda;
         } else {
@@ -146,7 +146,7 @@ export default class Queryable {
 
         if (typeof lambda === "function") {
             lambda = lambda || function() {};
-            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.type)).getExpression();
         } else if (lambda instanceof OperationExpressionBuilder) {
             propertyExpression = lambda.getExpression();
         } else {
@@ -169,7 +169,7 @@ export default class Queryable {
 
         if (typeof lambda === "function") {
             lambda = lambda || function() {};
-            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.type)).getExpression();
         } else if (lambda instanceof OperationExpressionBuilder) {
             propertyExpression = lambda.getExpression();
         } else {
@@ -216,7 +216,7 @@ export default class Queryable {
 
         if (typeof lambda === "function") {
             lambda = lambda || function() {};
-            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.Type)).getExpression();
+            propertyExpression = lambda.call(ExpressionBuilder, new ExpressionBuilder(this.type)).getExpression();
         } else if (lambda instanceof OperationExpressionBuilder) {
             propertyExpression = lambda.getExpression();
         } else {
@@ -270,7 +270,7 @@ export default class Queryable {
         assertHasProvider(this);
         return this.provider.executeAsync(this);
     }
-    
+
     countAsync() {
         assertHasProvider(this);
         return this.provider.countAsync(this);
@@ -281,14 +281,14 @@ export default class Queryable {
         return this.provider.toArrayWithCountAsync(this);
     }
 
-    ofType(Type) {
-        var queryable = new Queryable(Type);
+    ofType(type) {
+        var queryable = new Queryable(type);
         queryable.provider = this.provider;
         return queryable;
     }
 
     copy(query) {
-        var queryable = new Queryable(this.Type, query || copyQuery(this.query));
+        var queryable = new Queryable(this.type, query || copyQuery(this.query));
         queryable.provider = this.provider;
         return queryable;
     }

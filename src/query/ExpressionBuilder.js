@@ -105,13 +105,13 @@ class OperationExpressionBuilder {
 }
 
 class ExpressionBuilder {
-    constructor(Type) {
-        this.Type = Type || Object;
+    constructor(type) {
+        this.type = type || Object;
     }
 
     property(property) {
         return new OperationExpressionBuilder(() => {
-            return Expression.propertyAccess(Expression.type(this.Type), property);
+            return Expression.propertyAccess(Expression.type(this.type), property);
         });
     }
 
@@ -125,7 +125,7 @@ class ExpressionBuilder {
 
     value() {
         return new OperationExpressionBuilder(() => {
-            return Expression.type(this.Type);
+            return Expression.type(this.type);
         });
     }
 }

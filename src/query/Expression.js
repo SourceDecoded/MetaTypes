@@ -330,9 +330,9 @@ class Expression {
         return propertyAccessExpression;
     }
 
-    static contains(Type, namespace, expression) {
+    static contains(type, namespace, expression) {
         var containsExpression = new OperationExpression("contains");
-        var ofTypeExpression = new ValueExpression("ofType", Type);
+        var ofTypeExpression = new ValueExpression("ofType", type);
         var propertyExpression = new ValueExpression("property", namespace);
 
         containsExpression.children.push(ofTypeExpression, propertyExpression, expression);
@@ -340,9 +340,9 @@ class Expression {
         return containsExpression;
     }
 
-    static intersects(Type, namespace, expression) {
+    static intersects(type, namespace, expression) {
         var intersectsExpression = new OperationExpression("intersects");
-        var ofTypeExpression = new ValueExpression("ofType", Type);
+        var ofTypeExpression = new ValueExpression("ofType", type);
         var propertyExpression = new ValueExpression("property", namespace);
 
         intersectsExpression.children.push(ofTypeExpression, propertyExpression, expression);

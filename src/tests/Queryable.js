@@ -541,14 +541,14 @@ exports["Queryable: Constructor with ofType called."] = function() {
     let queryable = new Queryable();
     const testType = { test: "test" };
     queryable = queryable.ofType(testType);
-    assert.deepEqual(queryable.Type, testType);
+    assert.deepEqual(queryable.type, testType);
 };
 
 exports["Queryable: Constructor with ofType called."] = function() {
     let queryable = new Queryable();
     const testType = { test: "test" };
     queryable = queryable.ofType(testType);
-    assert.deepEqual(queryable.Type, testType);
+    assert.deepEqual(queryable.type, testType);
 };
 
 exports["Queryable: Constructor with copy called."] = function() {
