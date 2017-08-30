@@ -504,7 +504,7 @@ exports["Queryable: Constructor with query (merge: w/o a queryable passed in)"] 
 
 exports["Queryable: Constructor with toArrayAsync called."] = function() {
     let queryable = new Queryable();
-    queryable.provider = { executeAsync: () => Promise.resolve([]) };
+    queryable.provider = { toArrayAsync: () => Promise.resolve([]) };
 
     queryable.toArrayAsync().then(() => {
         assert.ok(true);

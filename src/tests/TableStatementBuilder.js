@@ -95,7 +95,7 @@ exports["TableStatementBuilder.createTableStatement: Without Relationships."] = 
 
     assert.equal(
         tableStatement,
-        "CREATE TABLE 'Source' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'string' TEXT, 'number' NUMERIC, 'date' NUMERIC, 'boolean' NUMERIC, 'float' REAL)"
+        "CREATE TABLE IF NOT EXISTS 'Source' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'string' TEXT, 'number' NUMERIC, 'date' NUMERIC, 'boolean' NUMERIC, 'float' REAL)"
     )
 }
 
@@ -106,7 +106,7 @@ exports["TableStatementBuilder.createTableStatement: With Relationships."] = () 
 
     assert.equal(
         tableStatement,
-        "CREATE TABLE 'Foreign' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'foreignKey' INTEGER) FOREIGN KEY ('foreignKey') REFERENCES 'Source' ('id')"
+        "CREATE TABLE IF NOT EXISTS 'Foreign' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'foreignKey' INTEGER) FOREIGN KEY ('foreignKey') REFERENCES 'Source' ('id')"
     )
 }
 

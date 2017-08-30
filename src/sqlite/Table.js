@@ -1,4 +1,6 @@
-import StatementBuilder from "./StatementBuilder";
+import TableStatementBuilder from "./TableStatementBuilder";
+import Queryable from "./../query/Queryable";
+import Provider from "./Provider";
 
 export default class Table {
     constructor(name, options = {}) {
@@ -19,8 +21,11 @@ export default class Table {
         }
 
         this.table = this._getTable(name);
-        this.statementBuilder = new StatementBuilder(name, options);
-
+        this.tableStatementBuilder = new TableStatementBuilder(name, options);
+        this.provider = new Provider(name, {
+            edm: this.edm,
+            sqlite: this.sqlite
+        });
     }
 
     _getTable(name) {
@@ -31,27 +36,43 @@ export default class Table {
 
 
     addEntityAsync(entity) {
+        var statement = this.tableStatementBuilder.createInsertStatement(this.table, entity);
 
+        return this.sqlite.run(statement);
     }
 
-    createTableAsync() {
+    createAsync() {
+        var tableStatement = this.tableStatementBuilder.createTableStatement(this.table, this.edm.relationships);
+        var indexesStatements = this.tableStatementBuilder.createTableIndexesStatements(this.table, this.edm.relationships);
 
+        indexesStatements.unshift(tableStatement);
+
+        return this.sqlite.exec(indexesStatments.join(";"));
     }
 
-    dropTableAsync() {
+    dropAsync() {
+        var statement = this.tableStatementBuilder.createDropTableStatement(this.table.name);
 
+        return this.sqlite.run(statement);
     }
 
     removeEntityAsync(entity) {
-
+        var statement = this.tableStatementBuilder.createDeleteStatement(this.table.name, entity);
     }
 
     updateEntityAsync(entity, delta) {
-
+        var statement = this.tableStatementBuilder.createUpdateStatement(this.table.name, entity, delta);
     }
 
-    asQueryable(){
-        
+    asQueryable() {
+        let queryable = new Queryable(this.name);
+        queryable.provider = provider;
+
+        return queryable;
+    }
+
+    getQueryProvider() {
+        return this.provider;
     }
 
 }

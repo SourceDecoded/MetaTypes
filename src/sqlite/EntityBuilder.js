@@ -87,12 +87,11 @@ export default class EntityBuilder {
     _convertRow(row, entityMap) {
         let edm = this.edm;
         let name = this.name;
-        let entity = this._createEntity(name, row);
         let key = this._getKeyForEntity(entity);
         let entity = entityMap[this.name][key];
 
         if (entity == null) {
-            entityMap[this.name][key] = entity;
+            entityMap[this.name][key] = this._createEntity(name, row);
         }
 
         Object.keys(row).forEach((key) => {

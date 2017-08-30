@@ -22,7 +22,7 @@ export default class TableStatementBuilder {
         return `'${name.replace(/\'/g, "''")}'`;
     }
 
-    createDropTableStatment(table){
+    createDropTableStatment(table) {
         return `DROP TABLE IF EXISTS ${this._escapeName(table.name)}`;
     }
 
@@ -239,11 +239,11 @@ export default class TableStatementBuilder {
         const foreignKeysStatement = this.createForeignKeysStatement(table, relationships);
 
         if (columnDefinitionsStatement && foreignKeysStatement) {
-            return `CREATE TABLE ${this._escapeName(table.name)} ${columnDefinitionsStatement} ${foreignKeysStatement}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} ${columnDefinitionsStatement} ${foreignKeysStatement}`;
         } else if (columnDefinitionsStatement) {
-            return `CREATE TABLE ${this._escapeName(table.name)} ${columnDefinitionsStatement}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} ${columnDefinitionsStatement}`;
         } else {
-            return `CREATE TABLE ${this._escapeName(table.name)}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)}`;
         }
 
     }

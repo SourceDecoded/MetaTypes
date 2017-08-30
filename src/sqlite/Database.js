@@ -10,42 +10,42 @@ export default class Database {
         }
 
         this.name = edm.name;
+        this.edm = edm;
         this.sqlite = sqlite;
+        this.tables = {};
+
+        this._createTables();
     }
 
-    activateAsync() {
+    _createTables() {
+        let options = {
+            sqlite: this.sqlite,
+            edm: this.edm
+        };
 
-    }
-
-    addEntityAsync() {
-
+        this.edm.tables.forEach((table) => {
+            this.tables[table.name] = new Table(table.name, options);
+        });
     }
 
     createAsync() {
-
-    }
-
-    deactivateAsync() {
-
+        return this.tables.reduce((promise, table) => {
+            return promise.then(() => {
+                return table.createAsync();
+            });
+        }, Promise.resolve());
     }
 
     dropAsync() {
-
+        return his.tables.reduce((promise, table) => {
+            return promise.then(() => {
+                return table.dropAsync();
+            });
+        }, Promise.resolve());
     }
 
-    asQueryable(type) {
-
+    getTable(name) {
+        return this.tables[name];
     }
 
-    getQueryProviderAsync(type) {
-
-    }
-
-    removeEntityAsync() {
-
-    }
-
-    updateEntityAsync() {
-
-    }
 }
