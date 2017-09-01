@@ -77,7 +77,9 @@ exports["Database.updateEntityAsync"] = () => {
             });
         }).then((entity) => {
             assert.equal(entity.string, "Hello World 2");
-            return table.asQueryable().toArrayAsync();
+            return table.asQueryable().where((expBuilder)=>{
+                return expBuilder.property("string").endsWith("World 2");
+            }).toArrayAsync();
         }).then((results) => {
             assert.equal(results.length, 1);
         });
