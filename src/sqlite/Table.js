@@ -33,6 +33,14 @@ export default class Table {
         });
     }
 
+    _getPrimaryKeyName() {
+        var column = this.table.columns.find((column) => {
+            return column.isPrimaryKey;
+        });
+
+        return column && column.name || null;
+    }
+
     _getTable(name) {
         return this.edm.tables.find((table) => {
             return table.name === name;
@@ -43,7 +51,10 @@ export default class Table {
     addEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createInsertStatement(this.table, entity);
 
-        return this.sqlite.run(sql.statement, sql.values);
+        return this.sqlite.run(sql.statement, sql.values).then((statement) => {
+            entity[this._getPrimaryKeyName()] = statement.lastID;
+            return entity;
+        });
     }
 
     createAsync() {
@@ -62,20 +73,24 @@ export default class Table {
     }
 
     removeEntityAsync(entity) {
-        var sql = this.tableStatementBuilder.createDeleteStatement(this.table.name, entity);
+        var sql = this.tableStatementBuilder.createDeleteStatement(this.table, entity);
 
-        return this.sqlite.run(sql.statement, sql.values);
+        return this.sqlite.run(sql.statement, sql.values).then(()=>{
+            return entity;
+        });
     }
 
     updateEntityAsync(entity, delta) {
-        var sql = this.tableStatementBuilder.createUpdateStatement(this.table.name, entity, delta);
+        var sql = this.tableStatementBuilder.createUpdateStatement(this.table, entity, delta);
 
-        return this.sqlite.run(sql.statement, sql.values);
+        return this.sqlite.run(sql.statement, sql.values).then(()=>{
+            return Object.assign(entity, delta);
+        });
     }
 
     asQueryable() {
         let queryable = new Queryable(this.name);
-        queryable.provider = provider;
+        queryable.provider = this.provider;
 
         return queryable;
     }

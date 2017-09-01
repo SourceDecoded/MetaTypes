@@ -19,7 +19,7 @@ export default class TableStatementBuilder {
     }
 
     _escapeName(name) {
-        return `'${name.replace(/\'/g, "''")}'`;
+        return `"${name.replace(/\"/g, '"')}"`;
     }
 
     createDropTableStatment(table) {
@@ -217,7 +217,7 @@ export default class TableStatementBuilder {
     }
 
     createForeignKeyStatement(relationship) {
-        return `FOREIGN KEY ('${relationship.withForeignKey}') REFERENCES '${relationship.type}' ('${relationship.hasKey}')`;
+        return `FOREIGN KEY (${this._escapeName(relationship.withForeignKey)}) REFERENCES ${this._escapeName(relationship.type)} (${this._escapeName(relationship.hasKey)})`;
     }
 
     createPrimaryKeyStatement(table) {
@@ -314,7 +314,7 @@ export default class TableStatementBuilder {
         if (typeof value === "string") {
             return value;
         } else if (typeof value === "number") {
-            return value.toString();
+            return value;
         } else if (typeof value === "boolean") {
             return value ? 1 : 0;
         } else if (value instanceof Date) {

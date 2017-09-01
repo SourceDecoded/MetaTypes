@@ -1,20 +1,109 @@
 import assert from "assert";
 import Database from "./../sqlite/Database";
 import edm from "./../mock/edm";
+import sqlite from "sqlite";
 
 exports["Database._getTableBuildOrder"] = () => {
-    var database = new Database({
-        sqlite: {
-            exec() {
 
-            },
-            run() {
+    sqlite.open(":memory:").then((db) => {
+        var database = new Database({
+            edm: edm,
+            sqlite: sqlite
+        });
 
-            }
-        },
-        edm: edm
+        let buildOrder = database._getTableBuildOrder();
     });
 
-    let buildOrder = database._getTableBuildOrder();
+};
+
+
+exports["Database.createAsync"] = () => {
+
+    return sqlite.open(":memory:").then((db) => {
+        var database = new Database({
+            edm: edm,
+            sqlite: sqlite
+        });
+
+        return database.createAsync();
+    });
+
+};
+
+exports["Database.addEntityAsync"] = () => {
+
+    return sqlite.open(":memory:").then((db) => {
+        var database = new Database({
+            edm: edm,
+            sqlite: sqlite
+        });
+
+        return database.createAsync().then(() => {
+            let table = database.getTable("Source");
+            return table.addEntityAsync({
+                string: "Hello World",
+                integer: 1
+            });
+        }).then((entity) => {
+            assert.equal(entity.id, 1);
+        });
+    });
+
+};
+
+exports["Database.updateEntityAsync"] = () => {
+
+    return sqlite.open(":memory:").then((db) => {
+        var database = new Database({
+            edm: edm,
+            sqlite: sqlite
+        });
+
+        let table = database.getTable("Source");
+
+        return database.createAsync().then(() => {
+            return table.addEntityAsync({
+                string: "Hello World",
+                integer: 1
+            });
+        }).then((entity) => {
+            return table.updateEntityAsync(entity, {
+                string: "Hello World 2"
+            });
+        }).then((entity) => {
+            assert.equal(entity.string, "Hello World 2");
+            return table.asQueryable().toArrayAsync();
+        }).then((results) => {
+            assert.equal(results.length, 1);
+        });
+    });
+
+};
+
+exports["Database.removeEntityAsync"] = () => {
+
+    return sqlite.open(":memory:").then((db) => {
+        var database = new Database({
+            edm: edm,
+            sqlite: sqlite
+        });
+
+        let table = database.getTable("Source");
+
+        return database.createAsync().then(() => {
+            return table.addEntityAsync({
+                string: "Hello World",
+                integer: 1
+            });
+        }).then((entity) => {
+            return table.removeEntityAsync(entity);
+        }).then((entity) => {
+            assert.equal(entity.id, 1);
+
+            return table.asQueryable().toArrayAsync();
+        }).then((result) => {
+            assert.equal(result, 0);
+        });
+    });
 
 };

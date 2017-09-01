@@ -19,8 +19,8 @@ export default class Provider {
     }
 
     toArrayAsync(queryable) {
-        let query = queryable;
-        let visitor = new Visitor(name);
+        let query = queryable.getQuery();
+        let visitor = new Visitor(this.name, this.edm);
         let statement = visitor.createSelectStatement(query);
 
         return this.sqlite.all(statement).then((results) => {
@@ -42,8 +42,8 @@ export default class Provider {
     }
 
     countAsync() {
-        let query = queryable;
-        let visitor = new Visitor(name);
+        let query = queryable.getQuery();
+        let visitor = new Visitor(this.name, this.edm);
         let statement = visitor.createSelectStatementWithCount(query);
 
         return this.sqlite.get(statement).then((result) => {

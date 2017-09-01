@@ -1,10 +1,16 @@
 
-let flattenMultiKeyMap = function (multiKeyMap) {
+let flattenMultiKeyMap = (multiKeyMap) => {
     let keys = multiKeyMap.getKeys();
     return keys.reduce(function (array, key) {
         return array.concat(multiKeyMap.get(key).getValues());
     }, []);
-}
+};
+
+let getValues = (object) => {
+    return Object.keys(object).map((key) => {
+        return object[key];
+    });
+};
 
 export default class EntityBuilder {
     constructor(name, edm) {
@@ -35,14 +41,14 @@ export default class EntityBuilder {
             let key = relationship.hasKey;
             let hasOne = relationship.hasOne;
 
-            let target = Object.values(entityMap[foreignTableName]).find((target) => {
+            let target = getValues(entityMap[foreignTableName]).find((target) => {
                 return target[foreignKey] === entity[key];
             });
 
             if (target != null && attachedEntities.indexOf(target) === -1) {
                 entity[hasOne] = target;
 
-                attachedEntities(foreignTableName, target, entityMap, attachedEntities.concat([entity]));
+                this._attachEntityRelationships(foreignTableName, target, entityMap, attachedEntities.concat([entity]));
             }
         });
 
@@ -52,16 +58,16 @@ export default class EntityBuilder {
             let key = relationship.hasKey;
             let hasMany = relationship.hasMany;
 
-            let targets = Object.values(entityMap[foreignTableName]).filter((target) => {
+            let targets = getValues(entityMap[foreignTableName]).filter((target) => {
                 return target[foreignKey] === entity[key];
             });
 
-            entity[hasOne] = [];
+            entity[hasMany] = [];
 
             targets.forEach((target) => {
                 if (attachedEntities.indexOf(target) === -1) {
-                    entity[hasOne].push(target);
-                    attachedEntities(foreignTableName, target, entityMap, attachedEntities.concat([entity]));
+                    entity[hasMany].push(target);
+                    this._attachEntityRelationships(foreignTableName, target, entityMap, attachedEntities.concat([entity]));
                 }
             });
         });
@@ -72,14 +78,14 @@ export default class EntityBuilder {
             let key = relationship.hasKey;
             let withOne = relationship.withOne;
 
-            let source = Object.values(entityMap[sourceTableName]).find((source) => {
+            let source = getValues(entityMap[sourceTableName]).find((source) => {
                 return source[key] === entity[foreignKey];
             });
 
             if (source != null && attachedEntities.indexOf(source) === -1) {
                 entity[withOne] = source;
 
-                attachedEntities(sourceTableName, source, entityMap, attachedEntities.concat([entity]));
+                this._attachEntityRelationships(sourceTableName, source, entityMap, attachedEntities.concat([entity]));
             }
         });
     }
@@ -87,11 +93,11 @@ export default class EntityBuilder {
     _convertRow(row, entityMap) {
         let edm = this.edm;
         let name = this.name;
-        let key = this._getKeyForEntity(entity);
+        let key = this._getKeyForRow(row);
         let entity = entityMap[this.name][key];
 
         if (entity == null) {
-            entityMap[this.name][key] = this._createEntity(name, row);
+            entity = entityMap[this.name][key] = this._createEntity(name, row);
         }
 
         Object.keys(row).forEach((key) => {
@@ -144,7 +150,7 @@ export default class EntityBuilder {
         let delimiter = this.delimiter;
 
         columns.forEach((column) => {
-            entity[column.name] = this._convertValue(row[`${type}${delimiter}${column.name}`]);
+            entity[column.name] = this._convertValue(column.type, row[`${type}${delimiter}${column.name}`]);
         });
 
         return entity;
@@ -158,13 +164,19 @@ export default class EntityBuilder {
     }
 
     _getKeyForEntity(entity) {
-        return this._getPrimaryKeys(type).map((key) => {
+        return this._getPrimaryKeys(this.name).map((key) => {
             return entity[key];
         }).join("|");
     }
 
-    _getPrimaryKeys(type) {
-        return this._getTable(type).columns.filter((column) => {
+    _getKeyForRow(row) {
+        return this._getPrimaryKeys(this.name).map((key) => {
+            return row[`${this.name}${this.delimiter}${key}`];
+        }).join("|");
+    }
+
+    _getPrimaryKeys(name) {
+        return this._getTable(name).columns.filter((column) => {
             return column.isPrimaryKey;
         }).map((column) => {
             return column.name;
@@ -222,7 +234,7 @@ export default class EntityBuilder {
             let entityMap = this._createEntityMap();
 
             let results = sqlResults.map((row) => {
-                return this.convertRow(row, entityMap);
+                return this._convertRow(row, entityMap);
             });
 
             Object.keys(entityMap).forEach((key) => {

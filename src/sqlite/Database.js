@@ -73,7 +73,8 @@ export default class Database {
 
         return buildOrder.reduce((promise, table) => {
             return promise.then(() => {
-                return table.createAsync();
+                let sqliteTable = this.tables[table.name];
+                return sqliteTable.createAsync();
             });
         }, Promise.resolve());
     }
@@ -83,7 +84,8 @@ export default class Database {
 
         return buildOrder.reduce((promise, table) => {
             return promise.then(() => {
-                return table.dropAsync();
+                let sqliteTable = this.tables[table.name];
+                return sqliteTable.dropAsync();
             });
         }, Promise.resolve());
     }

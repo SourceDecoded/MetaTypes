@@ -44,15 +44,19 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     _escape(value) {
-        return `'${value.replace(/'/g, "''")}'`;
+        return `${value.replace(/'/g, "''")}`;
+    }
+
+    _escapeIdentifier(value){
+        return `"${value.replace(/\"/g, '"')}"`; 
     }
 
     _buildLeftJoinStatementFromSource(relationship) {
-        return `LEFT JOIN ${this._escape(relationship.ofType)} ON ${this._escape(relationship.type)}.${this._escape(relationship.hasKey)} = ${this._escape(relationship.ofType)}.${this._escape(relationship.withForeignKey)}`;
+        return `LEFT JOIN ${this._escapeIdentifier(relationship.ofType)} ON ${this._escapeIdentifier(relationship.type)}.${this._escapeIdentifier(relationship.hasKey)} = ${this._escapeIdentifier(relationship.ofType)}.${this._escapeIdentifier(relationship.withForeignKey)}`;
     }
 
     _buildLeftJoinStatementFromTarget(relationship) {
-        return `LEFT JOIN ${this._escape(relationship.type)} ON ${this._escape(relationship.ofType)}.${this._escape(relationship.withForeignKey)} = ${this._escape(relationship.type)}.${this._escape(relationship.hasKey)}`;
+        return `LEFT JOIN ${this._escapeIdentifier(relationship.type)} ON ${this._escapeIdentifier(relationship.ofType)}.${this._escapeIdentifier(relationship.withForeignKey)} = ${this._escapeIdentifier(relationship.type)}.${this._escapeIdentifier(relationship.hasKey)}`;
     };
 
     _getNavigationProperties(edm, table) {
@@ -134,7 +138,7 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     _writeTableProperty(table, column) {
-        return this._escape(table) + "." + this._escape(column);
+        return this._escapeIdentifier(table) + "." + this._escapeIdentifier(column);
     }
 
     and() {
@@ -205,7 +209,7 @@ export default class Visitor extends ExpressionVisitor {
         }
 
         queryParts.push(
-            "SELECT COUNT(*) AS \"" + countAlias + "\" FROM " + this._escape(this.table.name),
+            "SELECT COUNT(*) AS \"" + countAlias + "\" FROM " + this._escapeIdentifier(this.table.name),
             this.joinClauses.join(" "),
             where,
             orderBy
@@ -237,7 +241,7 @@ export default class Visitor extends ExpressionVisitor {
         }
 
         queryParts.push(
-            "SELECT " + columnAliases + " FROM " + this._escape(this.table.name),
+            "SELECT " + columnAliases + " FROM " + this._escapeIdentifier(this.table.name),
             joinClause,
             where,
             orderBy,
@@ -322,7 +326,7 @@ export default class Visitor extends ExpressionVisitor {
             table.columns.forEach((column) => {
                 let columnName = column.name;
 
-                columns.push(this._escape(tableName) + "." + this._escape(columnName) + " AS " + this._escape(tableName + "___" + columnName));
+                columns.push(this._escapeIdentifier(tableName) + "." + this._escapeIdentifier(columnName) + " AS " + this._escapeIdentifier(tableName + "___" + columnName));
             });
 
         });

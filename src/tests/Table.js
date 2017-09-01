@@ -7,10 +7,10 @@ exports["Table: addEntityAsync"] = () => {
         edm: edm,
         sqlite: {
             run: (statement, values) => {
-                assert.equal(statement, "INSERT INTO 'Source' ('string') VALUES (?)");
+                assert.equal(statement, 'INSERT INTO "Source" ("string") VALUES (?)');
                 assert.equal(values[0], "Hello World");
 
-                return Promise.resolve(null);
+                return Promise.resolve({ lastID: 1 });
             }
         }
     });
@@ -23,7 +23,7 @@ exports["Table.createAsync: Create a Source Table."] = () => {
         edm: edm,
         sqlite: {
             exec: (statement, values) => {
-                assert.equal(statement, "CREATE TABLE IF NOT EXISTS 'Source' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'string' TEXT, 'number' NUMERIC, 'date' NUMERIC, 'boolean' NUMERIC, 'float' REAL);CREATE INDEX IF NOT EXISTS 'id' ON 'Source' ('id')");
+                assert.equal(statement, 'CREATE TABLE IF NOT EXISTS "Source" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "string" TEXT, "number" NUMERIC, "date" NUMERIC, "boolean" NUMERIC, "float" REAL);CREATE INDEX IF NOT EXISTS "id" ON "Source" ("id")');
                 return Promise.resolve(null);
             }
         }
@@ -38,8 +38,8 @@ exports["Table.createAsync: Create a Target Table."] = () => {
         sqlite: {
             exec: (statement, values) => {
                 assert.equal(
-                    statement, 
-                    "CREATE TABLE IF NOT EXISTS 'Foreign' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'foreignKey' INTEGER, FOREIGN KEY ('foreignKey') REFERENCES 'Source' ('id'));CREATE INDEX IF NOT EXISTS 'id' ON 'Foreign' ('id');CREATE INDEX IF NOT EXISTS 'foreignKey' ON 'Foreign' ('foreignKey')"
+                    statement,
+                    'CREATE TABLE IF NOT EXISTS "Foreign" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "foreignKey" INTEGER, FOREIGN KEY ("foreignKey") REFERENCES "Source" ("id"));CREATE INDEX IF NOT EXISTS "id" ON "Foreign" ("id");CREATE INDEX IF NOT EXISTS "foreignKey" ON "Foreign" ("foreignKey")'
                 );
                 return Promise.resolve(null);
             }
