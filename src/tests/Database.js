@@ -38,14 +38,19 @@ exports["Database.addEntityAsync"] = () => {
             sqlite: sqlite
         });
 
+        let table = database.getTable("Source");
         return database.createAsync().then(() => {
-            let table = database.getTable("Source");
             return table.addEntityAsync({
                 string: "Hello World",
                 integer: 1
             });
         }).then((entity) => {
             assert.equal(entity.id, 1);
+            return table.asQueryable().where((expBuilder) => {
+                return expBuilder.property("string").isEqualTo("Hello World");
+            }).toArrayAsync();
+        }).then((result) => {
+            assert.equal(result[0].string, "Hello World");
         });
     });
 

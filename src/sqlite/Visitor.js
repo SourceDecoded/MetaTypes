@@ -12,16 +12,16 @@ export default class Visitor extends ExpressionVisitor {
 
         this.dataConverter = {
             convertString: (value) => {
-                return this._escape(value);
+                return `'${this._escape(value)}'`;
             },
             convertContainsString: (value) => {
-                return "'%" + this._escape(value) + "%'";
+                return `'%${this._escape(value)}%'`;
             },
             convertStartsWithString: (value) => {
-                return "'" + this._escape(value) + "%'";
+                return `'${this._escape(value)}%'`;
             },
             convertEndsWithString: (value) => {
-                return "'%" + this._escape(value) + "'";
+                return `'%${this._escape(value)}'`;
             },
             convertNumber: (value) => {
                 return value.toString();
@@ -47,8 +47,8 @@ export default class Visitor extends ExpressionVisitor {
         return `${value.replace(/'/g, "''")}`;
     }
 
-    _escapeIdentifier(value){
-        return `"${value.replace(/\"/g, '"')}"`; 
+    _escapeIdentifier(value) {
+        return `"${value.replace(/\"/g, '"')}"`;
     }
 
     _buildLeftJoinStatementFromSource(relationship) {
