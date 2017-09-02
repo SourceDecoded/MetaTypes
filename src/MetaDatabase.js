@@ -18,7 +18,6 @@ export default class MetaDatabase {
         }
     }
 
-
     getTable(name) {
         this._assertIsInitialized();
     }
@@ -32,7 +31,7 @@ export default class MetaDatabase {
                     sqliteDatabase: sqliteDatabase
                 });
 
-                
+
 
             });
         }

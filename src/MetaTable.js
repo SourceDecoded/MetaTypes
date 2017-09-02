@@ -1,4 +1,6 @@
 import Table from "./sqlite/Table"
+import MetaProvider from "./MetaProvider";
+import Queryable from "./query/Queryable";
 
 export default class MetaTable {
     constructor(options = {}) {
@@ -14,18 +16,31 @@ export default class MetaTable {
         });
     }
 
-    _approveEntityToBeRemovedAsync(entity) {
-        return this._invokeMethodOnDecoratorsAsync("approveEntityToBeRemovedAsync", [entity]);
-    }
-
-    _entityAddedAsync(entity) {
-        return this._invokeMethodWithRecoveryOnDecoratorsAsync("entityAddedAsync", [entity]);
-    }
-
-    _entityRemovedAsync(entity) {
-        return this._invokeMethodWithRecoveryOnDecoratorsAsync("entityRemovedAsync", [entity]).then(() => {
+    _approveEntityToBeRemovedAsync(user, entity) {
+        return this._invokeMethodOnDecoratorsAsync("approveEntityToBeRemovedAsync", [user, entity]).then(() => {
             return entity;
         });
+    }
+
+    _entityAddedAsync(user, entity) {
+        return this._invokeMethodWithRecoveryOnDecoratorsAsync("entityAddedAsync", [user, entity]).then(() => {
+            return entity;
+        });
+    }
+
+    _entityRemovedAsync(user, entity) {
+        return this._invokeMethodWithRecoveryOnDecoratorsAsync("entityRemovedAsync", [user, entity]).then(() => {
+            return entity;
+        });
+    }
+
+    _entityUpdatedAsync(user, entity, delta) {
+        return this.decorators.reduce((promise, decorator) => {
+            return promise.then(() => {
+                let options = this._getDecoratorOptions(decorator.name);
+                return this._invokeMethodWithRecoveryAsync(decorator, "entityUpdatedAsync", [user, entity, delta, options]);
+            });
+        }, Promise.resolve());
     }
 
     _getDecoratorOptions(name) {
@@ -75,94 +90,107 @@ export default class MetaTable {
 
     _invokeMethodOnDecoratorsAsync(method, args) {
         return this.decorators.reduce((promise, decorator) => {
-            let options = this._getDecoratorOptions(decorator.name);
             return promise.then(() => {
-                let args = Array.from(arguments);
-                args.push(options);
-                return this._invokeMethodAsync(decorator, method, args);
+                let options = this._getDecoratorOptions(decorator.name);
+                let customArgs = args.slice();
+                customArgs.push(options);
+
+                return this._invokeMethodAsync(decorator, method, customArgs);
             });
-        }, Promise.resolve.apply(Promise, args));
+        }, Promise.resolve());
     }
 
     _invokeMethodWithRecoveryOnDecoratorsAsync(method, args) {
         return this.decorators.reduce((promise, decorator) => {
-            let options = this._getDecoratorOptions(decorator.name);
             return promise.then(() => {
-                let args = Array.from(arguments);
-                args.push(options);
-                return this._invokeMethodWithRecoveryAsync(decorator, method, args);
+                let options = this._getDecoratorOptions(decorator.name);
+                let customArgs = args.slice();
+                customArgs.push(options);
+
+                return this._invokeMethodWithRecoveryAsync(decorator, method, customArgs);
             });
-        }, Promise.resolve.apply(Promise, args));
+        }, Promise.resolve());
     }
 
-    _prepareEntityToBeAddedAsync(entity) {
-        return this._invokeMethodOnDecoratorsAsync("prepareEntityToBeAddedAsync", [entity]);
+    _prepareEntityToBeAddedAsync(user, entity) {
+        return this._invokeMethodOnDecoratorsAsync("prepareEntityToBeAddedAsync", [user, entity]);
     }
 
-    _validateEntityToBeAddedAsync(entity) {
+    _prepareEntityToBeUpdatedAsync(user, entity) {
+        return this.decorators.reduce((promise, decorator) => {
+            return promise.then((delta) => {
+                let options = this._getDecoratorOptions(decorator.name);
+                return this._invokeMethodAsync(decorator, "prepareEntityToBeUpdatedAsync", [user, entity, delta, options]);
+            });
+        }, Promise.resolve(delta))
+    }
+
+    _validateEntityToBeAddedAsync(user, entity) {
         Object.freeze(entity);
 
-        return this._invokeMethodOnDecoratorsAsync("validateEntityToBeAddedAsync", [entity]).then(() => {
+        return this._invokeMethodOnDecoratorsAsync("validateEntityToBeAddedAsync", [user, entity]).then(() => {
             return entity;
         });
     }
 
-    addEntityAsync(entity) {
-        this._prepareEntityToBeAddedAsync(entity).then((entity) => {
-            return this._validateEntityToBeAddedAsync(entity);
-        }).then((entity) => {
-            return this.sqliteTable.addEntityAsync(entity);
-        }).then((entity) => {
-            return this._entityAddedAsync(entity);
-        });
-    }
-
-    asQueryable() { }
-
-    getQueryProvider() { }
-
-    removedEntityAsync(entity) {
-        Object.freeze(entity);
-        return this._approveEntityToBeRemovedAsync(entity).then((entity) => {
-            return this.sqliteTable.removedEntityAsync(entity);
-        }).then((entity) => {
-            return this._entityRemovedAsync(entity);
-        });
-    }
-
-    updateEntityAsync(entity, delta) {
-        Object.freeze(entity);
-        let updatedEntity;
+    _validateEntityToBeUpdatedAsync(user, entity, delta) {
+        Object.freeze(delta);
 
         return this.decorators.reduce((promise, decorator) => {
             let options = this._getDecoratorOptions(decorator.name);
-            return promise.then((delta) => {
-                return this._invokeMethodAsync(decorator, "prepareEntityToBeUpdatedAsync", [entity, delta, options]);
+            return promise.then(() => {
+                return this._invokeMethodAsync(decorator, "validateEntityToBeUpdatedAsync", [user, entity, delta, options]);
             });
-        }, Promise.resolve(delta)).then((delta) => {
-            // Freeze the delta from being changes by the decorators.
-            Object.freeze(delta);
+        }, Promise.resolve()).then(() => {
+            return delta;
+        });
+    }
 
-            return this.decorators.reduce((promise, decorator) => {
-                let options = this._getDecoratorOptions(decorator.name);
-                return promise.then(() => {
-                    return this._invokeMethodAsync(decorator, "validateEntityToBeUpdatedAsync", [entity, delta, options]);
-                });
-            }, Promise.resolve()).then(() => {
-                return delta;
-            });
+    addEntityAsync(user, entity) {
+        this._prepareEntityToBeAddedAsync(user, entity).then(() => {
+            return this._validateEntityToBeAddedAsync(user, entity);
+        }).then(() => {
+            return this.sqliteTable.addEntityAsync(user, entity);
+        }).then(() => {
+            return this._entityAddedAsync(user, entity);
+        });
+    }
+
+    asQueryable(user) {
+        let provider = this.getQueryProvider(user);
+        let queryable = new Queryable();
+
+        queryable.provider = provider;
+
+        return queryable;
+    }
+
+    getQueryProvider(user) {
+        return new MetaProvider(user, this);
+    }
+
+    removedEntityAsync(user, entity) {
+        Object.freeze(entity);
+        return this._approveEntityToBeRemovedAsync(user, entity).then(() => {
+            return this.sqliteTable.removedEntityAsync(user, entity);
+        }).then(() => {
+            return this._entityRemovedAsync(user, entity);
+        });
+    }
+
+    updateEntityAsync(user, entity, delta) {
+        Object.freeze(entity);
+        let updatedEntity;
+
+        return this._prepareEntityToBeUpdatedAsync(user, entity, delta).then((delta) => {
+            return this._validateEntityToBeUpdatedAsync(user, entity, delta);
         }).then((delta) => {
-            return this.sqliteTable.updateEntityAsync(entity, delta).then((entity) => {
+            return this.sqliteTable.updateEntityAsync(user, entity, delta).then((entity) => {
                 updatedEntity = entity;
                 return delta;
             });
         }).then((delta) => {
-            return this.decorators.reduce((promise, decorator) => {
-                let options = this._getDecoratorOptions(decorator.name);
-                return promise.then(() => {
-                    return this._invokeMethodWithRecoveryAsync(decorator, "entityUpdatedAsync", [entity, delta, options]);
-                });
-            }, Promise.resolve());
+            return this._entityUpdatedAsync(user, updatedEntity, delta);
         }).then(() => {
             return updatedEntity;
         });
