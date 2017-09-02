@@ -8,7 +8,7 @@ exports["Database._getTableBuildOrder"] = () => {
     sqlite.open(":memory:").then((db) => {
         var database = new Database({
             edm: edm,
-            sqlite: sqlite
+            sqliteDatabase: db
         });
 
         let buildOrder = database._getTableBuildOrder();
@@ -22,7 +22,7 @@ exports["Database.createAsync"] = () => {
     return sqlite.open(":memory:").then((db) => {
         var database = new Database({
             edm: edm,
-            sqlite: sqlite
+            sqliteDatabase: db
         });
 
         return database.createAsync();
@@ -35,7 +35,7 @@ exports["Database.addEntityAsync"] = () => {
     return sqlite.open(":memory:").then((db) => {
         var database = new Database({
             edm: edm,
-            sqlite: sqlite
+            sqliteDatabase: db
         });
 
         let table = database.getTable("Source");
@@ -61,7 +61,7 @@ exports["Database.updateEntityAsync"] = () => {
     return sqlite.open(":memory:").then((db) => {
         var database = new Database({
             edm: edm,
-            sqlite: sqlite
+            sqliteDatabase: db
         });
 
         let table = database.getTable("Source");
@@ -92,7 +92,7 @@ exports["Database.removeEntityAsync"] = () => {
     return sqlite.open(":memory:").then((db) => {
         var database = new Database({
             edm: edm,
-            sqlite: sqlite
+            sqliteDatabase: db
         });
 
         let table = database.getTable("Source");

@@ -3,8 +3,8 @@ import EntityBuilder from "./EntityBuilder";
 
 export default class Provider {
     constructor(name, options = {}) {
-        if (options.sqlite == null) {
-            throw new Error("Null Argument Exception: sqlite is required in options.");
+        if (options.sqliteDatabase == null) {
+            throw new Error("Null Argument Exception: sqliteDatabase is required in options.");
         }
 
         if (options.edm == null) {
@@ -12,7 +12,7 @@ export default class Provider {
         }
 
         this.edm = options.edm;
-        this.sqlite = options.sqlite;
+        this.sqliteDatabase = options.sqliteDatabase;
         this.name = name;
 
         this.entityBuilder = new EntityBuilder(name, this.edm);
@@ -23,7 +23,7 @@ export default class Provider {
         let visitor = new Visitor(this.name, this.edm);
         let statement = visitor.createSelectStatement(query);
 
-        return this.sqlite.all(statement).then((results) => {
+        return this.sqliteDatabase.all(statement).then((results) => {
             return this.entityBuilder.convert(results);
         });
     }
@@ -41,12 +41,12 @@ export default class Provider {
         })
     }
 
-    countAsync() {
+    countAsync(queryable) {
         let query = queryable.getQuery();
         let visitor = new Visitor(this.name, this.edm);
         let statement = visitor.createSelectStatementWithCount(query);
 
-        return this.sqlite.get(statement).then((result) => {
+        return this.sqliteDatabase.get(statement).then((result) => {
             return result.count;
         });
     }

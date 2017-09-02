@@ -5,7 +5,7 @@ import edm from "./../mock/edm";
 exports["Table: addEntityAsync"] = () => {
     var table = new Table("Source", {
         edm: edm,
-        sqlite: {
+        sqliteDatabase: {
             run: (statement, values) => {
                 assert.equal(statement, 'INSERT INTO "Source" ("string") VALUES (?)');
                 assert.equal(values[0], "Hello World");
@@ -21,7 +21,7 @@ exports["Table: addEntityAsync"] = () => {
 exports["Table.createAsync: Create a Source Table."] = () => {
     var table = new Table("Source", {
         edm: edm,
-        sqlite: {
+        sqliteDatabase: {
             exec: (statement, values) => {
                 assert.equal(statement, 'CREATE TABLE IF NOT EXISTS "Source" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "string" TEXT, "number" NUMERIC, "date" NUMERIC, "boolean" NUMERIC, "float" REAL);CREATE INDEX IF NOT EXISTS "id" ON "Source" ("id")');
                 return Promise.resolve(null);
@@ -35,7 +35,7 @@ exports["Table.createAsync: Create a Source Table."] = () => {
 exports["Table.createAsync: Create a Target Table."] = () => {
     var table = new Table("Foreign", {
         edm: edm,
-        sqlite: {
+        sqliteDatabase: {
             exec: (statement, values) => {
                 assert.equal(
                     statement,

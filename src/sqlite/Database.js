@@ -2,11 +2,11 @@ import Table from "./Table";
 
 export default class Database {
     constructor(options = {}) {
-        let sqlite = options.sqlite;
+        let sqliteDatabase = options.sqliteDatabase;
         let edm = options.edm;
 
-        if (sqlite == null) {
-            throw new Error("Database needs to have a sqlite.");
+        if (sqliteDatabase == null) {
+            throw new Error("Database needs to have a sqliteDatabase.");
         }
         if (edm == null) {
             throw new Error("Database needs to have a edm.");
@@ -14,7 +14,7 @@ export default class Database {
 
         this.name = edm.name;
         this.edm = edm;
-        this.sqlite = sqlite;
+        this.sqliteDatabase = sqliteDatabase;
         this.tables = {};
 
         this._createTables();
@@ -22,7 +22,7 @@ export default class Database {
 
     _createTables() {
         let options = {
-            sqlite: this.sqlite,
+            sqliteDatabase: this.sqliteDatabase,
             edm: this.edm
         };
 
@@ -73,8 +73,8 @@ export default class Database {
 
         return buildOrder.reduce((promise, table) => {
             return promise.then(() => {
-                let sqliteTable = this.tables[table.name];
-                return sqliteTable.createAsync();
+                let sqliteDatabaseTable = this.tables[table.name];
+                return sqliteDatabaseTable.createAsync();
             });
         }, Promise.resolve());
     }
@@ -84,8 +84,8 @@ export default class Database {
 
         return buildOrder.reduce((promise, table) => {
             return promise.then(() => {
-                let sqliteTable = this.tables[table.name];
-                return sqliteTable.dropAsync();
+                let sqliteDatabaseTable = this.tables[table.name];
+                return sqliteDatabaseTable.dropAsync();
             });
         }, Promise.resolve());
     }

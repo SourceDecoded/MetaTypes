@@ -4,7 +4,7 @@ import Provider from "./Provider";
 
 export default class Table {
     constructor(name, options = {}) {
-        this.sqlite = options.sqlite;
+        this.sqliteDatabase = options.sqliteDatabase;
         this.edm = options.edm;
         this.name = name;
 
@@ -12,8 +12,8 @@ export default class Table {
             throw new Error("The table needs to have a name.");
         }
 
-        if (this.sqlite == null) {
-            throw new Error("The table needs to have a sqlite database.");
+        if (this.sqliteDatabase == null) {
+            throw new Error("The table needs to have a sqliteDatabase database.");
         }
 
         if (this.edm == null) {
@@ -29,7 +29,7 @@ export default class Table {
         this.tableStatementBuilder = new TableStatementBuilder(name, options);
         this.provider = new Provider(name, {
             edm: this.edm,
-            sqlite: this.sqlite
+            sqliteDatabase: this.sqliteDatabase
         });
     }
 
@@ -51,7 +51,7 @@ export default class Table {
     addEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createInsertStatement(this.table, entity);
 
-        return this.sqlite.run(sql.statement, sql.values).then((statement) => {
+        return this.sqliteDatabase.run(sql.statement, sql.values).then((statement) => {
             entity[this._getPrimaryKeyName()] = statement.lastID;
             return entity;
         });
@@ -63,19 +63,19 @@ export default class Table {
 
         indexesStatements.unshift(tableStatement);
 
-        return this.sqlite.exec(indexesStatements.join(";"));
+        return this.sqliteDatabase.exec(indexesStatements.join(";"));
     }
 
     dropAsync() {
         var statement = this.tableStatementBuilder.createDropTableStatement(this.table.name);
 
-        return this.sqlite.run(statement);
+        return this.sqliteDatabase.run(statement);
     }
 
     removeEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createDeleteStatement(this.table, entity);
 
-        return this.sqlite.run(sql.statement, sql.values).then(()=>{
+        return this.sqliteDatabase.run(sql.statement, sql.values).then(()=>{
             return entity;
         });
     }
@@ -83,7 +83,7 @@ export default class Table {
     updateEntityAsync(entity, delta) {
         var sql = this.tableStatementBuilder.createUpdateStatement(this.table, entity, delta);
 
-        return this.sqlite.run(sql.statement, sql.values).then(()=>{
+        return this.sqliteDatabase.run(sql.statement, sql.values).then((statement)=>{
             return Object.assign(entity, delta);
         });
     }
