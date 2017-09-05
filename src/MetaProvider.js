@@ -4,7 +4,7 @@ import EntityBuilder from "./EntityBuilder";
 export default class MetaProvider {
     constructor(user, metaTable) {
         this.metaTable = metaTable;
-        this.provider = metaTable.sqliteTable.provider;
+        this.provider = metaTable.table.provider;
         this.decorators = metaTable.decorators;
         this.user = user;
     }

@@ -94,4 +94,10 @@ export default class Database {
         return this.tables[name];
     }
 
+    getTables(){
+        return Object.keys(this.tables).map((name)=>{
+            return this.tables[name];
+        });
+    }
+
 }

@@ -1,44 +1,39 @@
 import Database from "./sqlite/Database";
-import MetaTables from "./MetaTables";
+import MetaTable from "./MetaTable";
+import path from "path";
+import fileSystem from "fs";
 
 export default class MetaDatabase {
 
-    constructor(options = {}) {
-        this.sqlite = options.sqlite;
-        this.sqliteFile = options.sqliteFile;
-        this.edm = options.edm;
-        this.sqliteDatabase = null;
-        this.initializedPromise = null;
-        this.tables = [];
-    }
-
-    _assertIsInitialized() {
-        if (this.sqliteDatabase === null) {
-            throw new Error("MetaDatabase needs to be initilaized before anything else.");
+    constructor(options = { decorators: [] }) {
+        if (!Array.isArray(options.decorators)) {
+            throw new Error();
         }
+
+        if (options.database == null) {
+            throw new Error();
+        }
+
+        this.database = options.database;
+        this.edm = this.database.edm;
+        this.decorators = options.decorators;
+        this.tables = {};
+
+        this.database.getTables().forEach((table) => {
+            this.tables[table.name] = new MetaTable({
+                table: table,
+                decorators: this.decorators
+            });
+        });
     }
 
     getTable(name) {
-        this._assertIsInitialized();
+        return this.tables[name];
     }
 
-    initializeAsync() {
-        if (this.initializedPromise == null) {
-            this.initializedPromise = this.sqlite.open(this.sqliteFile).then((sqliteDatabase) => {
-
-                this.sqliteDatabase = new Database({
-                    edm: this.edm,
-                    sqliteDatabase: sqliteDatabase
-                });
-
-
-
-            });
-        }
-
-        return this.initializedPromise;
-
+    getTables() {
+        return Object.keys(this.tables).map((name) => {
+            return this.tables[name];
+        });
     }
-
-
 }

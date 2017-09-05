@@ -1,14 +1,16 @@
 const edm = {
-    "name": "Mock Data",
+    "name": "MockData",
+    "label":"Mock Data",
     "version": "0.0.1",
     "tables": [
         {
             "name": "Source",
             "label": "Source",
             "pluralLabel": "Sources",
-            "decorators": [
-                "Authorization"
-            ],
+            "decorators": [{
+                name: "Governance",
+                options: {}
+            }],
             "columns": [
                 {
                     "type": "Integer",

@@ -1,5 +1,6 @@
 const metaEdm = {
-    "name": "Meta Edm",
+    "name": "MetaEdm",
+    "label": "Meta Edm",
     "version": "1.0.0",
     "tables": [
         {
@@ -18,8 +19,13 @@ const metaEdm = {
                 },
                 {
                     "type": "String",
-                    "name": "json",
-                    "label": "JSON"
+                    "name": "edm",
+                    "label": "Edm"
+                },
+                {
+                    "type": "String",
+                    "name": "decoratedEdm",
+                    "label": "Decorated Edm"
                 },
                 {
                     "type": "String",

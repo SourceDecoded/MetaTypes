@@ -2,12 +2,19 @@ import Table from "./sqlite/Table"
 import MetaProvider from "./MetaProvider";
 import Queryable from "./query/Queryable";
 
+const defaultDecorators = {
+    name: null,
+    edm: null,
+    table: null,
+    decorators: []
+};
+
 export default class MetaTable {
     constructor(options = {}) {
-        this.sqliteTable = options.sqliteTable;
-        this.name = sqliteTable.name;
-        this.edm = options.edm;
-        this.table = this._getTable(this.name);
+        this.table = options.table;
+        this.name = this.table.name;
+        this.edm = this.table.edm;
+        this.edmTable = this._getEdmTable(this.name);
 
         this.decorators = options.decorators.filter((decorator) => {
             return table.decorators.findIndexOf((tableDecorator) => {
@@ -44,14 +51,14 @@ export default class MetaTable {
     }
 
     _getDecoratorOptions(name) {
-        let decorator = this._getTable(this.name).decorators.find((decorator) => {
+        let decorator = this._getEdmTable(this.name).decorators.find((decorator) => {
             return decorator.name = name;
         });
 
         return decorator && decorator.options || null;
     }
 
-    _getTable(name) {
+    _getEdmTable(name) {
         return this.edm.tables.find((table) => {
             return table.name === name;
         });
@@ -150,7 +157,7 @@ export default class MetaTable {
         this._prepareEntityToBeAddedAsync(user, entity).then(() => {
             return this._validateEntityToBeAddedAsync(user, entity);
         }).then(() => {
-            return this.sqliteTable.addEntityAsync(user, entity);
+            return this.table.addEntityAsync(user, entity);
         }).then(() => {
             return this._entityAddedAsync(user, entity);
         });
@@ -172,7 +179,7 @@ export default class MetaTable {
     removedEntityAsync(user, entity) {
         Object.freeze(entity);
         return this._approveEntityToBeRemovedAsync(user, entity).then(() => {
-            return this.sqliteTable.removedEntityAsync(user, entity);
+            return this.table.removedEntityAsync(user, entity);
         }).then(() => {
             return this._entityRemovedAsync(user, entity);
         });
@@ -185,7 +192,7 @@ export default class MetaTable {
         return this._prepareEntityToBeUpdatedAsync(user, entity, delta).then((delta) => {
             return this._validateEntityToBeUpdatedAsync(user, entity, delta);
         }).then((delta) => {
-            return this.sqliteTable.updateEntityAsync(user, entity, delta).then((entity) => {
+            return this.table.updateEntityAsync(user, entity, delta).then((entity) => {
                 updatedEntity = entity;
                 return delta;
             });
