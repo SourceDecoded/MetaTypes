@@ -27,7 +27,7 @@ export default class MetaProvider {
         let user = this.user;
         return this.decorators.reduce((promise, decorator) => {
             return promise.then((queryable) => {
-                let options = this.metaTable._getDecoratorOptions(decorator.name);
+                let options = decorator.options || null;
                 return this._invokeMethodAsync(decorator, "refineQueryableAsync", [user, queryable, options]);
             });
         }, Promise.resolve(queryable));

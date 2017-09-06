@@ -20,72 +20,51 @@ export default class MetaDatabaseManager {
         this.readyPromise = this._createMetaDatabasesAsync();
     }
 
-    _createDatabaseAsync(edm) {
-        let path = this._getPathForDatabase(edm.name, edm.version);
-
-        this.sqlite.open(path).then((sqliteDatabase) => {
-            var database = new Database({
-                edm: edm,
-                sqliteDatabase: sqliteDatabase
-            });
-
-            return database;
-        });
-    }
-
     _createMetaDatabasesAsync(edm) {
         return this.getAllEdmsAsync().then((edms) => {
-            return edms.forEach((edm) => {
-                this._createDatabaseAsync(edm).then((database) => {
+            return edms.reduce((promise, edm) => {
+                return promise.then(() => {
                     let metaDatabase = new MetaDatabase({
-                        database: database,
+                        edm: edm,
+                        sqlite: this.sqlite,
+                        databasePath: this._getPathForDatabase(edm.name, edm.version),
                         decorators: this.decorators
                     });
 
-                    this.metaDatabases.push(metaDatabase);
-                });
-            });
+                    return metaDatabase.initializeAsync();
+                })
+            }, Promise.resolve());
         });
-    }
-
-    _decorateEdmAsync(edm) {
-        this._invokeOnDecoratorsAsync("prepareEdmAsync", [edm]);
     }
 
     _getPathForDatabase(name, version) {
         return `${name}_${version}`;
     }
 
-    _invokeOnDecoratorsAsync(methodName, args) {
-        return this.decorators.reduce((promise, decorator) => {
-            promise.then(() => {
-                if (typeof decorator[methodName] === "function") {
-                    return decorator[methodName].apply(decorator, args);
-                }
-            });
-
-        }, Promise.resolve());
-    }
-
-    addDatabaseAsync(edm) {
-        let path = this._getPathForDatabase(edm);
+    addDatabaseAsync(user, edm) {
+        let path = this._getPathForDatabase(edm.name, edm.version);
 
         this.fileSystem.access(path, this.fileSystem.constants.F_OK).then(() => {
             throw new Error("Database already exists.");
         }).then(() => {
-            let originalEdm = JSON.stringify(edm);
-            return this._decorateEdmAsync(edm);
-        }).then(() => {
-            return this._createDatabaseAsync(edm);
-        }).then((database) => {
-            return database.createAsync().then(() => database);
-        }).then((database) => {
             let metaDatabase = new MetaDatabase({
                 database: database,
                 decorators: this.decorators
             });
 
             this.metaDatabases.push(metaDatabase);
+
+            return metaDatabase.initializeAsync().then(() => {
+                return metaDatabase;
+            });
+        }).then((metaDatabase) => {
+            return this.edmDatabase.getTable("Edm").addEntityAsync({
+                name: edm.name,
+                version: edm.version,
+                edm: edm,
+                decoratedEdm: metaDatabase.edm,
+                createdBy: user.id
+            });
         });
     }
 
@@ -130,23 +109,30 @@ export default class MetaDatabaseManager {
         });
     }
 
-    removeDatabaseAsync(name, version) {
+    removeDatabaseAsync(user, name, version) {
         return this.readyPromise.then(() => {
-            let removeInformationPromise = this.edmDatabase.getTable("Edm").asQueryable().where((expBuilder) => {
+            return this.edmDatabase.getTable("Edm").asQueryable().where((expBuilder) => {
                 return expBuilder.and(
                     expBuilder.property("name").isEqualTo(name),
                     expBuilder.property("version").isEqualTo(version)
                 );
             }).toArrayAsync().then((results) => {
-                if (results.length === 0) {
+                var information = results[0];
+
+                if (information == 0) {
                     throw new Error(`Couldn't find database information for ${name}:${version}.`);
                 }
-                return this.edmDatabase.removeEntity(results[0]);
+
+                if (information.createdBy !== user.id) {
+                    throw new Error("You do not have permission to delete this database.");
+                }
+
+                return Promise.all([
+                    this.edmDatabase.removeEntityAsync(information),
+                    this.fileSystem.unlink(this._getPathForDatabase(name, version))
+                ]);
             });
 
-            let removeDatabaseFilePromise = this.fileSystem.unlink(this._getPathForDatabase(name, version));
-
-            return Promise.all([removeInformationPromise, removeDatabaseFilePromise]);
         });
     }
 

@@ -5,37 +5,117 @@ import fileSystem from "fs";
 
 export default class MetaDatabase {
 
-    constructor({ decorators = [], database = null } = {}) {
+    constructor({ decorators = [], sqlite = null, databasePath = null, edm = null } = {}) {
         if (!Array.isArray(decorators)) {
-            throw new Error("Invalid argument: decorators needs to be an array.");
+            throw new Error("Invalid Argument: decorators needs to be an array.");
         }
 
-        if (database == null) {
-            throw new Error();
+        if (sqlite == null) {
+            throw new Error("Null Argument Exception: MetaDatabase needs to have a sqlite.");
         }
 
-        this.database = database;
-        this.edm = database.edm;
+        if (databasePath == null) {
+            throw new Error("Null Argument Exception: MetaDatabase needs to have a databasePath.");
+        }
+
+        if (edm == null) {
+            throw new Error("Null Argument Exception: MetaDatabase needs to have a edm.");
+        }
+
         this.decorators = decorators;
-        this.tables = {};
+        this.databasePath = databasePath;
+        this.sqlite = sqlite;
+        this.edm = edm;
         this.name = this.edm.name;
         this.version = this.edm.version;
+        this.tables = {};
+        this.readyPromise = null;
+    }
 
-        database.getTables().forEach((table) => {
-            this.tables[table.name] = new MetaTable({
-                table: table,
-                decorators: decorators
+    _createDatabaseAsync(edm) {
+        let path = this.databasePath;
+
+        this.sqlite.open(path).then((sqliteDatabase) => {
+            var database = new Database({
+                edm: edm,
+                sqliteDatabase: sqliteDatabase
+            });
+
+            return database;
+        });
+    }
+
+    _initializeEdmAsync(edm) {
+        let decoratedEdm = JSON.parse(JSON.stringify(edm));
+
+        if (edm.isDecorated) {
+            this.edm = this.decoratedEdm;
+            return Promise.resolve(decoratedEdm);
+        } else {
+            return this._invokeOnDecoratorsAsync("prepareEdmAsync", [decoratedEdm]).then(() => decoratedEdm);
+        }
+    }
+
+    _initializeAsync() {
+        if (this.readyPromise == null) {
+            let database = null;
+
+            return this.readyPromise = this._initializeEdmAsync().then((edm) => {
+                this.edm = edm;
+                let databasePromise = this._createDatabaseAsync(edm);
+
+                if (!edm.isDecorated) {
+                    databasePromise = databasePromise.then((newDatabase) => {
+                        database = newDatabase;
+                        return newDatabase.createAsync();
+                    }).then(() => {
+                        this.edm.isDecorated = true;
+                    })
+                }
+
+                return databasePromise;
+            }).then(() => {
+
+                database.getTables().forEach((table) => {
+                    this.tables[table.name] = new MetaTable({
+                        table: table,
+                        decorators: decorators
+                    });
+                });
+
+            });
+        }
+
+        return this.readyPromise;
+    }
+
+    _invokeOnDecoratorsAsync(methodName, args) {
+        return this.decorators.reduce((promise, decorator) => {
+            promise.then(() => {
+                if (typeof decorator[methodName] === "function") {
+                    return decorator[methodName].apply(decorator, args);
+                }
+            });
+
+        }, Promise.resolve());
+    }
+
+    getTableAsync(name) {
+        return this.readyPromise().then(() => {
+            return this.tables[name] || null;
+        })
+    }
+
+    getTablesAsync() {
+        return this.readyPromise().then(() => {
+            return Object.keys(this.tables).map((name) => {
+                return this.tables[name];
             });
         });
     }
 
-    getTable(name) {
-        return this.tables[name] || null;
+    initializeAsync() {
+        return this.readyPromise;
     }
 
-    getTables() {
-        return Object.keys(this.tables).map((name) => {
-            return this.tables[name];
-        });
-    }
 }

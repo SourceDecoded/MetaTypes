@@ -1,7 +1,8 @@
 const edm = {
     "name": "MockData",
-    "label":"Mock Data",
+    "label": "Mock Data",
     "version": "0.0.1",
+    "isDecorated": false,
     "tables": [
         {
             "name": "Source",
