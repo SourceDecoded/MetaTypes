@@ -17,6 +17,7 @@
     "jsdoc": "^3.4.3"
   },
   "dependencies": {
+    "express": "^4.15.4",
     "sqlite": "^2.8.0"
   }
 }

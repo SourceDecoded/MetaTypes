@@ -10,14 +10,14 @@ const defaultDecorators = {
 };
 
 export default class MetaTable {
-    constructor(options = {}) {
-        this.table = options.table;
-        this.name = this.table.name;
-        this.edm = this.table.edm;
+    constructor({ table = null, decorators = [] } = {}) {
+        this.table = table;
+        this.name = table.name;
+        this.edm = table.edm;
         this.edmTable = this._getEdmTable(this.name);
 
-        this.decorators = options.decorators.filter((decorator) => {
-            return table.decorators.findIndexOf((tableDecorator) => {
+        this.decorators = decorators.filter((decorator) => {
+            return edmTable.decorators.findIndexOf((tableDecorator) => {
                 return tableDecorator.name === decorator.name
             });
         });
@@ -44,18 +44,10 @@ export default class MetaTable {
     _entityUpdatedAsync(user, entity, delta) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then(() => {
-                let options = this._getDecoratorOptions(decorator.name);
+                let options = decorator.options || null;
                 return this._invokeMethodWithRecoveryAsync(decorator, "entityUpdatedAsync", [user, entity, delta, options]);
             });
         }, Promise.resolve());
-    }
-
-    _getDecoratorOptions(name) {
-        let decorator = this._getEdmTable(this.name).decorators.find((decorator) => {
-            return decorator.name = name;
-        });
-
-        return decorator && decorator.options || null;
     }
 
     _getEdmTable(name) {
@@ -98,7 +90,7 @@ export default class MetaTable {
     _invokeMethodOnDecoratorsAsync(method, args) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then(() => {
-                let options = this._getDecoratorOptions(decorator.name);
+                let options = decorator.options || null;
                 let customArgs = args.slice();
                 customArgs.push(options);
 
@@ -110,7 +102,7 @@ export default class MetaTable {
     _invokeMethodWithRecoveryOnDecoratorsAsync(method, args) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then(() => {
-                let options = this._getDecoratorOptions(decorator.name);
+                let options = decorator.options || null;
                 let customArgs = args.slice();
                 customArgs.push(options);
 
@@ -126,7 +118,7 @@ export default class MetaTable {
     _prepareEntityToBeUpdatedAsync(user, entity) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then((delta) => {
-                let options = this._getDecoratorOptions(decorator.name);
+                let options = decorator.options || null;
                 return this._invokeMethodAsync(decorator, "prepareEntityToBeUpdatedAsync", [user, entity, delta, options]);
             });
         }, Promise.resolve(delta))
@@ -144,7 +136,7 @@ export default class MetaTable {
         Object.freeze(delta);
 
         return this.decorators.reduce((promise, decorator) => {
-            let options = this._getDecoratorOptions(decorator.name);
+            let options = decorator.options || null;
             return promise.then(() => {
                 return this._invokeMethodAsync(decorator, "validateEntityToBeUpdatedAsync", [user, entity, delta, options]);
             });

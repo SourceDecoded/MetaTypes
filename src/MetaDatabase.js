@@ -5,30 +5,32 @@ import fileSystem from "fs";
 
 export default class MetaDatabase {
 
-    constructor(options = { decorators: [] }) {
-        if (!Array.isArray(options.decorators)) {
+    constructor({ decorators = [], database = null } = {}) {
+        if (!Array.isArray(decorators)) {
+            throw new Error("Invalid argument: decorators needs to be an array.");
+        }
+
+        if (database == null) {
             throw new Error();
         }
 
-        if (options.database == null) {
-            throw new Error();
-        }
-
-        this.database = options.database;
-        this.edm = this.database.edm;
-        this.decorators = options.decorators;
+        this.database = database;
+        this.edm = database.edm;
+        this.decorators = decorators;
         this.tables = {};
+        this.name = this.edm.name;
+        this.version = this.edm.version;
 
-        this.database.getTables().forEach((table) => {
+        database.getTables().forEach((table) => {
             this.tables[table.name] = new MetaTable({
                 table: table,
-                decorators: this.decorators
+                decorators: decorators
             });
         });
     }
 
     getTable(name) {
-        return this.tables[name];
+        return this.tables[name] || null;
     }
 
     getTables() {

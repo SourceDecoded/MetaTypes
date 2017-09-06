@@ -41,6 +41,11 @@ const metaEdm = {
                     "type": "String",
                     "name": "createdBy",
                     "label": "Created By"
+                },
+                {
+                    "type": "Boolean",
+                    "name": "isInitialized",
+                    "label": "Is Initialized"
                 }
             ]
         }
