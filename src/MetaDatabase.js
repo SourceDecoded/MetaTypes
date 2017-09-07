@@ -30,12 +30,14 @@ export default class MetaDatabase {
         this.version = this.edm.version;
         this.tables = {};
         this.readyPromise = null;
+
+        this._initializeAsync();
     }
 
     _createDatabaseAsync(edm) {
         let path = this.databasePath;
 
-        this.sqlite.open(path).then((sqliteDatabase) => {
+        return this.sqlite.open(path).then((sqliteDatabase) => {
             var database = new Database({
                 edm: edm,
                 sqliteDatabase: sqliteDatabase
@@ -60,7 +62,7 @@ export default class MetaDatabase {
         if (this.readyPromise == null) {
             let database = null;
 
-            return this.readyPromise = this._initializeEdmAsync().then((edm) => {
+            return this.readyPromise = this._initializeEdmAsync(this.edm).then((edm) => {
                 this.edm = edm;
                 let databasePromise = this._createDatabaseAsync(edm);
 
@@ -79,7 +81,7 @@ export default class MetaDatabase {
                 database.getTables().forEach((table) => {
                     this.tables[table.name] = new MetaTable({
                         table: table,
-                        decorators: decorators
+                        decorators: this.decorators
                     });
                 });
 
@@ -91,9 +93,13 @@ export default class MetaDatabase {
 
     _invokeOnDecoratorsAsync(methodName, args) {
         return this.decorators.reduce((promise, decorator) => {
-            promise.then(() => {
+            return promise.then(() => {
                 if (typeof decorator[methodName] === "function") {
-                    return decorator[methodName].apply(decorator, args);
+                    let value = decorator[methodName].apply(decorator, args);
+                    if (!(value instanceof Promise)) {
+                        return Promise.resolve(value);
+                    }
+                    return value;
                 }
             });
 
@@ -101,13 +107,13 @@ export default class MetaDatabase {
     }
 
     getTableAsync(name) {
-        return this.readyPromise().then(() => {
+        return this.readyPromise.then(() => {
             return this.tables[name] || null;
         })
     }
 
     getTablesAsync() {
-        return this.readyPromise().then(() => {
+        return this.readyPromise.then(() => {
             return Object.keys(this.tables).map((name) => {
                 return this.tables[name];
             });

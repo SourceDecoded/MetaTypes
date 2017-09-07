@@ -33,6 +33,10 @@ export default class Table {
         });
     }
 
+    _clone(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
     _getPrimaryKeyName() {
         var column = this.table.columns.find((column) => {
             return column.isPrimaryKey;
@@ -47,13 +51,14 @@ export default class Table {
         });
     }
 
-
     addEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createInsertStatement(this.table, entity);
 
-        return this.sqliteDatabase.run(sql.statement, sql.values).then((statement) => {
-            entity[this._getPrimaryKeyName()] = statement.lastID;
-            return entity;
+        return this.sqliteDatabase.run(sql.statement, sql.values).then((result) => {
+            let updatedEntity = this._clone(entity);
+
+            updatedEntity[this._getPrimaryKeyName()] = result.stmt.lastID;
+            return updatedEntity;
         });
     }
 
@@ -75,7 +80,7 @@ export default class Table {
     removeEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createDeleteStatement(this.table, entity);
 
-        return this.sqliteDatabase.run(sql.statement, sql.values).then(()=>{
+        return this.sqliteDatabase.run(sql.statement, sql.values).then(() => {
             return entity;
         });
     }
@@ -83,7 +88,7 @@ export default class Table {
     updateEntityAsync(entity, delta) {
         var sql = this.tableStatementBuilder.createUpdateStatement(this.table, entity, delta);
 
-        return this.sqliteDatabase.run(sql.statement, sql.values).then((statement)=>{
+        return this.sqliteDatabase.run(sql.statement, sql.values).then((statement) => {
             return Object.assign(entity, delta);
         });
     }

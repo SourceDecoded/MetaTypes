@@ -15,11 +15,14 @@ export default class MetaTable {
         this.name = table.name;
         this.edm = table.edm;
         this.edmTable = this._getEdmTable(this.name);
-
+        this.decoratorOptions = {};
         this.decorators = decorators.filter((decorator) => {
-            return edmTable.decorators.findIndexOf((tableDecorator) => {
+            let decorators = this.edmTable.decorators || [];
+
+            return decorators.findIndex((tableDecorator) => {
+                this.decoratorOptions[tableDecorator.name] = tableDecorator.options;
                 return tableDecorator.name === decorator.name
-            });
+            }) > -1;
         });
     }
 
@@ -44,7 +47,7 @@ export default class MetaTable {
     _entityUpdatedAsync(user, entity, delta) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then(() => {
-                let options = decorator.options || null;
+                let options = this.decoratorOptions[decorator.name];
                 return this._invokeMethodWithRecoveryAsync(decorator, "entityUpdatedAsync", [user, entity, delta, options]);
             });
         }, Promise.resolve());
@@ -58,7 +61,7 @@ export default class MetaTable {
 
     _invokeMethodAsync(obj, method, args = []) {
         if (obj != null && typeof obj[method] === "function") {
-            var result = obj[method].apply(args);
+            var result = obj[method].apply(obj, args);
 
             if (!(result instanceof Promise)) {
                 result = Promise.resolve(result);
@@ -73,11 +76,11 @@ export default class MetaTable {
     _invokeMethodWithRecoveryAsync(obj, method, args = []) {
         let promise = Promise.resolve();
 
-        if (obj != null && typeof obj[nethod] === "function") {
-            promise = obj[method].apply(args);
+        if (obj != null && typeof obj[method] === "function") {
+            promise = obj[method].apply(obj, args);
 
             if (!(promise instanceof Promise)) {
-                promise = Promise.resolve(result);
+                promise = Promise.resolve(promise);
             }
         }
 
@@ -90,7 +93,7 @@ export default class MetaTable {
     _invokeMethodOnDecoratorsAsync(method, args) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then(() => {
-                let options = decorator.options || null;
+                let options = this.decoratorOptions[decorator.name];
                 let customArgs = args.slice();
                 customArgs.push(options);
 
@@ -102,7 +105,7 @@ export default class MetaTable {
     _invokeMethodWithRecoveryOnDecoratorsAsync(method, args) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then(() => {
-                let options = decorator.options || null;
+                let options = this.decoratorOptions[decorator.name];
                 let customArgs = args.slice();
                 customArgs.push(options);
 
@@ -118,7 +121,7 @@ export default class MetaTable {
     _prepareEntityToBeUpdatedAsync(user, entity) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then((delta) => {
-                let options = decorator.options || null;
+                let options = this.decoratorOptions[decorator.name];
                 return this._invokeMethodAsync(decorator, "prepareEntityToBeUpdatedAsync", [user, entity, delta, options]);
             });
         }, Promise.resolve(delta))
@@ -136,7 +139,7 @@ export default class MetaTable {
         Object.freeze(delta);
 
         return this.decorators.reduce((promise, decorator) => {
-            let options = decorator.options || null;
+            let options = this.decoratorOptions[decorator.name];
             return promise.then(() => {
                 return this._invokeMethodAsync(decorator, "validateEntityToBeUpdatedAsync", [user, entity, delta, options]);
             });
@@ -146,10 +149,10 @@ export default class MetaTable {
     }
 
     addEntityAsync(user, entity) {
-        this._prepareEntityToBeAddedAsync(user, entity).then(() => {
+        return this._prepareEntityToBeAddedAsync(user, entity).then(() => {
             return this._validateEntityToBeAddedAsync(user, entity);
         }).then(() => {
-            return this.table.addEntityAsync(user, entity);
+            return this.table.addEntityAsync(entity);
         }).then(() => {
             return this._entityAddedAsync(user, entity);
         });
@@ -171,7 +174,7 @@ export default class MetaTable {
     removedEntityAsync(user, entity) {
         Object.freeze(entity);
         return this._approveEntityToBeRemovedAsync(user, entity).then(() => {
-            return this.table.removedEntityAsync(user, entity);
+            return this.table.removedEntityAsync(entity);
         }).then(() => {
             return this._entityRemovedAsync(user, entity);
         });
@@ -189,7 +192,7 @@ export default class MetaTable {
                 return delta;
             });
         }).then((delta) => {
-            return this._entityUpdatedAsync(user, updatedEntity, delta);
+            return this._entityUpdatedAsync(updatedEntity, delta);
         }).then(() => {
             return updatedEntity;
         });

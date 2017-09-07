@@ -10,7 +10,7 @@ exports["Table: addEntityAsync"] = () => {
                 assert.equal(statement, 'INSERT INTO "Source" ("string") VALUES (?)');
                 assert.equal(values[0], "Hello World");
 
-                return Promise.resolve({ lastID: 1 });
+                return Promise.resolve({ stmt: { lastID: 1 } });
             }
         }
     });

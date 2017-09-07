@@ -9,8 +9,10 @@ const edm = {
             "label": "Source",
             "pluralLabel": "Sources",
             "decorators": [{
-                name: "Governance",
-                options: {}
+                name: "Test",
+                options: {
+                    option1: true
+                }
             }],
             "columns": [
                 {
