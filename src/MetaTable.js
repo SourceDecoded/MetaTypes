@@ -1,6 +1,6 @@
 import Table from "./sqlite/Table"
 import MetaProvider from "./MetaProvider";
-import Queryable from "./query/Queryable";
+import {Queryable} from "queryablejs";
 import User from "./User";
 
 const defaultDecorators = {

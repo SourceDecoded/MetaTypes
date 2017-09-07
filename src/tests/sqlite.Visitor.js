@@ -1,6 +1,6 @@
 import assert from "assert";
 import Visitor from "./../sqlite/Visitor";
-import Queryable from "./../query/Queryable";
+import { Queryable } from "queryablejs";
 import edm from "./../mock/edm";
 
 exports["sqlite.Visitor: Constructor."] = () => {

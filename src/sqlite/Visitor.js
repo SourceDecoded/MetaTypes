@@ -1,4 +1,4 @@
-import ExpressionVisitor from "./../query/ExpressionVisitor";
+import { ExpressionVisitor } from "queryablejs";
 
 export default class Visitor extends ExpressionVisitor {
     constructor(name, edm) {

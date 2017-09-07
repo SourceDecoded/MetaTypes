@@ -1,5 +1,5 @@
 import TableStatementBuilder from "./TableStatementBuilder";
-import Queryable from "./../query/Queryable";
+import { Queryable } from "queryablejs";
 import Provider from "./Provider";
 
 export default class Table {
