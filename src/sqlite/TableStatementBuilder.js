@@ -319,7 +319,7 @@ export default class TableStatementBuilder {
             return value ? 1 : 0;
         } else if (value instanceof Date) {
             return value.getTime();
-        } else if (value === null) {
+        } else if (value == null) {
             return null;
         } else {
             throw new Error("Unknown value.");

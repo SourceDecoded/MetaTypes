@@ -78,10 +78,145 @@ exports["MetaDatabase: prepareEntityToBeAddedAsync, entityAddedAsync, validateEn
 
 }
 
-exports["MetaDatabase: refineQueryable."] = () => {
+exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, validateEntityToBeUpdatedAsync."] = () => {
+    let prepareEntityToBeUpdatedAsyncCount = 0;
+    let entityUpdatedAsyncCount = 0;
+    let validateEntityToBeUpdatedAsyncCount = 0;
+
     let decorator = {
         name: "Test",
-        refineQueryableAsync(user, queryable) {
+        prepareEntityToBeUpdatedAsync(user, entity, delta, options) {
+            assert.equal(options.option1, true);
+            prepareEntityToBeUpdatedAsyncCount++;
+            return Promise.resolve();
+        },
+        entityUpdatedAsync(user, entity, delta, options) {
+            assert.equal(options.option1, true);
+            entityUpdatedAsyncCount++;
+        },
+        validateEntityToBeUpdatedAsync(user, entity, delta, options) {
+            assert.equal(options.option1, true);
+            validateEntityToBeUpdatedAsyncCount++;
+        }
+    };
+
+    let metaDatabase = new MetaDatabase({
+        sqlite: sqlite,
+        edm: edm,
+        databasePath: path,
+        decorators: [decorator]
+    });
+
+    let table = null;
+
+    return metaDatabase.getTableAsync("Source").then((t) => {
+        table = t;
+        return table.addEntityAsync(user, {
+            string: "Hello World!",
+            integer: 10
+        });
+    }).then((entity) => {
+        return table.updateEntityAsync(entity, { string: "Hello World 2" });
+    }).then(() => {
+        assert.equal(prepareEntityToBeUpdatedAsyncCount, 1);
+        assert.equal(entityUpdatedAsyncCount, 1);
+        assert.equal(validateEntityToBeUpdatedAsyncCount, 1);
+    });
+
+}
+
+exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, validateEntityToBeUpdatedAsync."] = () => {
+    let prepareEntityToBeUpdatedAsyncCount = 0;
+    let entityUpdatedAsyncCount = 0;
+    let validateEntityToBeUpdatedAsyncCount = 0;
+
+    let decorator = {
+        name: "Test",
+        prepareEntityToBeUpdatedAsync(user, entity, delta, options) {
+            assert.equal(options.option1, true);
+            prepareEntityToBeUpdatedAsyncCount++;
+            return Promise.resolve();
+        },
+        entityUpdatedAsync(user, entity, delta, options) {
+            assert.equal(options.option1, true);
+            entityUpdatedAsyncCount++;
+        },
+        validateEntityToBeUpdatedAsync(user, entity, delta, options) {
+            assert.equal(options.option1, true);
+            validateEntityToBeUpdatedAsyncCount++;
+        }
+    };
+
+    let metaDatabase = new MetaDatabase({
+        sqlite: sqlite,
+        edm: edm,
+        databasePath: path,
+        decorators: [decorator]
+    });
+
+    let table = null;
+
+    return metaDatabase.getTableAsync("Source").then((t) => {
+        table = t;
+        return table.addEntityAsync(user, {
+            string: "Hello World!",
+            integer: 10
+        });
+    }).then((entity) => {
+        return table.updateEntityAsync(user, entity, { string: "Hello World 2" });
+    }).then(() => {
+        assert.equal(prepareEntityToBeUpdatedAsyncCount, 1);
+        assert.equal(entityUpdatedAsyncCount, 1);
+        assert.equal(validateEntityToBeUpdatedAsyncCount, 1);
+    });
+
+}
+
+exports["MetaDatabase: approveEntityToBeRemovedAsync, entityRemovedAsync."] = () => {
+    let approveEntityToBeRemovedAsyncCount = 0;
+    let entityRemovedAsyncCount = 0;
+
+    let decorator = {
+        name: "Test",
+        approveEntityToBeRemovedAsync(user, entity, options) {
+            assert.equal(options.option1, true);
+            approveEntityToBeRemovedAsyncCount++;
+            return Promise.resolve();
+        },
+        entityRemovedAsync(user, entity, options) {
+            assert.equal(options.option1, true);
+            entityRemovedAsyncCount++;
+        }
+    };
+
+    let metaDatabase = new MetaDatabase({
+        sqlite: sqlite,
+        edm: edm,
+        databasePath: path,
+        decorators: [decorator]
+    });
+
+    let table = null;
+
+    return metaDatabase.getTableAsync("Source").then((t) => {
+        table = t;
+        return table.addEntityAsync(user, {
+            string: "Hello World!",
+            integer: 10
+        });
+    }).then((entity) => {
+        return table.removeEntityAsync(user, entity);
+    }).then(() => {
+        assert.equal(approveEntityToBeRemovedAsyncCount, 1);
+        assert.equal(entityRemovedAsyncCount, 1);
+    });
+
+}
+
+exports["MetaDatabase: refineQueryableAsync."] = () => {
+    let decorator = {
+        name: "Test",
+        refineQueryableAsync(user, queryable, options) {
             if (user.isAdmin) {
                 return queryable;
             } else {

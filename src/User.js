@@ -1,7 +1,8 @@
 export default class User {
-    constructor(){
+    constructor() {
         this.id = null;
         this.name = null;
         this.isAdmin = false;
+        this.groups = [];
     }
 }

@@ -1,6 +1,7 @@
 import Table from "./sqlite/Table"
 import MetaProvider from "./MetaProvider";
 import Queryable from "./query/Queryable";
+import User from "./User";
 
 const defaultDecorators = {
     name: null,
@@ -30,6 +31,12 @@ export default class MetaTable {
         return this._invokeMethodOnDecoratorsAsync("approveEntityToBeRemovedAsync", [user, entity]).then(() => {
             return entity;
         });
+    }
+
+    _assertUser(user) {
+        if (!(user instanceof User)) {
+            throw new Error("Illegal Argument Exception: user needs to be an instance of User.");
+        }
     }
 
     _entityAddedAsync(user, entity) {
@@ -118,7 +125,7 @@ export default class MetaTable {
         return this._invokeMethodOnDecoratorsAsync("prepareEntityToBeAddedAsync", [user, entity]);
     }
 
-    _prepareEntityToBeUpdatedAsync(user, entity) {
+    _prepareEntityToBeUpdatedAsync(user, entity, delta) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then((delta) => {
                 let options = this.decoratorOptions[decorator.name];
@@ -149,16 +156,20 @@ export default class MetaTable {
     }
 
     addEntityAsync(user, entity) {
+        this._assertUser(user);
+
         return this._prepareEntityToBeAddedAsync(user, entity).then(() => {
             return this._validateEntityToBeAddedAsync(user, entity);
         }).then(() => {
             return this.table.addEntityAsync(entity);
-        }).then(() => {
+        }).then((entity) => {
             return this._entityAddedAsync(user, entity);
         });
     }
 
     asQueryable(user) {
+        this._assertUser(user);
+
         let provider = this.getQueryProvider(user);
         let queryable = new Queryable();
 
@@ -168,19 +179,25 @@ export default class MetaTable {
     }
 
     getQueryProvider(user) {
+        this._assertUser(user);
+
         return new MetaProvider(user, this);
     }
 
-    removedEntityAsync(user, entity) {
+    removeEntityAsync(user, entity) {
+        this._assertUser(user);
+
         Object.freeze(entity);
         return this._approveEntityToBeRemovedAsync(user, entity).then(() => {
-            return this.table.removedEntityAsync(entity);
+            return this.table.removeEntityAsync(entity);
         }).then(() => {
             return this._entityRemovedAsync(user, entity);
         });
     }
 
     updateEntityAsync(user, entity, delta) {
+        this._assertUser(user);
+
         Object.freeze(entity);
         let updatedEntity;
 

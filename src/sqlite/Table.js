@@ -62,6 +62,13 @@ export default class Table {
         });
     }
 
+    asQueryable() {
+        let queryable = new Queryable(this.name);
+        queryable.provider = this.provider;
+
+        return queryable;
+    }
+
     createAsync() {
         var tableStatement = this.tableStatementBuilder.createTableStatement(this.table, this.edm.relationships);
         var indexesStatements = this.tableStatementBuilder.createTableIndexesStatements(this.table, this.edm.relationships);
@@ -77,6 +84,11 @@ export default class Table {
         return this.sqliteDatabase.run(statement);
     }
 
+    getQueryProvider() {
+        return this.provider;
+    }
+
+
     removeEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createDeleteStatement(this.table, entity);
 
@@ -89,19 +101,7 @@ export default class Table {
         var sql = this.tableStatementBuilder.createUpdateStatement(this.table, entity, delta);
 
         return this.sqliteDatabase.run(sql.statement, sql.values).then((statement) => {
-            return Object.assign(entity, delta);
+            return Object.assign({}, entity, delta);
         });
     }
-
-    asQueryable() {
-        let queryable = new Queryable(this.name);
-        queryable.provider = this.provider;
-
-        return queryable;
-    }
-
-    getQueryProvider() {
-        return this.provider;
-    }
-
 }
