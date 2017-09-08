@@ -132,16 +132,16 @@ exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, valida
 
     let decorator = {
         name: "Test",
-        prepareEntityToBeUpdatedAsync(user, entity, delta, options) {
+        prepareEntityToBeUpdatedAsync(type, entity, delta, options) {
             assert.equal(options.option1, true);
             prepareEntityToBeUpdatedAsyncCount++;
             return Promise.resolve();
         },
-        entityUpdatedAsync(user, entity, delta, options) {
+        entityUpdatedAsync(type, entity, delta, options) {
             assert.equal(options.option1, true);
             entityUpdatedAsyncCount++;
         },
-        validateEntityToBeUpdatedAsync(user, entity, delta, options) {
+        validateEntityToBeUpdatedAsync(type, entity, delta, options) {
             assert.equal(options.option1, true);
             validateEntityToBeUpdatedAsyncCount++;
         }
