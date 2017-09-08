@@ -66,6 +66,12 @@ export default class MetaTable {
         });
     }
 
+    _getPrimaryKeyName() {
+        return this._getEdmTable(this.name).columns.find((column) => {
+            return column.isPrimaryKey;
+        });
+    }
+
     _invokeMethodAsync(obj, method, args = []) {
         if (obj != null && typeof obj[method] === "function") {
             var result = obj[method].apply(obj, args);
@@ -179,6 +185,14 @@ export default class MetaTable {
         return queryable;
     }
 
+    getFileByIdAsync(user, id) {
+        
+    }
+
+    getEntityByIdAsync(user, id) {
+
+    }
+
     getQueryProvider(user) {
         this._assertUser(user);
 
@@ -194,6 +208,14 @@ export default class MetaTable {
         }).then(() => {
             return this._entityRemovedAsync(user, entity);
         });
+    }
+
+    removeFileByIdAsync(user, id) {
+
+    }
+
+    saveFileByIdAsync(user, id, stream) {
+
     }
 
     updateEntityAsync(user, entity, delta) {

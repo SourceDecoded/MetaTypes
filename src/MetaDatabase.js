@@ -109,7 +109,7 @@ export default class MetaDatabase {
     getTableAsync(name) {
         return this.readyPromise.then(() => {
             return this.tables[name] || null;
-        })
+        });
     }
 
     getTablesAsync() {

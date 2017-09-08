@@ -1,3 +1,5 @@
+import dataTypeMapping from "./dataTypeMapping";
+
 const defaultRelationships = {
     oneToOne: [],
     oneToMany: []
@@ -5,17 +7,7 @@ const defaultRelationships = {
 
 export default class TableStatementBuilder {
     constructor() {
-        this.dataTypeMapping = {
-            "String": "TEXT",
-            "Number": "NUMERIC",
-            "Boolean": "NUMERIC",
-            "Float": "REAL",
-            "Decimal": "REAL",
-            "Double": "REAL",
-            "Integer": "INTEGER",
-            "Date": "NUMERIC",
-            "Enum": "NUMERIC"
-        };
+        this.dataTypeMapping = dataTypeMapping;
     }
 
     _escapeName(name) {

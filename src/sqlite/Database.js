@@ -1,4 +1,7 @@
 import Table from "./Table";
+import EdmValidator from "./EdmValidator"
+
+const edmValidator = new EdmValidator();
 
 export default class Database {
     constructor(options = {}) {
@@ -17,6 +20,7 @@ export default class Database {
         this.sqliteDatabase = sqliteDatabase;
         this.tables = {};
 
+        edmValidator.validate(edm);
         this._createTables();
     }
 
@@ -94,8 +98,8 @@ export default class Database {
         return this.tables[name];
     }
 
-    getTables(){
-        return Object.keys(this.tables).map((name)=>{
+    getTables() {
+        return Object.keys(this.tables).map((name) => {
             return this.tables[name];
         });
     }

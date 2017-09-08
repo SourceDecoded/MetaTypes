@@ -103,7 +103,6 @@ const edm = {
     ],
     "relationships": {
         "oneToOne": [{
-            "id": 1,
             "type": "Source",
             "hasKey": "id",
             "hasOneLabel": "Foreigner",
@@ -115,7 +114,6 @@ const edm = {
             "withOneLabel": "Source"
         }],
         "oneToMany": [{
-            "id": 1,
             "type": "Source",
             "hasKey": "id",
             "hasManyLabel": "Foreigners",
