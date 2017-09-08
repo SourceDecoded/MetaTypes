@@ -1,7 +1,7 @@
 import Database from "./sqlite/Database";
 import MetaDatabase from "./MetaDatabase";
 
-export default class MetaDatabaseManager {
+export default class MetaSystem {
     constructor({ decorators = [], edmDatabase = null, fileSystem = null, sqlite = null } = {}) {
 
         if (edmDatabase == null) {

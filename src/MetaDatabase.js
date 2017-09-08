@@ -50,7 +50,7 @@ export default class MetaDatabase {
     _initializeEdmAsync(edm) {
         let decoratedEdm = JSON.parse(JSON.stringify(edm));
 
-        if (edm.isDecorated) {
+        if (edm.isInitialized) {
             this.edm = this.decoratedEdm;
             return Promise.resolve(decoratedEdm);
         } else {
@@ -66,12 +66,12 @@ export default class MetaDatabase {
                 this.edm = edm;
                 let databasePromise = this._createDatabaseAsync(edm);
 
-                if (!edm.isDecorated) {
+                if (!edm.isInitialized) {
                     databasePromise = databasePromise.then((newDatabase) => {
                         database = newDatabase;
                         return newDatabase.createAsync();
                     }).then(() => {
-                        this.edm.isDecorated = true;
+                        this.edm.isInitialized = true;
                     })
                 }
 
