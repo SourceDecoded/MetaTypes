@@ -5,6 +5,7 @@ import edm from "./../mock/edm";
 import sqlite from "sqlite";
 import GuestUser from "./../GuestUser";
 import AdminUser from "./../AdminUser";
+import FileSystem from "./../mock/FileSystem";
 
 let path = ":memory:";
 let user = new GuestUser();
@@ -12,8 +13,10 @@ let admin = new AdminUser();
 
 exports["MetaDatabase: prepareEdmAsync"] = () => {
     let hasCalledPrepareEdmAsync = false;
+    let fileSystem = new FileSystem();
 
     let metaDatabase = new MetaDatabase({
+        fileSystem: fileSystem,
         sqlite: sqlite,
         edm: edm,
         databasePath: path,
@@ -34,6 +37,7 @@ exports["MetaDatabase: prepareEntityToBeAddedAsync, entityAddedAsync, validateEn
     let prepareEntityToBeAddedAsyncCount = 0;
     let entityAddedAsyncCount = 0;
     let validateEntityToBeAddedAsyncCount = 0;
+    let fileSystem = new FileSystem();
 
     let decorator = {
         name: "Test",
@@ -53,6 +57,7 @@ exports["MetaDatabase: prepareEntityToBeAddedAsync, entityAddedAsync, validateEn
     };
 
     let metaDatabase = new MetaDatabase({
+        fileSystem: fileSystem,
         sqlite: sqlite,
         edm: edm,
         databasePath: path,
@@ -82,6 +87,7 @@ exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, valida
     let prepareEntityToBeUpdatedAsyncCount = 0;
     let entityUpdatedAsyncCount = 0;
     let validateEntityToBeUpdatedAsyncCount = 0;
+    let fileSystem = new FileSystem();
 
     let decorator = {
         name: "Test",
@@ -101,6 +107,7 @@ exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, valida
     };
 
     let metaDatabase = new MetaDatabase({
+        fileSystem: fileSystem,
         sqlite: sqlite,
         edm: edm,
         databasePath: path,
@@ -129,6 +136,7 @@ exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, valida
     let prepareEntityToBeUpdatedAsyncCount = 0;
     let entityUpdatedAsyncCount = 0;
     let validateEntityToBeUpdatedAsyncCount = 0;
+    let fileSystem = new FileSystem();
 
     let decorator = {
         name: "Test",
@@ -148,6 +156,7 @@ exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, valida
     };
 
     let metaDatabase = new MetaDatabase({
+        fileSystem: fileSystem,
         sqlite: sqlite,
         edm: edm,
         databasePath: path,
@@ -175,6 +184,7 @@ exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, valida
 exports["MetaDatabase: approveEntityToBeRemovedAsync, entityRemovedAsync."] = () => {
     let approveEntityToBeRemovedAsyncCount = 0;
     let entityRemovedAsyncCount = 0;
+    let fileSystem = new FileSystem();
 
     let decorator = {
         name: "Test",
@@ -190,6 +200,7 @@ exports["MetaDatabase: approveEntityToBeRemovedAsync, entityRemovedAsync."] = ()
     };
 
     let metaDatabase = new MetaDatabase({
+        fileSystem: fileSystem,
         sqlite: sqlite,
         edm: edm,
         databasePath: path,
@@ -214,6 +225,7 @@ exports["MetaDatabase: approveEntityToBeRemovedAsync, entityRemovedAsync."] = ()
 }
 
 exports["MetaDatabase: refineQueryableAsync."] = () => {
+    let fileSystem = new FileSystem();
     let decorator = {
         name: "Test",
         refineQueryableAsync(user, queryable, options) {
@@ -228,6 +240,7 @@ exports["MetaDatabase: refineQueryableAsync."] = () => {
     };
 
     let metaDatabase = new MetaDatabase({
+        fileSystem: fileSystem,
         sqlite: sqlite,
         edm: edm,
         databasePath: path,

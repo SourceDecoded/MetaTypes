@@ -11,10 +11,24 @@ const defaultDecorators = {
 };
 
 export default class MetaTable {
-    constructor({ table = null, decorators = [] } = {}) {
+    constructor({
+        table = null,
+        decorators = [],
+        fileSystem = null
+         } = {}) {
+
+        if (table == null) {
+            throw new Error("Null Argument Exception: MetaTable needs to have a table.");
+        }
+
+        if (fileSystem == null) {
+            throw new Error("Null Argument Exception: MetaTable needs to have a fileSystem.");
+        }
+
         this.table = table;
         this.name = table.name;
         this.edm = table.edm;
+        this.fileSystem = fileSystem;
         this.edmTable = this._getEdmTable(this.name);
         this.decoratorOptions = {};
         this.decorators = decorators.filter((decorator) => {
@@ -70,6 +84,10 @@ export default class MetaTable {
         return this._getEdmTable(this.name).columns.find((column) => {
             return column.isPrimaryKey;
         });
+    }
+
+    _getFilePathById(id) {
+        return `${this.edm.name}_${this.edm.version}_${this.edmTable.name}_${id}`;
     }
 
     _invokeMethodAsync(obj, method, args = []) {
@@ -185,12 +203,25 @@ export default class MetaTable {
         return queryable;
     }
 
-    getFileByIdAsync(user, id) {
-        
+    getReadStreamByIdAsync(user, id) {
+        return getEntityByIdAsync(user, id).then((entity) => {
+            return this.fileSystem.getReadStreamAsync(this._getFilePathById(id));
+        });
+    }
+
+    getWriteStreamByIdAsync(user, id) {
+        return getEntityByIdAsync(user, id).then((entity) => {
+            return this.fileSystem.getWriteStreamAsync(this._getFilePathById(id));
+        });
     }
 
     getEntityByIdAsync(user, id) {
-
+        let primaryKey = this._getPrimaryKeyName();
+        return this.asQueryable(user).where((expBuilder) => {
+            return expBuilder.property(primaryKey).isEqualTo(id);
+        }).toArrayAsync().then((results) => {
+            return results[0] || null;
+        });
     }
 
     getQueryProvider(user) {
@@ -204,6 +235,10 @@ export default class MetaTable {
 
         Object.freeze(entity);
         return this._approveEntityToBeRemovedAsync(user, entity).then(() => {
+            return this.removeFileByIdAsync(user, entity[this._getPrimaryKeyName()]).catch((error) => {
+                return;
+            });
+        }).then(() => {
             return this.table.removeEntityAsync(entity);
         }).then(() => {
             return this._entityRemovedAsync(user, entity);
@@ -211,11 +246,9 @@ export default class MetaTable {
     }
 
     removeFileByIdAsync(user, id) {
-
-    }
-
-    saveFileByIdAsync(user, id, stream) {
-
+        return this.getEntityByIdAsync(user, id).then(() => {
+            return this.fileSystem.removeFileAsync(this._getFilePathById(id));
+        });
     }
 
     updateEntityAsync(user, entity, delta) {

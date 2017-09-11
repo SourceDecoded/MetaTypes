@@ -5,7 +5,13 @@ import fileSystem from "fs";
 
 export default class MetaDatabase {
 
-    constructor({ decorators = [], sqlite = null, databasePath = null, edm = null } = {}) {
+    constructor({
+        decorators = [],
+        sqlite = null,
+        databasePath = null,
+        edm = null,
+        fileSystem = null
+         } = {}) {
         if (!Array.isArray(decorators)) {
             throw new Error("Invalid Argument: decorators needs to be an array.");
         }
@@ -22,12 +28,17 @@ export default class MetaDatabase {
             throw new Error("Null Argument Exception: MetaDatabase needs to have a edm.");
         }
 
+        if (fileSystem == null) {
+            throw new Error("Null Argument Exception: MetaDatabase needs to have a fileSystem.");
+        }
+
         this.decorators = decorators;
         this.databasePath = databasePath;
         this.sqlite = sqlite;
         this.edm = edm;
         this.name = this.edm.name;
         this.version = this.edm.version;
+        this.fileSystem = fileSystem;
         this.tables = {};
         this.readyPromise = null;
 
@@ -81,7 +92,8 @@ export default class MetaDatabase {
                 database.getTables().forEach((table) => {
                     this.tables[table.name] = new MetaTable({
                         table: table,
-                        decorators: this.decorators
+                        decorators: this.decorators,
+                        fileSystem: this.fileSystem
                     });
                 });
 
