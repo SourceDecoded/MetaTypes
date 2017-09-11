@@ -25,6 +25,22 @@ exports["sqlite.Visitor: IsEqualTo."] = () => {
     assert.equal(statement, 'SELECT "Source"."id" AS "Source___id", "Source"."string" AS "Source___string", "Source"."number" AS "Source___number", "Source"."date" AS "Source___date", "Source"."boolean" AS "Source___boolean", "Source"."float" AS "Source___float" FROM "Source" WHERE ("Source"."string" = \'Hello World\') LIMIT -1 OFFSET 0');
 }
 
+exports["sqlite.Visitor: Query nested object but don't bring back the data."] = () => {
+
+    let visitor = new Visitor("Source", edm);
+    let queryable = new Queryable("Source");
+
+    queryable = queryable.where((expBuilder) => {
+        return expBuilder.property("foreigner").property("string").isEqualTo("Hello World");
+    });
+
+    let query = queryable.getQuery();
+
+    let statement = visitor.createSelectStatement(query);
+
+    assert.equal(statement, 'SELECT "Source"."id" AS "Source___id", "Source"."string" AS "Source___string", "Source"."number" AS "Source___number", "Source"."date" AS "Source___date", "Source"."boolean" AS "Source___boolean", "Source"."float" AS "Source___float" FROM "Source" LEFT JOIN "OtherForeign" ON "Source"."id" = "OtherForeign"."foreignKey" WHERE ("OtherForeign"."string" = \'Hello World\') LIMIT -1 OFFSET 0');
+}
+
 exports["sqlite.Visitor: Include nested object."] = () => {
 
     let visitor = new Visitor("Source", edm);

@@ -1,13 +1,15 @@
 import path from "path";
-import fileSystem from "fs-extra";
+import defaultFileSystem from "fs-extra";
 
 export default class LocalFileSystem {
-    constructor({ rootFilePath }) {
+    constructor({ rootFilePath, fileSystem }) {
+
         if (rootFilePath == null) {
             throw new Error("Null Argument Exception: File System needs to have a rootFilePath.");
         }
 
         this.rootFilePath = rootFilePath;
+        this.fileSystem = fileSystem || defaultFileSystem;
     }
 
     getReadStreamAsync(path) {

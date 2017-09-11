@@ -9,6 +9,7 @@ export default class Visitor extends ExpressionVisitor {
         this.currentNavigationTable = this.table;
         this.joinClauses = [];
         this.tableTypes = new Map();
+        this.isParsingInclude = false;
 
         this.dataConverter = {
             convertString: (value) => {
@@ -199,20 +200,11 @@ export default class Visitor extends ExpressionVisitor {
         this.tableTypes.set(this.table.name, this.table);
 
         let where = this.parse(query.where);
-        let orderBy = this.parse(query.orderBy);
-        let include = this.parse(query.include);
-
-        if (where && include) {
-            where = where + " AND " + include;
-        } else if (!where && include) {
-            where = include;
-        }
 
         queryParts.push(
             "SELECT COUNT(*) AS \"" + countAlias + "\" FROM " + this._escapeIdentifier(this.table.name),
             this.joinClauses.join(" "),
-            where,
-            orderBy
+            where
         );
 
         return queryParts.join(" ");
@@ -228,9 +220,13 @@ export default class Visitor extends ExpressionVisitor {
 
         let where = this.parse(query.where);
         let orderBy = this.parse(query.orderBy);
-        let include = this.parse(query.include);
         let skip = this.parse(query.skip);
         let take = this.parse(query.take);
+        
+        this.isParsingInclude = true;
+        let include = this.parse(query.include);
+        this.isParsingInclude = false;
+        
         let columnAliases = this.makeColumnAliases(this.tableTypes);
         let joinClause = this.joinClauses.length > 0 ? this.joinClauses.join(" ") : "";
 
@@ -396,7 +392,9 @@ export default class Visitor extends ExpressionVisitor {
         let navigationProperties = null;
 
         if (propertyTable) {
-            this.tableTypes.set(propertyTable.name, propertyTable);
+            if (this.isParsingInclude) {
+                this.tableTypes.set(propertyTable.name, propertyTable);
+            }
             this._addJoinClause(propertyData.joinClause);
             this.currentNavigationTable = propertyTable;
             navigationProperties = this._getNavigationProperties(this.edm, propertyTable);
