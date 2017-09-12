@@ -80,10 +80,14 @@ export default class MetaTable {
         });
     }
 
-    _getPrimaryKeyName() {
+    _getPrimaryKeyColumn() {
         return this._getEdmTable(this.name).columns.find((column) => {
             return column.isPrimaryKey;
         });
+    }
+
+    _getPrimaryKeyName() {
+        return this._getPrimaryKeyColumn().name;
     }
 
     _getFilePathById(id) {
@@ -203,15 +207,28 @@ export default class MetaTable {
         return queryable;
     }
 
+    getFileSizeByIdAsync(user, id) {
+        return this.getEntityByIdAsync(user, id).then((entity) => {
+            return this.getFileSizeAsync(this._getFilePathById(id));
+        });
+    }
+
     getReadStreamByIdAsync(user, id) {
-        return getEntityByIdAsync(user, id).then((entity) => {
+        return this.getEntityByIdAsync(user, id).then((entity) => {
             return this.fileSystem.getReadStreamAsync(this._getFilePathById(id));
         });
     }
 
     getWriteStreamByIdAsync(user, id) {
-        return getEntityByIdAsync(user, id).then((entity) => {
-            return this.fileSystem.getWriteStreamAsync(this._getFilePathById(id));
+        return this.getEntityByIdAsync(user, id).then((entity) => {
+            let filePath = this._getFilePathById(id);
+            let writable = this.fileSystem.getWriteStreamAsync(filePath);
+
+            writable.on("end", () => {
+                this._invokeMethodWithRecoveryOnDecoratorsAsync("fileUpdatedAsync", [id, filePath]);
+            });
+
+            return writable;
         });
     }
 
@@ -235,7 +252,9 @@ export default class MetaTable {
 
         Object.freeze(entity);
         return this._approveEntityToBeRemovedAsync(user, entity).then(() => {
-            return this.removeFileByIdAsync(user, entity[this._getPrimaryKeyName()]).catch((error) => {
+            let primaryKey = this._getPrimaryKeyName();
+
+            return this.removeFileByIdAsync(user, entity[primaryKey]).catch((error) => {
                 return;
             });
         }).then(() => {
@@ -246,8 +265,12 @@ export default class MetaTable {
     }
 
     removeFileByIdAsync(user, id) {
+        let filePath = this._getFilePathById(id);
+
         return this.getEntityByIdAsync(user, id).then(() => {
-            return this.fileSystem.removeFileAsync(this._getFilePathById(id));
+            return this.fileSystem.removeFileAsync(filePath);
+        }).then(() => {
+            return _invokeMethodWithRecoveryOnDecoratorsAsync("fileRemovedAsync", [id, filePath]);
         });
     }
 

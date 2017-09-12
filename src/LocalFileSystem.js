@@ -26,4 +26,10 @@ export default class LocalFileSystem {
         return Promise.resolve(fileStream);
     }
 
+    getFileSizeAsync(path) {
+        return fileSystem.stat().then((stat) => {
+            return stat.size;
+        })
+    }
+
 }

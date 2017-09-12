@@ -48,3 +48,17 @@ exports["mock.FileSystem: removeFileAsync"] = () => {
         assert.equal(fileSystem.files[fileName], null);
     });
 }
+
+exports["mock.FileSystem: getFileSizeAsync"] = () => {
+    let fileSystem = new FileSystem();
+    let fileName = "Mock File.txt";
+    let fileContent = "Hello World!";
+
+    fileSystem.files[fileName] = fileContent;
+
+    let size = Buffer.byteLength(fileContent, 'utf8');
+
+    fileSystem.getFileSizeAsync(fileName).then((s) => {
+        assert.equal(s, size);
+    });
+}

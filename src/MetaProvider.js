@@ -1,3 +1,5 @@
+import { Queryable } from "queryablejs";
+
 export default class MetaProvider {
     constructor(user, metaTable) {
         this.metaTable = metaTable;
@@ -22,16 +24,29 @@ export default class MetaProvider {
 
     _refineQueryableAsync(queryable) {
         let user = this.user;
+        let previousQueryable = queryable;
+
         return this.decorators.reduce((promise, decorator) => {
             return promise.then((queryable) => {
+                previousQueryable = queryable;
+
                 let options = this.metaTable.decoratorOptions[decorator.name];
                 let result = this._invokeMethodAsync(decorator, "refineQueryableAsync", [user, queryable, options]);
+
+                if (result == null) {
+                    result = queryable;
+                }
 
                 if (!(result instanceof Promise)) {
                     return Promise.resolve(result);
                 }
 
                 return result;
+            }).then((queryable) => {
+                if (!(queryable instanceof Queryable)) {
+                    return previousQueryable;
+                }
+                return queryable;
             });
         }, Promise.resolve(queryable));
     }

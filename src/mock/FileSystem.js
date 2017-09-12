@@ -1,4 +1,5 @@
 import { Readable, Writable } from "stream";
+import { Buffer } from "buffer";
 
 class FileWritable extends Writable {
     constructor(files, path) {
@@ -45,5 +46,13 @@ export default class FileSystem {
         this.files[path] = null;
 
         return Promise.resolve();
+    }
+
+    getFileSizeAsync(path) {
+        if (this.files[path] == null) {
+            throw new Error("File didn't exist.");
+        }
+
+        return Promise.resolve(Buffer.byteLength(this.files[path], 'utf8'));
     }
 }
