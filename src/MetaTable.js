@@ -138,7 +138,7 @@ export default class MetaTable {
         }, Promise.resolve());
     }
 
-    _invokeMethodWithRecoveryOnDecoratorsAsync(user, method, args) {
+    _invokeMethodWithRecoveryOnDecoratorsAsync(user, method, args = []) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then(() => {
                 let options = Object.assign({ user: user }, this.decoratorOptions[decorator.name]);
@@ -213,21 +213,20 @@ export default class MetaTable {
         });
     }
 
-    getReadStreamByIdAsync(user, id) {
+    getFileReadStreamByIdAsync(user, id) {
         return this.getEntityByIdAsync(user, id).then((entity) => {
             return this.fileSystem.getReadStreamAsync(this._getFilePathById(id));
         });
     }
 
-    getWriteStreamByIdAsync(user, id) {
+    getFileWriteStreamByIdAsync(user, id) {
+        let filePath = this._getFilePathById(id);
         return this.getEntityByIdAsync(user, id).then((entity) => {
-            let filePath = this._getFilePathById(id);
-            let writable = this.fileSystem.getWriteStreamAsync(filePath);
-
-            writable.on("end", () => {
-                this._invokeMethodWithRecoveryOnDecoratorsAsync("fileUpdatedAsync", [id, filePath]);
+            return this.fileSystem.getWriteStreamAsync(filePath);
+        }).then((writable) => {
+            writable.on("finish", () => {
+                this._invokeMethodWithRecoveryOnDecoratorsAsync(user, "fileUpdatedAsync", [id, filePath]);
             });
-
             return writable;
         });
     }
@@ -237,7 +236,11 @@ export default class MetaTable {
         return this.asQueryable(user).where((expBuilder) => {
             return expBuilder.property(primaryKey).isEqualTo(id);
         }).toArrayAsync().then((results) => {
-            return results[0] || null;
+            if (results.length === 1) {
+                return results[0];
+            }
+
+            throw new Error("Entity Not Found");
         });
     }
 
@@ -270,7 +273,7 @@ export default class MetaTable {
         return this.getEntityByIdAsync(user, id).then(() => {
             return this.fileSystem.removeFileAsync(filePath);
         }).then(() => {
-            return _invokeMethodWithRecoveryOnDecoratorsAsync("fileRemovedAsync", [id, filePath]);
+            return this._invokeMethodWithRecoveryOnDecoratorsAsync(user, "fileRemovedAsync", [id, filePath]);
         });
     }
 

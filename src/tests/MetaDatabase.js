@@ -224,6 +224,66 @@ exports["MetaDatabase: approveEntityToBeRemovedAsync, entityRemovedAsync."] = ()
 
 }
 
+exports["MetaDatabase: file life cycle."] = () => {
+    let fileSystem = new FileSystem();
+    let fileUpdatedAsyncCount = 0;
+    let fileRemovedAsyncCount = 0;
+    let fileContent = "This is a file.";
+    let table;
+    let id;
+
+    let decorator = {
+        name: "Test",
+        fileUpdatedAsync(id, filePath) {
+            fileUpdatedAsyncCount++;
+        },
+        fileRemovedAsync(id, filePath) {
+            fileRemovedAsyncCount++;
+        }
+    };
+
+    let metaDatabase = new MetaDatabase({
+        fileSystem: fileSystem,
+        sqlite: sqlite,
+        edm: edm,
+        databasePath: path,
+        decorators: [decorator]
+    });
+
+    return metaDatabase.getTableAsync("Source").then((t) => {
+        table = t;
+        return table.addEntityAsync(user, {
+            string: "Hello World!"
+        });
+    }).then((entity) => {
+        id = entity.id;
+        return table.getFileWriteStreamByIdAsync(user, id);
+    }).then((stream) => {
+        stream.write(fileContent);
+        stream.end();
+    }).then(() => {
+        return table.getFileReadStreamByIdAsync(user, id);
+    }).then((stream) => {
+        return new Promise((resolve, reject) => {
+            let data = "";
+
+            stream.on("data", (d) => {
+                data += d;
+            });
+            stream.on("end", () => {
+                resolve(data);
+            });
+        });
+    }).then((data) => {
+        assert.equal(fileUpdatedAsyncCount, 1);
+        assert.equal(data, fileContent);
+    }).then(() => {
+        return table.removeFileByIdAsync(user, id);
+    }).then(() => {
+        assert.equal(fileRemovedAsyncCount, 1);
+    });
+};
+
 exports["MetaDatabase: refineQueryableAsync."] = () => {
     let fileSystem = new FileSystem();
     let decorator = {
