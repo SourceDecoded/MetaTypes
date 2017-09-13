@@ -3029,6 +3029,13 @@ var MetaDatabase = function () {
                     return databasePromise;
                 }).then(function () {
 
+                    return _this.decorators.reduce(function (promise, decorator) {
+                        return promise.then(function () {
+                            return _this._invokeOnDecoratorsAsync("activatedAsync", [_this]);
+                        });
+                    }, Promise.resolve());
+                }).then(function () {
+
                     database.getTables().forEach(function (table) {
                         _this.tables[table.name] = new _MetaTable2.default({
                             table: table,

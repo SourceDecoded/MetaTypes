@@ -89,6 +89,14 @@ export default class MetaDatabase {
                 return databasePromise;
             }).then(() => {
 
+                return this.decorators.reduce((promise, decorator) => {
+                    return promise.then(() => {
+                        return this._invokeOnDecoratorsAsync("activatedAsync", [this]);
+                    })
+                }, Promise.resolve());
+                
+            }).then(() => {
+
                 database.getTables().forEach((table) => {
                     this.tables[table.name] = new MetaTable({
                         table: table,
