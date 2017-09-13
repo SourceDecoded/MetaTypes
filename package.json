@@ -1,8 +1,8 @@
 {
   "name": "meta-database",
-  "version": "0.0.1",
-  "description": "",
-  "main": "./lib/index.js",
+  "version": "0.0.2",
+  "description": "Allows for you to decorate your databases with functionality.",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "node ./.clarity/test.js",
     "build": "node ./.clarity/build.js"
@@ -12,11 +12,12 @@
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.5.1",
     "child-process-es6-promise": "^1.1.0",
-    "fs-extra": "^3.0.1",
     "istanbul": "^0.4.5",
-    "jsdoc": "^3.4.3"
+    "jsdoc": "^3.4.3",
+    "webpack": "^3.5.6"
   },
   "dependencies": {
+    "fs-extra": "^3.0.1",
     "express": "^4.15.4",
     "queryablejs": "0.0.3",
     "sqlite": "^2.8.0"
