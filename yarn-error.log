@@ -1,0 +1,51 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn install
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet
+
+Yarn version: 
+  0.27.5
+
+Node version: 
+  6.10.2
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "meta-database",
+    "version": "0.0.1",
+    "description": "",
+    "main": "./lib/index.js",
+    "scripts": {
+      "test": "node ./.clarity/test.js",
+      "build": "node ./.clarity/build.js"
+    },
+    "keywords": [],
+    "devDependencies": {
+      "babel-cli": "^6.24.1",
+      "babel-preset-env": "^1.5.1",
+      "child-process-es6-promise": "^1.1.0",
+      "istanbul": "^0.4.5",
+      "jsdoc": "^3.4.3",
+      "webpack": "^3.5.6"
+    },
+    "dependencies": {
+      "fs-extra": "^3.0.1",
+      "express": "^4.15.4",
+      "queryablejs": "0.0.3",
+      "sqlite": "^2.8.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: EACCES: permission denied, mkdir '/Users/jaredbarnes/Library/Caches/Yarn/v1/npm-webpack-3.5.6-a492fb6c1ed7f573816f90e00c8fbb5a20cc5c36'
+      at Error (native)

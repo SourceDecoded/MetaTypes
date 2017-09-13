@@ -28,6 +28,14 @@
             ]
         },
         {
+            "taskName": "webpack",
+            "isBuildCommand": true,
+            "isTestCommand": true,
+            "args": [
+                "${workspaceRoot}/node_modules/webpack/bin/webpack.js"
+            ]
+        },
+        {
             "taskName": "coverage",
             "isBuildCommand": true,
             "isTestCommand": false,
