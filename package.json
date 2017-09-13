@@ -1,5 +1,5 @@
 {
-  "name": "meta-type-system",
+  "name": "meta-database",
   "version": "0.0.1",
   "description": "",
   "main": "./lib/index.js",
@@ -16,5 +16,9 @@
     "istanbul": "^0.4.5",
     "jsdoc": "^3.4.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.15.4",
+    "queryablejs": "0.0.3",
+    "sqlite": "^2.8.0"
+  }
 }

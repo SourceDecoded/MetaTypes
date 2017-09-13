@@ -1,88 +1,16 @@
 import * as assert from "assert";
+import edm from "./../mock/edm";
 import TableStatementBuilder from "./../sqlite/TableStatementBuilder";
 
-var sourceTable = {
-    "id": 1,
-    "name": "Source",
-    "label": "Source",
-    "pluralLabel": "Sources",
-    "columns": [
-        {
-            "id": 1,
-            "type": "Number", // Possible types: String, Number, Date, Boolean
-            "name": "id",
-            "isPrimaryKey": true, // Defaults to false
-            "isAutoIncrement": true, // Default to false
-            "isNullable": false // Default to true
-        },
-        {
-            "id": 2,
-            "type": "String",
-            "name": "string",
-            "defaultStringValue": ""
-        },
-        {
-            "id": 3,
-            "type": "Number",
-            "name": "number",
-            "defaultNumberValue": 1
-        },
-        {
-            "id": 4,
-            "type": "Date",
-            "name": "date",
-            "defaultDateValue": new Date(1900, 0, 1)
-        },
-        {
-            "id": 5,
-            "type": "Boolean",
-            "name": "boolean",
-            "defaultBooleanValue": false
-        },
-        {
-            "id": 6,
-            "type": "Float",
-            "name": "float",
-            "defaultFloatValue": false
-        },
-    ]
-};
+var sourceTable = edm.tables.find((table) => {
+    return table.name === "Source";
+});
 
-const foreignTable = {
-    "id": 1,
-    "name": "Foreign",
-    "label": "Foreign",
-    "pluralLabel": "Foreigners",
-    "columns": [
-        {
-            "id": 100,
-            "type": "Number", // Possible types: String, Number, Date, Boolean
-            "name": "id",
-            "isPrimaryKey": true, // Defaults to false
-            "isAutoIncrement": true, // Default to false
-            "isNullable": false // Default to true
-        },
-        {
-            "id": 101,
-            "type": "Integer",
-            "name": "foreignKey",
-        }
-    ]
-};
+const foreignTable = edm.tables.find((table) => {
+    return table.name === "Foreign";
+});
 
-const relationships = {
-    oneToOne: [],
-    oneToMany: [{
-        "id": 1,
-        "type": "Source",
-        "hasKey": "id",
-        "hasMany": "foreigners",
-        "ofType": "Foreign",
-        "withKey": "id",
-        "withForeignKey": "foreignKey",
-        "withOne": "source"
-    }]
-};
+const relationships = edm.relationships;
 
 exports["TableStatementBuilder: Constructor"] = () => {
     var builder = new TableStatementBuilder();
@@ -95,7 +23,7 @@ exports["TableStatementBuilder.createTableStatement: Without Relationships."] = 
 
     assert.equal(
         tableStatement,
-        "CREATE TABLE 'Source' ('id' NUMERIC PRIMARY KEY AUTOINCREMENT, 'string' TEXT, 'number' NUMERIC, 'date' NUMERIC, 'boolean' NUMERIC, 'float' REAL)"
+        'CREATE TABLE IF NOT EXISTS "Source" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "string" TEXT, "number" NUMERIC, "date" NUMERIC, "boolean" NUMERIC, "float" REAL)'
     )
 }
 
@@ -106,7 +34,7 @@ exports["TableStatementBuilder.createTableStatement: With Relationships."] = () 
 
     assert.equal(
         tableStatement,
-        "CREATE TABLE 'Foreign' ('id' NUMERIC PRIMARY KEY AUTOINCREMENT, 'foreignKey' INTEGER) FOREIGN KEY ('foreignKey') REFERENCES 'Source' ('id')"
+        `CREATE TABLE IF NOT EXISTS "Foreign" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "foreignKey" INTEGER, FOREIGN KEY ("foreignKey") REFERENCES "Source" ("id"))`
     )
 }
 
@@ -119,7 +47,8 @@ exports["TableStatementBuilder.createInsertStatement"] = () => {
 
     assert.equal(
         insertStatement.statement,
-        "INSERT INTO 'Source' ('string') VALUES (?)"
+        'INSERT INTO "Source" ("string") VALUES (?)'
+        
     );
 
     assert.equal(
@@ -135,7 +64,7 @@ exports["TableStatementBuilder.createInsertStatement: Defualt Values."] = () => 
 
     assert.equal(
         insertStatement.statement,
-        "INSERT INTO 'Source' DEFAULT VALUES"
+        'INSERT INTO "Source" DEFAULT VALUES'
     );
 
     assert.equal(
@@ -151,7 +80,7 @@ exports["TableStatementBuilder.createUpdateStatement"] = () => {
 
     assert.equal(
         updateStatement.statement,
-        "UPDATE 'Source' SET 'string' = ? WHERE 'id' = ?"
+        `UPDATE "Source" SET "string" = ? WHERE "id" = ?`
     );
 
     assert.equal(
@@ -178,7 +107,7 @@ exports["TableStatementBuilder.createDeleteStatement"] = () => {
 
     assert.equal(
         deleteStatement.statement,
-        "DELETE FROM 'Source' WHERE 'id' = ?"
+        `DELETE FROM "Source" WHERE "id" = ?`
     );
 
     assert.equal(
@@ -197,6 +126,6 @@ exports["TableStatementBuilder.createTableIndexesStatements"] = () => {
 
     var indexStatements = builder.createTableIndexesStatements(foreignTable, relationships);
 
-    assert.equal(indexStatements[0], "CREATE INDEX IF NOT EXIST 'id' ON 'Foreign' ('id')");
-    assert.equal(indexStatements[1], "CREATE INDEX IF NOT EXIST 'foreignKey' ON 'Foreign' ('foreignKey')");
+    assert.equal(indexStatements[0], `CREATE INDEX IF NOT EXISTS "id" ON "Foreign" ("id")`);
+    assert.equal(indexStatements[1], `CREATE INDEX IF NOT EXISTS "foreignKey" ON "Foreign" ("foreignKey")`);
 }

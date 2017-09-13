@@ -1,3 +1,5 @@
+import dataTypeMapping from "./dataTypeMapping";
+
 const defaultRelationships = {
     oneToOne: [],
     oneToMany: []
@@ -5,24 +7,14 @@ const defaultRelationships = {
 
 export default class TableStatementBuilder {
     constructor() {
-        this.dataTypeMapping = {
-            "String": "TEXT",
-            "Number": "NUMERIC",
-            "Boolean": "NUMERIC",
-            "Float": "REAL",
-            "Decimal": "REAL",
-            "Double": "REAL",
-            "Integer": "INTEGER",
-            "Date": "NUMERIC",
-            "Enum": "NUMERIC"
-        };
+        this.dataTypeMapping = dataTypeMapping;
     }
 
     _escapeName(name) {
-        return `'${name.replace(/\'/g, "''")}'`;
+        return `"${name.replace(/\"/g, '"')}"`;
     }
 
-    createDropTableStatment(table){
+    createDropTableStatment(table) {
         return `DROP TABLE IF EXISTS ${this._escapeName(table.name)}`;
     }
 
@@ -180,11 +172,11 @@ export default class TableStatementBuilder {
             return value != null;
         }).join(", ")
 
-        return `(${columnsDefinition})`;
+        return columnsDefinition;
     }
 
     createIndexStatement(table, column) {
-        return `CREATE INDEX IF NOT EXIST ${this._escapeName(column)} ON ${this._escapeName(table)} (${this._escapeName(column)})`;
+        return `CREATE INDEX IF NOT EXISTS ${this._escapeName(column)} ON ${this._escapeName(table)} (${this._escapeName(column)})`;
     }
 
     createTableIndexesStatements(table, relationships) {
@@ -217,7 +209,7 @@ export default class TableStatementBuilder {
     }
 
     createForeignKeyStatement(relationship) {
-        return `FOREIGN KEY ('${relationship.withForeignKey}') REFERENCES '${relationship.type}' ('${relationship.hasKey}')`;
+        return `FOREIGN KEY (${this._escapeName(relationship.withForeignKey)}) REFERENCES ${this._escapeName(relationship.type)} (${this._escapeName(relationship.hasKey)})`;
     }
 
     createPrimaryKeyStatement(table) {
@@ -239,11 +231,11 @@ export default class TableStatementBuilder {
         const foreignKeysStatement = this.createForeignKeysStatement(table, relationships);
 
         if (columnDefinitionsStatement && foreignKeysStatement) {
-            return `CREATE TABLE ${this._escapeName(table.name)} ${columnDefinitionsStatement} ${foreignKeysStatement}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} (${columnDefinitionsStatement}, ${foreignKeysStatement})`;
         } else if (columnDefinitionsStatement) {
-            return `CREATE TABLE ${this._escapeName(table.name)} ${columnDefinitionsStatement}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} (${columnDefinitionsStatement})`;
         } else {
-            return `CREATE TABLE ${this._escapeName(table.name)}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)}`;
         }
 
     }
@@ -279,7 +271,7 @@ export default class TableStatementBuilder {
         const filter = (relationship) => {
             const key = relationship.hasKey;
 
-            if (relationship.type === table.name && foreignKeyNames[key] == null) {
+            if (relationship.type === table.name && keyNames[key] == null) {
                 keyNames[key];
                 return true;
             }
@@ -314,12 +306,12 @@ export default class TableStatementBuilder {
         if (typeof value === "string") {
             return value;
         } else if (typeof value === "number") {
-            return value.toString();
+            return value;
         } else if (typeof value === "boolean") {
             return value ? 1 : 0;
         } else if (value instanceof Date) {
             return value.getTime();
-        } else if (value === null) {
+        } else if (value == null) {
             return null;
         } else {
             throw new Error("Unknown value.");

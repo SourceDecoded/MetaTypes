@@ -67,6 +67,6 @@ fs.readdir(testDirectory).then((files) => {
             });
         }
     });
-}).catch(() => {
+}).catch((error) => {
     console.log(`Couldn't find test folder here: ${testDirectory}`);
 });

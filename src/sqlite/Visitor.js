@@ -1,26 +1,28 @@
-import ExpressionVisitor from "./../query/Visitor";
+import { ExpressionVisitor } from "queryablejs";
 
-export default class Visitor {
+export default class Visitor extends ExpressionVisitor {
     constructor(name, edm) {
+        super();
         this.name = name;
         this.edm = edm;
         this.table = this._getTable(name);
         this.currentNavigationTable = this.table;
         this.joinClauses = [];
         this.tableTypes = new Map();
+        this.isParsingInclude = false;
 
         this.dataConverter = {
             convertString: (value) => {
-                return "'" + this._escape(value) + "'";
+                return `'${this._escape(value)}'`;
             },
             convertContainsString: (value) => {
-                return "'%" + this._escape(value) + "%'";
+                return `'%${this._escape(value)}%'`;
             },
             convertStartsWithString: (value) => {
-                return "'" + this._escape(value) + "%'";
+                return `'${this._escape(value)}%'`;
             },
             convertEndsWithString: (value) => {
-                return "'%" + this._escape(value) + "'";
+                return `'%${this._escape(value)}'`;
             },
             convertNumber: (value) => {
                 return value.toString();
@@ -42,16 +44,20 @@ export default class Visitor {
         }
     }
 
-    _escape = function (value) {
-        return `'${value.replace(/'/g, "''")}'`;
+    _escape(value) {
+        return `${value.replace(/'/g, "''")}`;
+    }
+
+    _escapeIdentifier(value) {
+        return `"${value.replace(/\"/g, '"')}"`;
     }
 
     _buildLeftJoinStatementFromSource(relationship) {
-        return `LEFT JOIN ${this._escape(relationship.ofType)} ON ${this._escape(relationship.type)}.${this._escape(relationship.hasKey)} = ${this._escape(relationship.ofType)}.${this._escape(relationship.withForeignKey)}`;
+        return `LEFT JOIN ${this._escapeIdentifier(relationship.ofType)} ON ${this._escapeIdentifier(relationship.type)}.${this._escapeIdentifier(relationship.hasKey)} = ${this._escapeIdentifier(relationship.ofType)}.${this._escapeIdentifier(relationship.withForeignKey)}`;
     }
 
     _buildLeftJoinStatementFromTarget(relationship) {
-        return `LEFT JOIN ${this._escape(relationship.type)} ON ${this._escape(relationship.ofType)}.${this._escape(relationship.withForeignKey)} = ${this._escape(relationship.type)}.${this._escape(relationship.hasKey)}`;
+        return `LEFT JOIN ${this._escapeIdentifier(relationship.type)} ON ${this._escapeIdentifier(relationship.ofType)}.${this._escapeIdentifier(relationship.withForeignKey)} = ${this._escapeIdentifier(relationship.type)}.${this._escapeIdentifier(relationship.hasKey)}`;
     };
 
     _getNavigationProperties(edm, table) {
@@ -99,7 +105,7 @@ export default class Visitor {
         return oneToOneRelationships.concat(oneToManyRelationships);
     }
 
-    _getRelationshipsAsTarget() {
+    _getRelationshipsAsTarget(table, relationships) {
         const filter = (relationship) => {
             return relationship.ofType === table.name;
         }
@@ -133,7 +139,7 @@ export default class Visitor {
     }
 
     _writeTableProperty(table, column) {
-        return this._escape(table) + "." + this._escape(column);
+        return this._escapeIdentifier(table) + "." + this._escapeIdentifier(column);
     }
 
     and() {
@@ -194,20 +200,11 @@ export default class Visitor {
         this.tableTypes.set(this.table.name, this.table);
 
         let where = this.parse(query.where);
-        let orderBy = this.parse(query.orderBy);
-        let include = this.parse(query.include);
-
-        if (where && include) {
-            where = where + " AND " + include;
-        } else if (!where && include) {
-            where = include;
-        }
 
         queryParts.push(
-            "SELECT COUNT(*) AS \"" + countAlias + "\" FROM " + this._escape(this.table.name),
+            "SELECT COUNT(*) AS \"" + countAlias + "\" FROM " + this._escapeIdentifier(this.table.name),
             this.joinClauses.join(" "),
-            where,
-            orderBy
+            where
         );
 
         return queryParts.join(" ");
@@ -223,10 +220,15 @@ export default class Visitor {
 
         let where = this.parse(query.where);
         let orderBy = this.parse(query.orderBy);
-        let include = this.parse(query.include);
         let skip = this.parse(query.skip);
         let take = this.parse(query.take);
+        
+        this.isParsingInclude = true;
+        let include = this.parse(query.include);
+        this.isParsingInclude = false;
+        
         let columnAliases = this.makeColumnAliases(this.tableTypes);
+        let joinClause = this.joinClauses.length > 0 ? this.joinClauses.join(" ") : "";
 
         if (where && include) {
             where = where + " AND " + include;
@@ -235,15 +237,17 @@ export default class Visitor {
         }
 
         queryParts.push(
-            "SELECT " + columnAliases + " FROM " + this._escape(this.table.name),
-            this.joinClauses.join(" "),
+            "SELECT " + columnAliases + " FROM " + this._escapeIdentifier(this.table.name),
+            joinClause,
             where,
             orderBy,
             take,
             skip
         );
 
-        return queryParts.join(" ");
+        return queryParts.filter((part) => {
+            return part != null && part != "";
+        }).join(" ");
     };
 
     date(expression) {
@@ -312,15 +316,18 @@ export default class Visitor {
     makeColumnAliases(map) {
         let columns = [];
 
-        return map.forEach((table) => {
+        map.forEach((table) => {
             let tableName = table.name;
 
-            Object.keys(table.columns).forEach((columnName) => {
-                columns.push(_escape(tableName) + "." + _escape(columnName) + " AS " + _escape(tableName + "___" + columnName));
+            table.columns.forEach((column) => {
+                let columnName = column.name;
+
+                columns.push(this._escapeIdentifier(tableName) + "." + this._escapeIdentifier(columnName) + " AS " + this._escapeIdentifier(tableName + "___" + columnName));
             });
 
-            return columns;
-        }, []).join(", ");
+        });
+
+        return columns.join(", ");
     }
 
     not(left, right) {
@@ -385,10 +392,12 @@ export default class Visitor {
         let navigationProperties = null;
 
         if (propertyTable) {
-            this.tableTypes.set(propertyTable.name, propertyTable);
+            if (this.isParsingInclude) {
+                this.tableTypes.set(propertyTable.name, propertyTable);
+            }
             this._addJoinClause(propertyData.joinClause);
             this.currentNavigationTable = propertyTable;
-            navigationProperties = getNavigationProperties(this.edm, propertyTable);
+            navigationProperties = this._getNavigationProperties(this.edm, propertyTable);
         }
 
         return {
@@ -406,7 +415,7 @@ export default class Visitor {
     };
 
     skip(value) {
-        return " OFFSET " + value;
+        return "OFFSET " + value;
     }
 
     startsWith(propertyAccessor, value) {
@@ -428,9 +437,9 @@ export default class Visitor {
 
     take(value) {
         if (value === Infinity) {
-            return " LIMIT -1";
+            return "LIMIT -1";
         } else {
-            return " LIMIT " + value;
+            return "LIMIT" + value;
         }
     }
 
