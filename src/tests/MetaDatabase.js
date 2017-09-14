@@ -224,6 +224,34 @@ exports["MetaDatabase: approveEntityToBeRemovedAsync, entityRemovedAsync."] = ()
 
 }
 
+exports["MetaDatabase: activatedAsync."] = () => {
+    let activatedAsyncCount = 0;
+    let fileSystem = new FileSystem();
+
+    let decorator = {
+        name: "Test",
+        activatedAsync(metaDatabase) {
+            assert.equal(metaDatabase != null, true);
+            activatedAsyncCount++;
+        }
+    };
+
+    let metaDatabase = new MetaDatabase({
+        fileSystem: fileSystem,
+        sqlite: sqlite,
+        edm: edm,
+        databasePath: path,
+        decorators: [decorator]
+    });
+
+    let table = null;
+
+    return metaDatabase.getTableAsync("Source").then(() => {
+        assert.equal(activatedAsyncCount, 1);
+    });
+
+};
+
 exports["MetaDatabase: file life cycle."] = () => {
     let fileSystem = new FileSystem();
     let fileUpdatedAsyncCount = 0;
