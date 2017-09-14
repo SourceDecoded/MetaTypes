@@ -42,7 +42,12 @@ export default class MetaDatabase {
         this.tables = {};
         this.readyPromise = null;
 
-        this._initializeAsync();
+    }
+
+    _assertInitialized() {
+        if (this.readyPromise == null) {
+            throw new Error("MetaDatabase isn't initialized yet. Invoke initializeAsync before invoking these methods.");
+        }
     }
 
     _createDatabaseAsync(edm) {
@@ -94,7 +99,7 @@ export default class MetaDatabase {
                         return this._invokeOnDecoratorsAsync("activatedAsync", [this]);
                     })
                 }, Promise.resolve());
-                
+
             }).then(() => {
 
                 database.getTables().forEach((table) => {
@@ -111,28 +116,52 @@ export default class MetaDatabase {
         return this.readyPromise;
     }
 
+    _invokeMethodAsync(obj, methodName, args = []) {
+        if (typeof obj[methodName] === "function") {
+            let value = obj[methodName].apply(obj, args);
+            if (!(value instanceof Promise)) {
+                return Promise.resolve(value);
+            }
+            return value;
+        }
+        return Promise.resolve();
+    }
+
     _invokeOnDecoratorsAsync(methodName, args) {
         return this.decorators.reduce((promise, decorator) => {
             return promise.then(() => {
-                if (typeof decorator[methodName] === "function") {
-                    let value = decorator[methodName].apply(decorator, args);
-                    if (!(value instanceof Promise)) {
-                        return Promise.resolve(value);
-                    }
-                    return value;
-                }
+                return this._invokeMethodAsync(decorator, methodName, args);
             });
 
         }, Promise.resolve());
     }
 
+    addDecoratorAsync(decorator) {
+        this.decorators.push(decorator);
+        this._invokeMethodAsync(decorator, "activatedAsync", [this]);
+    }
+
+    removeDecoratorAsync(decorator) {
+        let index = this.decorators.indexOf(decorator);
+
+        if (index > -1) {
+            this.decorators.splice(index, 1);
+
+            this._invokeMethodAsync(decorator, "deactivatedAsync", [this]);
+        }
+    }
+
     getTableAsync(name) {
+        this._assertInitialized();
+
         return this.readyPromise.then(() => {
             return this.tables[name] || null;
         });
     }
 
     getTablesAsync() {
+        this._assertInitialized();
+
         return this.readyPromise.then(() => {
             return Object.keys(this.tables).map((name) => {
                 return this.tables[name];
@@ -141,7 +170,7 @@ export default class MetaDatabase {
     }
 
     initializeAsync() {
-        return this.readyPromise;
+        return this._initializeAsync();
     }
 
 }

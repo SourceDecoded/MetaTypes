@@ -64,7 +64,9 @@ exports["MetaDatabase: prepareEntityToBeAddedAsync, entityAddedAsync, validateEn
         decorators: [decorator]
     });
 
-    return metaDatabase.getTableAsync("Source").then((table) => {
+    return metaDatabase.initializeAsync().then(() => {
+        return metaDatabase.getTableAsync("Source");
+    }).then((table) => {
         return table.addEntityAsync(user, {
             string: "Hello World!",
             integer: 10
@@ -116,7 +118,9 @@ exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, valida
 
     let table = null;
 
-    return metaDatabase.getTableAsync("Source").then((t) => {
+    return metaDatabase.initializeAsync().then(() => {
+        return metaDatabase.getTableAsync("Source");
+    }).then((t) => {
         table = t;
         return table.addEntityAsync(user, {
             string: "Hello World!",
@@ -165,7 +169,9 @@ exports["MetaDatabase: prepareEntityToBeUpdatedAsync, entityUpdatedAsync, valida
 
     let table = null;
 
-    return metaDatabase.getTableAsync("Source").then((t) => {
+    return metaDatabase.initializeAsync().then(() => {
+        return metaDatabase.getTableAsync("Source");
+    }).then((t) => {
         table = t;
         return table.addEntityAsync(user, {
             string: "Hello World!",
@@ -209,7 +215,9 @@ exports["MetaDatabase: approveEntityToBeRemovedAsync, entityRemovedAsync."] = ()
 
     let table = null;
 
-    return metaDatabase.getTableAsync("Source").then((t) => {
+    return metaDatabase.initializeAsync().then(() => {
+        return metaDatabase.getTableAsync("Source");
+    }).then((t) => {
         table = t;
         return table.addEntityAsync(user, {
             string: "Hello World!",
@@ -246,7 +254,9 @@ exports["MetaDatabase: activatedAsync."] = () => {
 
     let table = null;
 
-    return metaDatabase.getTableAsync("Source").then(() => {
+    return metaDatabase.initializeAsync().then(() => {
+        return metaDatabase.getTableAsync("Source");
+    }).then(() => {
         assert.equal(activatedAsyncCount, 1);
     });
 
@@ -278,7 +288,9 @@ exports["MetaDatabase: file life cycle."] = () => {
         decorators: [decorator]
     });
 
-    return metaDatabase.getTableAsync("Source").then((t) => {
+    return metaDatabase.initializeAsync().then(() => {
+        return metaDatabase.getTableAsync("Source");
+    }).then((t) => {
         table = t;
         return table.addEntityAsync(user, {
             string: "Hello World!"
@@ -337,7 +349,9 @@ exports["MetaDatabase: refineQueryableAsync."] = () => {
 
     let table = null;
 
-    return metaDatabase.getTableAsync("Source").then((t) => {
+    return metaDatabase.initializeAsync().then(() => {
+        return metaDatabase.getTableAsync("Source");
+    }).then((t) => {
         table = t;
 
         return table.addEntityAsync(user, {

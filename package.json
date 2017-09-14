@@ -1,6 +1,6 @@
 {
   "name": "meta-database",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Allows for you to decorate your databases with functionality.",
   "main": "./dist/index.js",
   "scripts": {
