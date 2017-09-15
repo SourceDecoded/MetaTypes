@@ -39,7 +39,7 @@ exports["Table.createAsync: Create a Target Table."] = () => {
             exec: (statement, values) => {
                 assert.equal(
                     statement,
-                    'CREATE TABLE IF NOT EXISTS "Foreign" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "foreignKey" INTEGER, FOREIGN KEY ("foreignKey") REFERENCES "Source" ("id"));CREATE INDEX IF NOT EXISTS "id" ON "Foreign" ("id");CREATE INDEX IF NOT EXISTS "foreignKey" ON "Foreign" ("foreignKey")'
+                    'CREATE TABLE IF NOT EXISTS "Foreign" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "foreignKey" INTEGER, FOREIGN KEY ("foreignKey") REFERENCES "Source" ("id"));CREATE INDEX IF NOT EXISTS "foreignKey" ON "Foreign" ("foreignKey");CREATE INDEX IF NOT EXISTS "id" ON "Foreign" ("id")'
                 );
                 return Promise.resolve(null);
             }

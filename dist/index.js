@@ -1713,6 +1713,7 @@ var User = function User() {
     _classCallCheck(this, User);
 
     this.id = null;
+    this.authenticatedId = null;
     this.name = null;
     this.isAdmin = false;
     this.groups = [];
@@ -3512,23 +3513,37 @@ var TableStatementBuilder = function () {
         value: function createTableIndexesStatements(table, relationships) {
             var _this5 = this;
 
-            var foreignKeyIndexes = this.getTablesRelationshipsAsTargets(table, relationships).map(function (relationship) {
-                return _this5.createIndexStatement(relationship.ofType, relationship.withForeignKey);
+            if (relationships == null) {
+                throw new Error("Null Argument Exception: relationships cannot be null or undefined.");
+            }
+
+            var indexedColumns = {};
+
+            var foreignKeyIndexes = this.getTablesRelationshipsAsTargets(table, relationships).forEach(function (relationship) {
+                indexedColumns[relationship.withForeignKey] = true;
             });
 
             var primaryKeys = this.getPrimaryKeys(table.columns);
 
-            var keyIndexes = this.getTablesRelationshipsAsSources(table, relationships).filter(function (relationship) {
+            this.getTablesRelationshipsAsSources(table, relationships).filter(function (relationship) {
                 return primaryKeys.indexOf(relationship.hasKey) === -1;
-            }).map(function (relationship) {
-                return _this5.createIndexStatement(relationship.type, relationship.hasKey);
+            }).forEach(function (relationship) {
+                return indexedColumns[relationship.hasKey] = true;
             });
 
-            var primaryKeysIndexes = primaryKeys.map(function (name) {
-                return _this5.createIndexStatement(table.name, name);
+            primaryKeys.forEach(function (name) {
+                indexedColumns[name] = true;
             });
 
-            return primaryKeysIndexes.concat(foreignKeyIndexes);
+            table.columns.filter(function (column) {
+                return column.isIndexed;
+            }).map(function (column) {
+                return indexedColumns[column.name];
+            });
+
+            return Object.keys(indexedColumns).map(function (columnName) {
+                return _this5.createIndexStatement(table.name, columnName);
+            });
         }
     }, {
         key: "createForeignKeysStatement",

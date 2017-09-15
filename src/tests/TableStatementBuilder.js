@@ -10,6 +10,10 @@ const foreignTable = edm.tables.find((table) => {
     return table.name === "Foreign";
 });
 
+const otherForeignTable = edm.tables.find((table) => {
+    return table.name === "OtherForeign";
+});
+
 const relationships = edm.relationships;
 
 exports["TableStatementBuilder: Constructor"] = () => {
@@ -48,7 +52,7 @@ exports["TableStatementBuilder.createInsertStatement"] = () => {
     assert.equal(
         insertStatement.statement,
         'INSERT INTO "Source" ("string") VALUES (?)'
-        
+
     );
 
     assert.equal(
@@ -126,6 +130,13 @@ exports["TableStatementBuilder.createTableIndexesStatements"] = () => {
 
     var indexStatements = builder.createTableIndexesStatements(foreignTable, relationships);
 
-    assert.equal(indexStatements[0], `CREATE INDEX IF NOT EXISTS "id" ON "Foreign" ("id")`);
-    assert.equal(indexStatements[1], `CREATE INDEX IF NOT EXISTS "foreignKey" ON "Foreign" ("foreignKey")`);
+    assert.equal(indexStatements[0], `CREATE INDEX IF NOT EXISTS "foreignKey" ON "Foreign" ("foreignKey")`);
+    assert.equal(indexStatements[1], `CREATE INDEX IF NOT EXISTS "id" ON "Foreign" ("id")`);
+}
+
+exports["TableStatementBuilder.createTableIndexesStatements: With custom indexes."] = () => {
+    var builder = new TableStatementBuilder();
+
+    var indexStatements = builder.createTableIndexesStatements(otherForeignTable, relationships);
+
 }

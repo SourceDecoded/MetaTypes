@@ -97,6 +97,12 @@ const edm = {
                     "type": "String",
                     "name": "string",
                     "label": "String"
+                },
+                {
+                    "type": "Integer",
+                    "name": "indexedColumn",
+                    "label": "Indexed Column",
+                    "isIndexed": true
                 }
             ]
         }

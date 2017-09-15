@@ -180,23 +180,38 @@ export default class TableStatementBuilder {
     }
 
     createTableIndexesStatements(table, relationships) {
-        const foreignKeyIndexes = this.getTablesRelationshipsAsTargets(table, relationships).map((relationship) => {
-            return this.createIndexStatement(relationship.ofType, relationship.withForeignKey);
+        if (relationships == null) {
+            throw new Error("Null Argument Exception: relationships cannot be null or undefined.");
+        }
+
+        const indexedColumns = {};
+
+        const foreignKeyIndexes = this.getTablesRelationshipsAsTargets(table, relationships).forEach((relationship) => {
+            indexedColumns[relationship.withForeignKey] = true;
         });
 
         const primaryKeys = this.getPrimaryKeys(table.columns);
 
-        const keyIndexes = this.getTablesRelationshipsAsSources(table, relationships).filter((relationship) => {
+        this.getTablesRelationshipsAsSources(table, relationships).filter((relationship) => {
             return primaryKeys.indexOf(relationship.hasKey) === -1;
-        }).map((relationship) => {
-            return this.createIndexStatement(relationship.type, relationship.hasKey);
+        }).forEach((relationship) => {
+            return indexedColumns[relationship.hasKey] = true;
         });
 
-        const primaryKeysIndexes = primaryKeys.map((name) => {
-            return this.createIndexStatement(table.name, name);
+        primaryKeys.forEach((name) => {
+            indexedColumns[name] = true;
         });
 
-        return primaryKeysIndexes.concat(foreignKeyIndexes);
+        table.columns.filter((column) => {
+            return column.isIndexed;
+        }).map((column) => {
+            return indexedColumns[column.name]
+        });
+
+        return Object.keys(indexedColumns).map((columnName) => {
+            return this.createIndexStatement(table.name, columnName);
+        });
+
     }
 
     createForeignKeysStatement(table, relationships) {
