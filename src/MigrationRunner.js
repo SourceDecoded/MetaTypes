@@ -9,6 +9,7 @@ const defaultOptions = {
 export default class MigrationRunner {
     constructor(options) {
         Object.assign({}, defaultOptions, options);
+
         this._validateOptions(options);
 
         this.edm = options.edm;
@@ -17,8 +18,8 @@ export default class MigrationRunner {
         this.edmValidator = new EdmValidator();
 
         this._executeActionAsync = this._executeActionAsync.bind(this);
-        this._revertAction = this._revertAction.bind(this);
-        this._recoverMigration = this._recoverMigration.bind(this);
+        this._revertActionAsync = this._revertActionAsync.bind(this);
+        this._recoverMigrationAsync = this._recoverMigrationAsync.bind(this);
     }
 
     _executeActionAsync(promise, action, index) {
@@ -48,10 +49,10 @@ export default class MigrationRunner {
         });
     }
 
-    _recoverMigration(error) {
+    _recoverMigrationAsync(error) {
         let index = actions.length - error.index;
 
-        return actions.slice().reverse().reduce(this._revertAction, Promise.resolve()).catch((error) => {
+        return actions.slice().reverse().reduce(this._revertActionAsync, Promise.resolve()).catch((error) => {
             let modifiedError = Error("Failed to revert actions on a failed migration.");
             modifiedError.stack = error.stack;
 
@@ -65,7 +66,7 @@ export default class MigrationRunner {
 
     }
 
-    _revertAction(promise, action, index) {
+    _revertActionAsync(promise, action, index) {
         return promise.then(() => {
             let actionName = action.revert.action;
             let migratorAction = this.migrator[actionName];
@@ -126,6 +127,6 @@ export default class MigrationRunner {
         All actions return an array of other actions.
     */
     migrateAsync(actions) {
-        return actions.reduce(this._executeActionAsync, Promise.resolve()).catch(this._recoverMigration);
+        return actions.reduce(this._executeActionAsync, Promise.resolve()).catch(this._recoverMigrationAsync);
     }
 }
