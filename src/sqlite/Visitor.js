@@ -165,6 +165,7 @@ export default class Visitor extends ExpressionVisitor {
     any(property, expression) {
         let table = property.table;
         let visitor = new Visitor(table.name, this.edm);
+        let result = vistor.parse(expression);
 
         return visitor.parse(expression);
     }
@@ -208,6 +209,10 @@ export default class Visitor extends ExpressionVisitor {
         );
 
         return queryParts.join(" ");
+    }
+
+    createCustomSelectStatement(query, properties){
+        
     }
 
     createSelectStatement(query) {

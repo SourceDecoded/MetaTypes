@@ -1,6 +1,9 @@
 import assert from "assert";
 import Table from "./../sqlite/Table";
 import edm from "./../mock/edm";
+import sqlite from "sqlite";
+
+const databaseFile = ":memory:";
 
 exports["Table: addEntityAsync"] = () => {
     var table = new Table("Source", {
@@ -47,4 +50,25 @@ exports["Table.createAsync: Create a Target Table."] = () => {
     });
 
     table.createAsync();
+};
+
+exports["Table.asQueryable: Query off nested one to one."] = () => {
+    
+    return sqlite.open(":memory:").then((db) => {
+
+        var table = new Table("Source", {
+            edm: edm,
+            sqliteDatabase: db
+        });
+
+        return table.asQueryable().where((expBuilder) => {
+            return expBuilder.property("foreigner").property("string").isEqualTo("Hello World");
+        }).toArrayAsync((results) => {
+            
+        });
+
+    });
+
+
+
 };
