@@ -14,10 +14,11 @@ export default class MigrationRunner {
         this.edm = options.edm;
         this.history = options.history;
         this.migrator = options.migrator;
+        this.edmValidator = new EdmValidator();
 
         this._executeActionAsync = this._executeActionAsync.bind(this);
         this._revertAction = this._revertAction.bind(this);
-        this.edmValidator = new EdmValidator();
+        this._recoverMigration = this._recoverMigration.bind(this);
     }
 
     _executeActionAsync(promise, action, index) {
@@ -45,6 +46,23 @@ export default class MigrationRunner {
 
             throw executionError;
         });
+    }
+
+    _recoverMigration(error) {
+        let index = actions.length - error.index;
+
+        return actions.slice().reverse().reduce(this._revertAction, Promise.resolve()).catch((error) => {
+            let modifiedError = Error("Failed to revert actions on a failed migration.");
+            modifiedError.stack = error.stack;
+
+            throw modifiedError;
+        }).then(() => {
+            let modifiedError = new Error("Successfully reverted actions on a failed mirgration.");
+            modifiedError.stack = error.stack;
+
+            throw modifiedError;
+        });
+
     }
 
     _revertAction(promise, action, index) {
@@ -108,22 +126,6 @@ export default class MigrationRunner {
         All actions return an array of other actions.
     */
     migrateAsync(actions) {
-        let passedActionIndex = -1;
-
-        return actions.reduce(this._executeActionAsync, Promise.resolve()).catch((error) => {
-            let index = actions.length - error.index;
-            return actions.slice().reverse().reduce(this._revertAction, Promise.resolve());
-        }).catch((error) => {
-            let modifiedError = Error("Failed to revert actions on a failed migration.");
-            modifiedError.stack = error.stack;
-
-            throw modifiedError;
-        }).then(() => {
-            let modifiedError = new Error("Successfully reverted actions on a failed mirgration.");
-            modifiedError.stack = error.stack;
-
-            throw modifiedError;
-        });
-
+        return actions.reduce(this._executeActionAsync, Promise.resolve()).catch(this._recoverMigration);
     }
 }
