@@ -53,7 +53,7 @@ exports["Table.createAsync: Create a Target Table."] = () => {
 };
 
 exports["Table.asQueryable: Query off nested one to one."] = () => {
-    
+
     return sqlite.open(":memory:").then((db) => {
 
         var table = new Table("Source", {
@@ -61,10 +61,10 @@ exports["Table.asQueryable: Query off nested one to one."] = () => {
             sqliteDatabase: db
         });
 
-        return table.asQueryable().where((expBuilder) => {
-            return expBuilder.property("foreigner").property("string").isEqualTo("Hello World");
-        }).toArrayAsync((results) => {
-            
+        return table.createAsync().then(() => {
+            return table.asQueryable().where((expBuilder) => {
+                return expBuilder.property("foreigner").property("string").isEqualTo("Hello World");
+            }).toArrayAsync();
         });
 
     });

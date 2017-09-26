@@ -6,8 +6,6 @@ const defaultOptions = {
     migrator: null
 };
 
-const edmValidator = new EdmValidator();
-
 export default class MigrationRunner {
     constructor(options) {
         Object.assign({}, defaultOptions, options);
@@ -16,6 +14,50 @@ export default class MigrationRunner {
         this.edm = options.edm;
         this.history = options.history;
         this.migrator = options.migrator;
+
+        this._executeActionAsync = this._executeActionAsync.bind(this);
+        this._revertAction = this._revertAction.bind(this);
+        this.edmValidator = new EdmValidator();
+    }
+
+    _executeActionAsync(promise, action, index) {
+        return promise.then(() => {
+            this._validateAction(action);
+
+            let actionName = action.execute.action;
+            let migratorAction = this.migrator[actionName];
+
+            if (typeof migratorAction !== "function") {
+                throw new Error(`'${this.migrator.name}' migrator doesn't support this action. ${actionName}`);
+            }
+
+            return migratorAction.apply(this.migrator, [edm, action.execute.options]);
+
+
+        }).then((consequentialActions) => {
+            if (Array.isArray(consequentialActions) && consequentialActions.length > 0) {
+                return this.migrateAsync(consequentialActions);
+            }
+        }).catch((error) => {
+            let executionError = new Error(error.message);
+            executionError.stack = error.stack;
+            executionError.index = index;
+
+            throw executionError;
+        });
+    }
+
+    _revertAction(promise, action, index) {
+        return promise.then(() => {
+            let actionName = action.revert.action;
+            let migratorAction = this.migrator[actionName];
+
+            if (typeof migratorAction !== "function") {
+                throw new Error(`Migrator doesn't support this action. ${actionName}`);
+            }
+
+            return migratorAction.apply(this.migrator, [edm, action.revert.options]);
+        });
     }
 
     _validateAction(action) {
@@ -41,7 +83,7 @@ export default class MigrationRunner {
     }
 
     _validateEdm(edm) {
-        edmValidator.validate(edm);
+        this.edmValidator.validate(edm);
     }
 
     _validateHistory(history) {
@@ -65,61 +107,23 @@ export default class MigrationRunner {
     /*
         All actions return an array of other actions.
     */
-    migrate(actions) {
+    migrateAsync(actions) {
         let passedActionIndex = -1;
 
-        try {
+        return actions.reduce(this._executeActionAsync, Promise.resolve()).catch((error) => {
+            let index = actions.length - error.index;
+            return actions.slice().reverse().reduce(this._revertAction, Promise.resolve());
+        }).catch((error) => {
+            let modifiedError = Error("Failed to revert actions on a failed migration.");
+            modifiedError.stack = error.stack;
 
-            for (let index = 0; index < actions.length; index++) {
-                let action = actions[index];
-                this._validateAction(action);
-
-                let actionName = action.execute.action;
-                let migratorAction = this.migrator[actionName];
-
-                if (typeof migratorAction !== "function") {
-                    throw new Error(`'${this.migrator.name}' migrator doesn't support this action. ${actionName}`);
-                }
-
-                let consequentialActions = migratorAction.apply(this.migrator, [edm, action.execute.options]);
-
-                if (Array.isArray(consequentialActions) && consequentialActions.length > 0) {
-                    this.migrate(consequentialActions);
-                }
-
-                passedActionIndex = index;
-            }
-
-        } catch (error) {
-
-            try {
-
-                for (let index = passedActionIndex; passedActionIndex > 0; passedActionIndex--) {
-                    let action = actions[index];
-                    let actionName = action.revert.action;
-                    let migratorAction = this.migrator[actionName];
-
-                    if (typeof migratorAction !== "function") {
-                        throw new Error(`Migrator doesn't support this action. ${actionName}`);
-                    }
-
-                    migratorAction.apply(this.migrator, [edm, action.revert.options]);
-
-                }
-
-            } catch (error) {
-                let modifiedError = Error("Failed to revert actions on a failed migration.");
-                modifiedError.stack = error.stack;
-
-                throw modifiedError;
-            }
-
+            throw modifiedError;
+        }).then(() => {
             let modifiedError = new Error("Successfully reverted actions on a failed mirgration.");
             modifiedError.stack = error.stack;
 
             throw modifiedError;
-        }
+        });
 
     }
-
 }
