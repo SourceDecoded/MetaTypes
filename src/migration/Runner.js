@@ -1,4 +1,4 @@
-import EdmValidator from "./EdmValidator";
+import Validator from "./../edm/Validator";
 
 const defaultOptions = {
     edm: null,
@@ -6,16 +6,15 @@ const defaultOptions = {
     migrator: null
 };
 
-export default class MigrationRunner {
+export default class Runner {
     constructor(options) {
         Object.assign({}, defaultOptions, options);
 
         this._validateOptions(options);
 
         this.edm = options.edm;
-        this.history = options.history;
         this.migrator = options.migrator;
-        this.edmValidator = new EdmValidator();
+        this.edmValidator = new Validator();
 
         this._executeActionAsync = this._executeActionAsync.bind(this);
         this._revertActionAsync = this._revertActionAsync.bind(this);
@@ -52,13 +51,15 @@ export default class MigrationRunner {
     _recoverMigrationAsync(error) {
         let index = actions.length - error.index;
 
-        return actions.slice().reverse().reduce(this._revertActionAsync, Promise.resolve()).catch((error) => {
+        let reverseActions = actions.slice().reverse();
+
+        return reverseActions.reduce(this._revertActionAsync, Promise.resolve()).catch((error) => {
             let modifiedError = Error("Failed to revert actions on a failed migration.");
             modifiedError.stack = error.stack;
 
             throw modifiedError;
         }).then(() => {
-            let modifiedError = new Error("Successfully reverted actions on a failed mirgration.");
+            let modifiedError = new Error("Failed Migration. Successfully reverted actions.");
             modifiedError.stack = error.stack;
 
             throw modifiedError;
@@ -66,7 +67,7 @@ export default class MigrationRunner {
 
     }
 
-    _revertActionAsync(promise, action, index) {
+    _revertActionAsync(promise, action) {
         return promise.then(() => {
             let actionName = action.revert.action;
             let migratorAction = this.migrator[actionName];

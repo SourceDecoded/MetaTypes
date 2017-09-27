@@ -1,6 +1,6 @@
 import User from "./User";
 
-export default class GuestUser extends User {
+export default class Guest extends User {
     constructor(name) {
         super();
         this.id = "guest"

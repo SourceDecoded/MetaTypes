@@ -10,7 +10,7 @@ const defaultDataTypeMapping = {
     "Enum": "Enum"
 };
 
-export default class EdmValidator {
+export default class Validator {
     constructor(dataTypeMapping) {
         this.dataTypeMapping = dataTypeMapping || defaultDataTypeMapping;
     }
@@ -66,6 +66,11 @@ export default class EdmValidator {
 
     }
 
+    validateDecorator(decorator) {
+        if (this._isEmptyString(decorator.name)) {
+            throw new Error("Invalid Argument: Decorators need to have a name property.");
+        }
+    }
 
     validateOneToOneRelationship(relationship) {
         if (this._isEmptyString(relationship.type)) {
@@ -159,13 +164,39 @@ export default class EdmValidator {
         edm.relationships.oneToOne.forEach((relationship) => {
             this.validateOneToOneRelationship(relationship);
         });
-
         edm.relationships.oneToMany.forEach((relationship) => {
             this.validateOneToManyRelationship(relationship);
         });
     }
 
     validateTable(table) {
+        this.validateTableDescriptors(table);
+
+        if (!Array.isArray(table.columns)) {
+            throw new Error("Invalid Argument: Table needs to have an array of columns.");
+        }
+
+        if (Array.isArray(table.decorators)) {
+            table.decorators.forEach((decorator) => {
+                this.validateDecorator(decorator);
+            });
+        }
+
+        let primaryKeyColumns = table.columns.filter((column) => {
+            return column.isPrimaryKey;
+        });
+
+        table.columns.forEach((column) => {
+            this.validateColumn(column);
+        });
+
+        if (table.columns.length > 0 && primaryKeyColumns.length !== 1) {
+            throw new Error("Invalid Argument: Tables can only have one primary key.");
+        }
+
+    }
+
+    validateTableDescriptors(table) {
         if (table == null) {
             throw new Error("Invalid Argument: Table cannot be null or undefined.");
         }
@@ -184,22 +215,6 @@ export default class EdmValidator {
 
         if (this._isEmptyString(table.pluralLabel)) {
             throw new Error("Invalid Argument: Table needs to have a pluralLabel.");
-        }
-
-        if (!Array.isArray(table.columns)) {
-            throw new Error("Invalid Argument: Table needs to have an array of columns.");
-        }
-
-        let primaryKeyColumns = table.columns.filter((column) => {
-            return column.isPrimaryKey;
-        });
-
-        table.columns.forEach((column) => {
-            this.validateColumn(column);
-        });
-
-        if (table.columns.length > 0 && primaryKeyColumns.length !== 1) {
-            throw new Error("Invalid Argument: Tables can only have one primary key.");
         }
 
     }

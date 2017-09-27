@@ -1,7 +1,8 @@
 import Table from "./Table";
-import EdmValidator from "./EdmValidator"
+import Validator from "./../edm/Validator";
+import dataTypeMapping from "./dataTypeMapping";
 
-const edmValidator = new EdmValidator();
+const edmValidator = new Validator(dataTypeMapping);
 
 export default class Database {
     constructor(options = {}) {

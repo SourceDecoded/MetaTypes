@@ -1,7 +1,6 @@
-import Table from "./sqlite/Table"
-import MetaProvider from "./MetaProvider";
+import Provider from "./Provider";
 import { Queryable } from "queryablejs";
-import User from "./User";
+import User from "./../user/User";
 
 const defaultDecorators = {
     name: null,
@@ -10,7 +9,7 @@ const defaultDecorators = {
     decorators: []
 };
 
-export default class MetaTable {
+export default class Table {
     constructor({
         table = null,
         decorators = [],
@@ -247,7 +246,7 @@ export default class MetaTable {
     getQueryProvider(user) {
         this._assertUser(user);
 
-        return new MetaProvider(user, this);
+        return new Provider(user, this);
     }
 
     removeEntityAsync(user, entity) {

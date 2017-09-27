@@ -1,6 +1,6 @@
 import { Queryable } from "queryablejs";
 
-export default class MetaProvider {
+export default class Provider {
     constructor(user, metaTable) {
         this.metaTable = metaTable;
         this.provider = metaTable.table.provider;

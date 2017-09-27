@@ -1,13 +1,13 @@
-import MigrationRunner from "./../MigrationRunner";
+import MigrationRunner from "./../migration/Runner";
 import assert from "assert";
 
-exports["MigrationRunner.constructor: empty options"] = () => {
+exports["migration.Runner.constructor: empty options"] = () => {
     assert.throws(() => {
         let runner = new MigrationRunner();
     });
 }
 
-exports["MigrationRunner.constructor: null edm."] = () => {
+exports["migration.Runner.constructor: null edm."] = () => {
     assert.throws(() => {
         let runner = new MigrationRunner({
             edm: null
@@ -15,7 +15,7 @@ exports["MigrationRunner.constructor: null edm."] = () => {
     });
 }
 
-exports["MigrationRunner.constructor: invalid history."] = () => {
+exports["migration.Runner.constructor: invalid history."] = () => {
     assert.throws(() => {
         let runner = new MigrationRunner({
             history: "blah"

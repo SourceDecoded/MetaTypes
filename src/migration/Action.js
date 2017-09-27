@@ -1,6 +1,6 @@
-import Guid from "./Guid";
+import Guid from "./../util/Guid";
 
-export default class MetaDatabaseAction {
+export default class Action {
     constructor(id) {
         this.id = id || Guid.create();
 

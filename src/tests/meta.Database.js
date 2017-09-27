@@ -1,37 +1,15 @@
 import assert from "assert";
-import MetaDatabase from "./../MetaDatabase";
+import MetaDatabase from "./../meta/Database";
 import Database from "./../sqlite/Database";
 import edm from "./../mock/edm";
 import sqlite from "sqlite";
-import GuestUser from "./../GuestUser";
-import AdminUser from "./../AdminUser";
+import GuestUser from "./../user/Guest";
+import AdminUser from "./../user/Admin";
 import FileSystem from "./../mock/FileSystem";
 
 let path = ":memory:";
 let user = new GuestUser();
 let admin = new AdminUser();
-
-exports["MetaDatabase: prepareEdmAsync"] = () => {
-    let hasCalledPrepareEdmAsync = false;
-    let fileSystem = new FileSystem();
-
-    let metaDatabase = new MetaDatabase({
-        fileSystem: fileSystem,
-        sqlite: sqlite,
-        edm: edm,
-        databasePath: path,
-        decorators: [{
-            prepareEdmAsync: () => {
-                hasCalledPrepareEdmAsync = true;
-            }
-        }]
-    });
-
-    return metaDatabase.initializeAsync().then(() => {
-        assert.equal(hasCalledPrepareEdmAsync, true);
-    });
-
-}
 
 exports["MetaDatabase: prepareEntityToBeAddedAsync, entityAddedAsync, validateEntityToBeAddedAsync."] = () => {
     let prepareEntityToBeAddedAsyncCount = 0;
@@ -56,31 +34,34 @@ exports["MetaDatabase: prepareEntityToBeAddedAsync, entityAddedAsync, validateEn
         }
     };
 
-    let metaDatabase = new MetaDatabase({
-        fileSystem: fileSystem,
-        sqlite: sqlite,
-        edm: edm,
-        databasePath: path,
-        decorators: [decorator]
-    });
+    return sqlite.open(path).then((sqliteDatabase) => {
+        let database = new Database({
+            edm: edm,
+            sqliteDatabase: sqliteDatabase
+        });
 
-    return metaDatabase.initializeAsync().then(() => {
-        return metaDatabase.getTableAsync("Source");
-    }).then((table) => {
+        let metaDatabase = new MetaDatabase({
+            fileSystem: fileSystem,
+            database: database,
+            decorators: [decorator]
+        });
+
+
+        let table = metaDatabase.getTable("Source");
+
         return table.addEntityAsync(user, {
             string: "Hello World!",
             integer: 10
+        }).then(() => {
+            let table = metaDatabase.getTable("Foreign");
+            return table.addEntityAsync(user, {
+                integer: 10
+            });
+        }).then(() => {
+            assert.equal(prepareEntityToBeAddedAsyncCount, 1);
+            assert.equal(entityAddedAsyncCount, 1);
+            assert.equal(validateEntityToBeAddedAsyncCount, 1);
         });
-    }).then(() => {
-        return metaDatabase.getTableAsync("Foreign");
-    }).then((table) => {
-        return table.addEntityAsync(user, {
-            integer: 10
-        });
-    }).then(() => {
-        assert.equal(prepareEntityToBeAddedAsyncCount, 1);
-        assert.equal(entityAddedAsyncCount, 1);
-        assert.equal(validateEntityToBeAddedAsyncCount, 1);
     });
 
 }
