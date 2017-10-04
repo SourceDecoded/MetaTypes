@@ -26,7 +26,7 @@ export default class Runner {
             this._validateAction(action);
 
             let actionName = action.execute.action;
-            let migratorAction = this.migrator[actionName];
+            let migratorAction = this.migrator[actionName + "Async"];
 
             if (typeof migratorAction !== "function") {
                 throw new Error(`'${this.migrator.name}' migrator doesn't support this action. ${actionName}`);
@@ -70,7 +70,7 @@ export default class Runner {
     _revertActionAsync(promise, action) {
         return promise.then(() => {
             let actionName = action.revert.action;
-            let migratorAction = this.migrator[actionName];
+            let migratorAction = this.migrator[actionName + "Async"];
 
             if (typeof migratorAction !== "function") {
                 throw new Error(`Migrator doesn't support this action. ${actionName}`);

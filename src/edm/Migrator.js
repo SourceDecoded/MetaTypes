@@ -105,6 +105,16 @@ export default class Migrator {
         return resolvedPromise;
     }
 
+    addOneToOnRelationship(edm, options) {
+        this.validator.validateOneToOneRelationship(options.relationship);
+        edm.relationships.oneToOne.push(options.relationship);
+    }
+
+    addOneToManyRelationship(edm, options) {
+        this.validator.validateOneToManyRelationship(options.relationship);
+        edm.relationships.oneToMany.push(options.relationship);
+    }
+
     addTableAsync(edm, options = {}) {
         this.validator.validateTableDescriptors(options);
         this._throwIfTableExist(edm, options.name);
@@ -153,10 +163,10 @@ export default class Migrator {
     }
 
     removeTableAsync(edm, options = {}) {
-        this._throwIfTableDoesNotExist(edm, options.name);
+        this._throwIfTableDoesNotExist(edm, options.tableName);
 
         let index = edm.tables.findIndex((table) => {
-            return table.name === options.name;
+            return table.name === options.tableName;
         });
 
         edm.tables.splice(index, 1);
