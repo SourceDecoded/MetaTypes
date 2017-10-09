@@ -13,6 +13,10 @@ const edm = {
                     option1: true
                 }
             }],
+            gem: {
+                tools: [],
+                action: []
+            },
             "columns": [
                 {
                     "type": "Integer",

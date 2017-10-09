@@ -16,28 +16,28 @@ export default class Runner {
         this.migrator = options.migrator;
         this.edmValidator = new Validator();
 
-        this._executeActionAsync = this._executeActionAsync.bind(this);
-        this._revertActionAsync = this._revertActionAsync.bind(this);
+        this._executeCommandAsync = this._executeCommandAsync.bind(this);
+        this._revertCommandAsync = this._revertCommandAsync.bind(this);
         this._recoverMigrationAsync = this._recoverMigrationAsync.bind(this);
     }
 
-    _executeActionAsync(promise, action, index) {
+    _executeCommandAsync(promise, command, index) {
         return promise.then(() => {
-            this._validateAction(action);
+            this._validateCommand(command);
 
-            let actionName = action.execute.action;
-            let migratorAction = this.migrator[actionName + "Async"];
+            let commandName = command.execute.command;
+            let migratorCommand = this.migrator[commandName + "Async"];
 
-            if (typeof migratorAction !== "function") {
-                throw new Error(`'${this.migrator.name}' migrator doesn't support this action. ${actionName}`);
+            if (typeof migratorCommand !== "function") {
+                throw new Error(`'${this.migrator.name}' migrator doesn't support this command. ${commandName}`);
             }
 
-            return migratorAction.apply(this.migrator, [edm, action.execute.options]);
+            return migratorCommand.apply(this.migrator, [edm, command.execute.options]);
 
 
-        }).then((consequentialActions) => {
-            if (Array.isArray(consequentialActions) && consequentialActions.length > 0) {
-                return this.migrateAsync(consequentialActions);
+        }).then((consequentialCommands) => {
+            if (Array.isArray(consequentialCommands) && consequentialCommands.length > 0) {
+                return this.migrateAsync(consequentialCommands);
             }
         }).catch((error) => {
             let executionError = new Error(error.message);
@@ -49,17 +49,17 @@ export default class Runner {
     }
 
     _recoverMigrationAsync(error) {
-        let index = actions.length - error.index;
+        let index = commands.length - error.index;
 
-        let reverseActions = actions.slice().reverse();
+        let reverseCommands = commands.slice().reverse();
 
-        return reverseActions.reduce(this._revertActionAsync, Promise.resolve()).catch((error) => {
-            let modifiedError = Error("Failed to revert actions on a failed migration.");
+        return reverseCommands.reduce(this._revertCommandAsync, Promise.resolve()).catch((error) => {
+            let modifiedError = Error("Failed to revert commands on a failed migration.");
             modifiedError.stack = error.stack;
 
             throw modifiedError;
         }).then(() => {
-            let modifiedError = new Error("Failed Migration. Successfully reverted actions.");
+            let modifiedError = new Error("Failed Migration. Successfully reverted commands.");
             modifiedError.stack = error.stack;
 
             throw modifiedError;
@@ -67,38 +67,38 @@ export default class Runner {
 
     }
 
-    _revertActionAsync(promise, action) {
+    _revertCommandAsync(promise, command) {
         return promise.then(() => {
-            let actionName = action.revert.action;
-            let migratorAction = this.migrator[actionName + "Async"];
+            let commandName = command.revert.command;
+            let migratorCommand = this.migrator[commandName + "Async"];
 
-            if (typeof migratorAction !== "function") {
-                throw new Error(`Migrator doesn't support this action. ${actionName}`);
+            if (typeof migratorCommand !== "function") {
+                throw new Error(`Migrator doesn't support this command. ${commandName}`);
             }
 
-            return migratorAction.apply(this.migrator, [edm, action.revert.options]);
+            return migratorCommand.apply(this.migrator, [edm, command.revert.options]);
         });
     }
 
-    _validateAction(action) {
-        if (typeof action.id !== "string") {
-            throw new Error("Actions require an id.");
+    _validateCommand(command) {
+        if (typeof command.id !== "string") {
+            throw new Error("Commands require an id.");
         }
 
-        if (action.execute == null) {
-            throw new Error("Actions require an execute object.");
+        if (command.execute == null) {
+            throw new Error("Commands require an execute object.");
         }
 
-        if (typeof actions.execute.action !== "string") {
-            throw new Error("Actions require an execute object with an action property of type string.");
+        if (typeof commands.execute.command !== "string") {
+            throw new Error("Commands require an execute object with an command property of type string.");
         }
 
-        if (action.revert == null) {
-            throw new Error("Actions require an revert object.");
+        if (command.revert == null) {
+            throw new Error("Commands require an revert object.");
         }
 
-        if (typeof actions.revert.action !== "string") {
-            throw new Error("Actions require an revert object with an action property of type string.");
+        if (typeof commands.revert.command !== "string") {
+            throw new Error("Commands require an revert object with an command property of type string.");
         }
     }
 
@@ -107,8 +107,8 @@ export default class Runner {
     }
 
     _validateHistory(history) {
-        history.forEach((action) => {
-            this._validateAction(action);
+        history.forEach((command) => {
+            this._validateCommand(command);
         });
     }
 
@@ -125,9 +125,9 @@ export default class Runner {
     }
 
     /*
-        All actions return an array of other actions.
+        All commands return an array of other commands.
     */
-    migrateAsync(actions) {
-        return actions.reduce(this._executeActionAsync, Promise.resolve()).catch(this._recoverMigrationAsync);
+    migrateAsync(commands) {
+        return commands.reduce(this._executeCommandAsync, Promise.resolve()).catch(this._recoverMigrationAsync);
     }
 }
