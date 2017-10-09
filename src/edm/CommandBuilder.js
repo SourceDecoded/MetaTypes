@@ -5,9 +5,9 @@ export default class CommandBuilder {
 
     }
 
-    _createColumn(column) {
+    createAddColumn(column) {
         let command = new Command();
-        command.execute.command = "addColumn";
+        command.execute.action = "addColumn";
         command.execute.options = {
             type: column.type,
             name: column.name,
@@ -18,7 +18,7 @@ export default class CommandBuilder {
             isIndexed: typeof column.isIndexed === "boolean" ? column.isIndexed : false
         };
 
-        command.revert.command = "removeColumn";
+        command.revert.action = "removeColumn";
         command.revert.options = {
             type: column.type,
             name: column.name,
@@ -30,18 +30,20 @@ export default class CommandBuilder {
         };
     }
 
-    _createTableCommand(table) {
+    createAddTableCommand(table) {
         let command = new Command();
-        command.execute.command = "addTable";
+        command.execute.action = "addTable";
         command.execute.options = {
             name: table.name,
             label: table.label,
             pluralLabel: table.pluralLabel
         }
 
-        command.revert.command = "removeTable";
+        command.revert.action = "removeTable";
         command.revert.options = {
-            tableName: table.name
+            name: table.name,
+            label: table.label,
+            pluralLabel: table.pluralLabel
         }
     }
 

@@ -3,7 +3,8 @@ import Validator from "./../edm/Validator";
 const defaultOptions = {
     edm: null,
     history: [],
-    migrator: null
+    migrator: null,
+    decorators: []
 };
 
 export default class Runner {
@@ -15,6 +16,7 @@ export default class Runner {
         this.edm = options.edm;
         this.migrator = options.migrator;
         this.edmValidator = new Validator();
+        this.decorators = options.decorators;
 
         this._executeCommandAsync = this._executeCommandAsync.bind(this);
         this._revertCommandAsync = this._revertCommandAsync.bind(this);
@@ -25,14 +27,29 @@ export default class Runner {
         return promise.then(() => {
             this._validateCommand(command);
 
-            let commandName = command.execute.command;
-            let migratorCommand = this.migrator[commandName + "Async"];
+            let actionName = `${command.execute.action}Async`;
+            let options = command.execute.options;
+            let migratorCommand = this.migrator[actionName];
 
             if (typeof migratorCommand !== "function") {
-                throw new Error(`'${this.migrator.name}' migrator doesn't support this command. ${commandName}`);
+                throw new Error(`'${this.migrator.name}' migrator doesn't support this command. ${actionName}`);
             }
 
-            return migratorCommand.apply(this.migrator, [edm, command.execute.options]);
+            return this.decorators.reduce((promise, decorator) => {
+                return promise.then((actions) => {
+                    this._invokeMethodAsyncWithRecovery(decorator, actionName, [options]).then((consequentialCommands) => {
+                        if (Array.isArray(consequentialCommands)){
+                            return actions.concat(consequentialCommands);
+                        } else {
+                            return actions;
+                        }
+                    });
+                });
+            }, Promise.resolve([])).then((actions) => {
+                return migratorCommand.apply(this.migrator, [edm, options]).then((consequentialCommands) => {
+                    return actions.concat(consequentialCommands);
+                });
+            });
 
 
         }).then((consequentialCommands) => {
@@ -46,6 +63,28 @@ export default class Runner {
 
             throw executionError;
         });
+    }
+
+    _invokeMethodAsyncWithRecovery(obj, methodName, args) {
+        if (obj && typeof obj[methodName] === "function") {
+            let result;
+
+            try {
+                result = obj[methodName].apply(obj, args);
+            } catch (error) {
+                result = null;
+            }
+
+            if (!(result instanceof Promise)) {
+                result = Promise.resolve(result);
+            }
+
+            return result.catch((error) => {
+                return null;
+            });
+        }
+
+        return Promise.resolve();
     }
 
     _recoverMigrationAsync(error) {
@@ -69,11 +108,11 @@ export default class Runner {
 
     _revertCommandAsync(promise, command) {
         return promise.then(() => {
-            let commandName = command.revert.command;
-            let migratorCommand = this.migrator[commandName + "Async"];
+            let actionName = command.revert.action;
+            let migratorCommand = this.migrator[actionName + "Async"];
 
             if (typeof migratorCommand !== "function") {
-                throw new Error(`Migrator doesn't support this command. ${commandName}`);
+                throw new Error(`Migrator doesn't support this command. ${actionName}`);
             }
 
             return migratorCommand.apply(this.migrator, [edm, command.revert.options]);
@@ -89,7 +128,7 @@ export default class Runner {
             throw new Error("Commands require an execute object.");
         }
 
-        if (typeof commands.execute.command !== "string") {
+        if (typeof commands.execute.action !== "string") {
             throw new Error("Commands require an execute object with an command property of type string.");
         }
 
@@ -97,7 +136,7 @@ export default class Runner {
             throw new Error("Commands require an revert object.");
         }
 
-        if (typeof commands.revert.command !== "string") {
+        if (typeof commands.revert.action !== "string") {
             throw new Error("Commands require an revert object with an command property of type string.");
         }
     }
