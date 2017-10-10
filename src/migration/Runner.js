@@ -1,4 +1,5 @@
 import Validator from "./../edm/Validator";
+import Migrator from "./../edm/Migrator";
 
 const defaultOptions = {
     edm: null,
@@ -16,43 +17,49 @@ export default class Runner {
         this.edm = options.edm;
         this.migrator = options.migrator;
         this.edmValidator = new Validator();
+        this.edmMigrator = new Migrator();
         this.decorators = options.decorators;
 
         this._executeCommandAsync = this._executeCommandAsync.bind(this);
         this._revertCommandAsync = this._revertCommandAsync.bind(this);
-        this._recoverMigrationAsync = this._recoverMigrationAsync.bind(this);
+        
     }
 
     _executeCommandAsync(promise, command, index) {
-        return promise.then(() => {
-            this._validateCommand(command);
+        let actionName = `${command.execute.action}Async`;
+        let options = command.execute.options;
+        let edm = this.edm;
+        let migratorCommand = this.migrator[actionName];
+        var consequentialCommands;
 
-            let actionName = `${command.execute.action}Async`;
-            let options = command.execute.options;
-            let migratorCommand = this.migrator[actionName];
+        return promise.then(() => {
+
+            this._validateCommand(command);
 
             if (typeof migratorCommand !== "function") {
                 throw new Error(`'${this.migrator.name}' migrator doesn't support this command. ${actionName}`);
             }
 
             return this.decorators.reduce((promise, decorator) => {
-                return promise.then((actions) => {
-                    this._invokeMethodAsyncWithRecovery(decorator, actionName, [options]).then((consequentialCommands) => {
-                        if (Array.isArray(consequentialCommands)){
-                            return actions.concat(consequentialCommands);
-                        } else {
-                            return actions;
-                        }
-                    });
-                });
-            }, Promise.resolve([])).then((actions) => {
-                return migratorCommand.apply(this.migrator, [edm, options]).then((consequentialCommands) => {
-                    return actions.concat(consequentialCommands);
-                });
-            });
 
+                return promise.then(() => {
+                    return this._invokeMethodAsyncWithRecovery(decorator, actionName, [edm, options])
+                }).then((consequentialCommands) => {
 
-        }).then((consequentialCommands) => {
+                    if (Array.isArray(consequentialCommands) && consequentialCommands.length > 0) {
+                        return this.migrateAsync(consequentialCommands);
+                    }
+
+                });
+
+            }, Promise.resolve());
+
+        }).then(() => {
+            return migratorCommand.apply(this.migrator, [edm, options]);
+        }).then((commands) => {
+            consequentialCommands = commands;
+            return this.edmMigrator[migratorCommand](this.edm, options);
+        }).then(() => {
             if (Array.isArray(consequentialCommands) && consequentialCommands.length > 0) {
                 return this.migrateAsync(consequentialCommands);
             }
@@ -85,25 +92,6 @@ export default class Runner {
         }
 
         return Promise.resolve();
-    }
-
-    _recoverMigrationAsync(error) {
-        let index = commands.length - error.index;
-
-        let reverseCommands = commands.slice().reverse();
-
-        return reverseCommands.reduce(this._revertCommandAsync, Promise.resolve()).catch((error) => {
-            let modifiedError = Error("Failed to revert commands on a failed migration.");
-            modifiedError.stack = error.stack;
-
-            throw modifiedError;
-        }).then(() => {
-            let modifiedError = new Error("Failed Migration. Successfully reverted commands.");
-            modifiedError.stack = error.stack;
-
-            throw modifiedError;
-        });
-
     }
 
     _revertCommandAsync(promise, command) {
@@ -163,10 +151,24 @@ export default class Runner {
         }
     }
 
-    /*
-        All commands return an array of other commands.
-    */
     migrateAsync(commands) {
-        return commands.reduce(this._executeCommandAsync, Promise.resolve()).catch(this._recoverMigrationAsync);
+        return commands.reduce(this._executeCommandAsync, Promise.resolve()).catch((error) => {
+            let index = commands.length - error.index;
+
+            let reverseCommands = commands.slice(0, index).reverse();
+
+            return reverseCommands.reduce(this._revertCommandAsync, Promise.resolve()).catch((error) => {
+                let modifiedError = Error("Failed to revert commands on a failed migration. Current edm state is corrupted.");
+                modifiedError.stack = error.stack;
+
+                throw modifiedError;
+            }).then(() => {
+                let modifiedError = new Error("Failed Migration. Successfully reverted commands.");
+                modifiedError.stack = error.stack;
+
+                throw modifiedError;
+            });
+
+        });
     }
 }
