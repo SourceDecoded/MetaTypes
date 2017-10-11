@@ -5,6 +5,7 @@ const resolvedPromise = Promise.resolve;
 export default class Migrator {
     constructor() {
         this.validator = new Validator();
+        this.name = "Edm Migrator";
     }
 
     _doesTableHavePrimaryKey(table) {

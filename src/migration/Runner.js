@@ -10,9 +10,7 @@ const defaultOptions = {
 
 export default class Runner {
     constructor(options) {
-        Object.assign({}, defaultOptions, options);
-
-        this._validateOptions(options);
+        options = Object.assign({}, defaultOptions, options);
 
         this.edm = options.edm;
         this.migrator = options.migrator;
@@ -22,7 +20,9 @@ export default class Runner {
 
         this._executeCommandAsync = this._executeCommandAsync.bind(this);
         this._revertCommandAsync = this._revertCommandAsync.bind(this);
-        
+
+        this._validateOptions(options);
+
     }
 
     _executeCommandAsync(promise, command, index) {
@@ -58,7 +58,7 @@ export default class Runner {
             return migratorCommand.apply(this.migrator, [edm, options]);
         }).then((commands) => {
             consequentialCommands = commands;
-            return this.edmMigrator[migratorCommand](this.edm, options);
+            return this.edmMigrator[actionName](edm, options);
         }).then(() => {
             if (Array.isArray(consequentialCommands) && consequentialCommands.length > 0) {
                 return this.migrateAsync(consequentialCommands);
@@ -95,15 +95,17 @@ export default class Runner {
     }
 
     _revertCommandAsync(promise, command) {
-        return promise.then(() => {
-            let actionName = command.revert.action;
-            let migratorCommand = this.migrator[actionName + "Async"];
+        let actionName = `${command.revert.action}Async`;
+        let migratorCommand = this.migrator[actionName];
 
+        return promise.then(() => {
             if (typeof migratorCommand !== "function") {
                 throw new Error(`Migrator doesn't support this command. ${actionName}`);
             }
 
             return migratorCommand.apply(this.migrator, [edm, command.revert.options]);
+        }).then(() => {
+            return this.edmMigrator[actionName](edm, command.revert.options);
         });
     }
 
@@ -116,7 +118,7 @@ export default class Runner {
             throw new Error("Commands require an execute object.");
         }
 
-        if (typeof commands.execute.action !== "string") {
+        if (typeof command.execute.action !== "string") {
             throw new Error("Commands require an execute object with an command property of type string.");
         }
 
@@ -124,7 +126,7 @@ export default class Runner {
             throw new Error("Commands require an revert object.");
         }
 
-        if (typeof commands.revert.action !== "string") {
+        if (typeof command.revert.action !== "string") {
             throw new Error("Commands require an revert object with an command property of type string.");
         }
     }
@@ -133,15 +135,8 @@ export default class Runner {
         this.edmValidator.validate(edm);
     }
 
-    _validateHistory(history) {
-        history.forEach((command) => {
-            this._validateCommand(command);
-        });
-    }
-
     _validateOptions(options) {
         this._validateEdm(options.edm);
-        this._validateHistory(options.history);
         this._validateMigrator(options.migrator);
     }
 

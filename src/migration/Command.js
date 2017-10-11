@@ -5,13 +5,13 @@ export default class Command {
         this.id = id || Guid.create();
 
         this.execute = {
-            command: null,
+            action: null,
             options: null,
             response: null
         };
 
         this.revert = {
-            command: null,
+            action: null,
             options: null,
             response: null
         };
