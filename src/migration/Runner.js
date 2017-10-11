@@ -95,6 +95,7 @@ export default class Runner {
     }
 
     _revertCommandAsync(promise, command) {
+        let edm = this.edm;
         let actionName = `${command.revert.action}Async`;
         let migratorCommand = this.migrator[actionName];
 
@@ -148,7 +149,7 @@ export default class Runner {
 
     migrateAsync(commands) {
         return commands.reduce(this._executeCommandAsync, Promise.resolve()).catch((error) => {
-            let index = commands.length - error.index;
+            let index = error.index;
 
             let reverseCommands = commands.slice(0, index).reverse();
 

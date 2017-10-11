@@ -133,11 +133,12 @@ export default class Migrator {
 
     removeColumnAsync(edm, options = {}) {
         let table = this._getTable(edm.tables, options.tableName);
-        this._throwIfTableDoesNotExist(edm, table.columns, options.columnName);
+        let column = this._getColumn(table.columns, options.column.name);
 
-        let column = this._getColumn(table.columns, options.columnName);
+        this._throwIfTableDoesNotExist(edm, options.tableName);
+        this._throwIfColumnDoesNotExist(edm, table.columns, options.column.name);
 
-        if (column.isPrimaryKey) {
+        if (column.isPrimaryKey && table.columns.length > 1) {
             throw new Error("Cannot remove the primary key.");
         }
 
@@ -148,14 +149,14 @@ export default class Migrator {
         let table = this._getTable(edm.tables, options.tableName);
         this._throwIfTableDoesNotExist(edm, options.tableName);
 
-        let decorator = this._getDecorator(table, options.decoratorName);
+        let decorator = this._getDecorator(table, options.decorator.name);
 
         if (decorator == null) {
             throw new Error(`The ${options.tableName} doesn't have the ${options.decorator.name} to update.`);
         }
 
         let index = table.decorators.findIndex((decorator) => {
-            return decorator.name === options.decoratorName;
+            return decorator.name === options.decorator.name;
         });
 
         table.decorators.splice(index, 1);
@@ -164,10 +165,10 @@ export default class Migrator {
     }
 
     removeTableAsync(edm, options = {}) {
-        this._throwIfTableDoesNotExist(edm, options.tableName);
+        this._throwIfTableDoesNotExist(edm, options.name);
 
         let index = edm.tables.findIndex((table) => {
-            return table.name === options.tableName;
+            return table.name === options.name;
         });
 
         edm.tables.splice(index, 1);
@@ -177,9 +178,9 @@ export default class Migrator {
 
     updateColumnAsync(edm, options = {}) {
         let table = this._getTable(edm.tables, options.tableName);
-        this._throwIfTableDoesNotExist(edm, table.columns, options.columnName);
+        this._throwIfTableDoesNotExist(edm, table.columns, options.column.name);
 
-        let column = this._getColumn(table.columns, options.columnName);
+        let column = this._getColumn(table.columns, options.column.name);
         let updatedColumn = Object.assign({}, column, options.column);
 
         this.validator.validateColumn(updatedColumn);

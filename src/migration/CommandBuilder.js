@@ -6,14 +6,17 @@ export default class CommandBuilder {
         this.edmValidator = new Validator();
     }
 
-    createAddColumnCommand(column) {
+    createAddColumnCommand(tableName, column) {
         this.edmValidator.validateColumn(column);
 
         let command = new Command();
-        let options = column;
+        let options = {
+            tableName: tableName,
+            column: column
+        };;
 
         command.execute.action = "addColumn";
-        command.execute.options = options
+        command.execute.options = options;
 
         command.revert.action = "removeColumn";
         command.revert.options = options;
@@ -21,11 +24,14 @@ export default class CommandBuilder {
         return command;
     }
 
-    createAddDecoratorCommand(decorator) {
+    createAddDecoratorCommand(tableName, decorator) {
         this.edmValidator.validateDecorator(decorator);
 
         let command = new Command();
-        let options = decorator;
+        let options = {
+            tableName: tableName,
+            decorator: decorator
+        };
 
         if (typeof options.name != "string") {
             throw new Error("Decorators need to have a name.");
@@ -44,7 +50,9 @@ export default class CommandBuilder {
         this.edmValidator.validateOneToOneRelationship(relationship);
 
         let command = new Command();
-        let options = relationship;
+        let options = {
+            relationship: relationship
+        };
 
         command.execute.action = "addOneToOneRelationship";
         command.execute.options = options;
@@ -59,7 +67,9 @@ export default class CommandBuilder {
         this.edmValidator.validateOneToManyRelationship(relationship);
 
         let command = new Command();
-        let options = relationship;
+        let options = {
+            relationship: relationship
+        };
 
         command.execute.action = "addOneToManyRelationship";
         command.execute.options = options;
@@ -85,11 +95,14 @@ export default class CommandBuilder {
         return command;
     }
 
-    createRemoveColumnCommand(column) {
+    createRemoveColumnCommand(tableName, column) {
         this.edmValidator.validateColumn(column);
 
         let command = new Command();
-        let options = column;
+        let options = {
+            tableName: tableName,
+            column: column
+        };
 
         command.execute.action = "removeColumn";
         command.execute.options = options
@@ -100,11 +113,14 @@ export default class CommandBuilder {
         return command;
     }
 
-    createRemoveDecoratorCommand(decorator) {
+    createRemoveDecoratorCommand(tableName, decorator) {
         this.edmValidator.validateDecorator(decorator);
 
         let command = new Command();
-        let options = decorator;
+        let options = {
+            tableName: tableName,
+            decorator: decorator
+        };
 
         if (typeof options.name != "string") {
             throw new Error("Decorators need to have a name.");
@@ -123,7 +139,9 @@ export default class CommandBuilder {
         this.edmValidator.validateOneToOneRelationship(relationship);
 
         let command = new Command();
-        let options = relationship;
+        let options = {
+            relationship: relationship
+        };
 
         command.execute.action = "removeOneToOneRelationship";
         command.execute.options = options;
@@ -138,7 +156,9 @@ export default class CommandBuilder {
         this.edmValidator.validateOneToManyRelationship(relationship);
 
         let command = new Command();
-        let options = relationship;
+        let options = {
+            relationship: relationship
+        };
 
         command.execute.action = "removeOneToManyRelationship";
         command.execute.options = options;
@@ -164,32 +184,44 @@ export default class CommandBuilder {
         return command;
     }
 
-    createUpdateColumnCommand(oldColumn, newColumn) {
+    createUpdateColumnCommand(tableName, oldColumn, newColumn) {
         this.edmValidator.validateColumn(oldColumn);
         this.edmValidator.validateColumn(newColumn);
 
         let command = new Command();
 
         command.execute.action = "updateColumn";
-        command.execute.options = newColumn
+        command.execute.options = {
+            tableName: tableName,
+            column: newColumn
+        }
 
         command.revert.action = "updateColumn";
-        command.revert.options = oldColumn;
+        command.revert.options = {
+            tableName: tableName,
+            column: oldColumn
+        };
 
         return command;
     }
 
-    createUpdateDecoratorCommand(oldDecorator, newDecorator) {
+    createUpdateDecoratorCommand(tableName, oldDecorator, newDecorator) {
         this.edmValidator.validateDecorator(oldDecorator);
         this.edmValidator.validateDecorator(newDecorator);
 
         let command = new Command();
 
         command.execute.action = "updateDecorator";
-        command.execute.options = newDecorator;
+        command.execute.options = {
+            tableName: tableName,
+            decorator: newDecorator
+        };
 
         command.revert.action = "updateDecorator";
-        command.revert.options = oldDecorator;
+        command.revert.options = {
+            tableName: tableName,
+            decorator: oldDecorator
+        };;
 
         return command;
     }
@@ -224,25 +256,55 @@ export default class CommandBuilder {
         return command;
     }
 
-    createUpdateTableCommand(oldTable, newTable) {
+    createUpdateTableCommand(tableName, oldTable, newTable) {
         this.edmValidator.validateTableDescriptors(oldTable);
         this.edmValidator.validateTableDescriptors(newTable);
 
         let command = new Command();
-        let options = table;
 
-        command.execute.action = "removeTable";
-        command.execute.options = newTable;
+        command.execute.action = "updateTable";
+        command.execute.options = {
+            tableName: tableName,
+            table: newTable
+        };
 
-        command.revert.action = "addTable";
-        command.revert.options = oldTable;
+        command.revert.action = "updateTable";
+        command.revert.options = {
+            tableName: tableName,
+            table: oldTable
+        };;
 
         return command;
     }
 
     createCommandsFromEdm(edm) {
-        return edm.tables.reduce((accumulator, table) => {
+        let commands = edm.tables.reduce((accumulator, table) => {
+            let tableTemplate = Object.assign({}, table);
+            delete tableTemplate.columns;
+
+            accumulator.push(this.createAddTableCommand(tableTemplate));
+
+            table.columns.forEach((column) => {
+                accumulator.push(this.createAddColumnCommand({
+                    tableName: table.name,
+                    column: column
+                }));
+            });
 
         }, []);
+
+        edm.relationships.oneToOne((relationship) => {
+            accumulator.push(this.createAddOneToOneRelationshipCommand({
+                relationship: relationship
+            }));
+        }, commands);
+
+        edm.relationships.oneToMany((relationship) => {
+            accumulator.push(this.createAddOneToManyRelationshipCommand({
+                relationship: relationship
+            }));
+        }, commands);
+
+        return commands;
     }
 }
