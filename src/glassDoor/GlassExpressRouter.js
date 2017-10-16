@@ -9,6 +9,9 @@ export default class {
         attach(apiRoot);
     }
 
+    // NOTE: sub-apps and routers can not be removed from an Express app stack,
+    // so we wrap the router and use some middleware to short-circuit
+    // requests to things we wish we could remove.
     dispose() {
         this.enabled = false;
     }
@@ -93,7 +96,7 @@ export default class {
             if (req.entity.fileType) {
                 res.set(req.entity.fileType);
             }            
-            req.table.getFileWriteStreamByIdAsync(req.user, req.id).then((stream) => {
+            req.table.getFileWriteStreamByIdAsync(req.user, req.params.id).then((stream) => {
                 res.send(stream);
             }).catch((e) => {
                 res.status(500).send(e);
@@ -121,7 +124,7 @@ export default class {
             if (!req.busboy) {
                 res.status(500).send("No file found");
             }
-            req.table.getFileWriteStreamByIdAsync(req.user, req.id).then((stream) => {
+            req.table.getFileWriteStreamByIdAsync(req.user, req.params.id).then((stream) => {
                 req.busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
                     file.on('data', (data) => {
                         stream.write(data);
@@ -147,7 +150,7 @@ export default class {
 
         // DELETE file
         handler.delete(":/model/:version/:id/file", (req, res, next) => {
-            req.table.removeFileByIdAsync(req.user, req.id).then((result) => {
+            req.table.removeFileByIdAsync(req.user, req.params.id).then((result) => {
                 res.status(200).end();
             }).catch((e) => {
                 res.status(500).send(e);
