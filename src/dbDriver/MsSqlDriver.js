@@ -1,5 +1,7 @@
 // SqlServerDriver.js
 import mssql from "mssql";
+import MsSqlDatabase from "../mssql/Database";
+import MsSqlMigrator  from "../mssql/Migrator";
 
 generateEdmCreateSql = function(options) {
     return `CREATE TABLE ${options.edmSchema}.${options.edmTable}(
@@ -66,6 +68,8 @@ export default class {
     getEdmListAsync() {
         return _verifyEdmTableAsync().then((pool) => {
             return pool.query(generateGetEdmsQuery(this.options));
+        }).then((result) => {
+            return result.recordset;
         });
     }
 
@@ -73,9 +77,14 @@ export default class {
         return this.getDataDbAsync().then((pool) => {
             return new MsSqlDatabase({
                 edm: edm,
-                mssqlDatabase: pool
+                mssqlDatabase: pool,
+                schema: this.options.schema
             });
         });
+    }
+
+    getMigrator() {
+        return new MsSqlMigrator();
     }
 
     _checkEdmDbExistsAsync(pool) {
