@@ -10,9 +10,8 @@ export default class TableStatementBuilder {
         this.dataTypeMapping = dataTypeMapping;
     }
 
-    // TODO: Why are we replacing double quotes with double quotes?
     _escapeName(name) {
-        return `[${name.replace(/\"/g, '"')}]`;
+        return `[${name}]`;
     }
 
     createDropTableStatment(schema, table) {

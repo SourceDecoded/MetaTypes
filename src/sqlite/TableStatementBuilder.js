@@ -11,7 +11,7 @@ export default class TableStatementBuilder {
     }
 
     _escapeName(name) {
-        return `"${name.replace(/\"/g, '"')}"`;
+        return `"${name.replace(/\"/g, '""')}"`;
     }
 
     createDropTableStatment(table) {

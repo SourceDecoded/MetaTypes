@@ -49,7 +49,7 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     _escapeIdentifier(value) {
-        return `"${value.replace(/\"/g, '"')}"`;
+        return `"${value.replace(/\"/g, '""')}"`;
     }
 
     _buildLeftJoinStatementFromSource(relationship) {
