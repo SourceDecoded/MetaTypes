@@ -3,7 +3,7 @@ import sqlite from "sqlite";
 import path from "path";
 import SqliteDatabase from "../sqlite/Database";
 
-generateCreateSql = function(){
+let generateCreateSql = function(){
     return `CREATE TABLE IF NOT EXISTS edm 
     ("id" INT PRIMARY KEY AUTOINCREMENT,
      "json" TEXT,
@@ -27,18 +27,18 @@ export default class {
         this._storageMode = "file";
         this._storageModes = {
             "file": {
-                "getEdmDbAsync": function(){
+                getEdmDbAsync:() => {
                     return sqlite.open(path.resolve(options.path, options.edmDb));
                 },
-                "getDataDbAsync": function(){
+                getDataDbAsync:() => {
                     return sqlite.open(path.resolve(options.path, options.dataDb));
                 }
             },
             "memory": {
-                "getEdmDbAsync": function(){
+                "getEdmDbAsync"(){
                     return sqlite.open(":memory:");
                 },
-                "getDataDbAsync": function(){
+                "getDataDbAsync"(){
                     return sqlite.open(":memory:");
                 }
             }

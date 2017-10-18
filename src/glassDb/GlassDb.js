@@ -93,10 +93,10 @@ export default class {
 
     _openDoorsAsync(doorsConfig) {
         if (doorsConfig.length === 0) {
-            console.warn("GlassDB is running, but there is no way to access it. Include one or more doors in the options");
+            console.warn("GlassDB is running, but there is no way to access it. Include one or more doors in the options.");
         }
-        doorsConfig.forEach((door) => {
-            door.options['glass'] = this;
+        doorsConfig.forEach((doorConfig) => {
+            doorConfig.options['glass'] = this;
             let door = new require(supportedDoors[door.name])(door.options);
             this.glassDoors.push(door);
         });

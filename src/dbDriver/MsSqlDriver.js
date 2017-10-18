@@ -3,7 +3,7 @@ import mssql from "mssql";
 import MsSqlDatabase from "../mssql/Database";
 import MsSqlMigrator  from "../mssql/Migrator";
 
-generateEdmCreateSql = function(options) {
+let generateEdmCreateSql = function(options) {
     return `CREATE TABLE ${options.edmSchema}.${options.edmTable}(
         [id] [int] IDENTITY(1,1) NOT NULL,
         [json] [text] NOT NULL,
@@ -16,7 +16,7 @@ generateEdmCreateSql = function(options) {
     ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]`;
 }
 
-generateGetEdmsQuery = function(options) {
+let generateGetEdmsQuery = function(options) {
     return `SELECT [id], [json], [name], [version] 
     FROM ${options.edmSchema}.${options.edmTable}`;
 }

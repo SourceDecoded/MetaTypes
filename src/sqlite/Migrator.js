@@ -1,4 +1,4 @@
-import TableStatementBuilder from "./TableStatememntBuilder";
+import TableStatementBuilder from "./TableStatementBuilder";
 
 export default class Migrator {
     constructor() { }

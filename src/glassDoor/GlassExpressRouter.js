@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import busboy from "connect-busboy";
+import Queryable from "queryablejs";
 
 export default class {
     constructor(mainApp, pane){
@@ -71,7 +72,8 @@ export default class {
         }
 
         let handleQuery = function(query, req, res, next) {
-            req.table.asQueryable(req.user).where(/* do something with the query here */).toArrayAsync().then((result) => {
+            var queryable = new Queryable("", query);
+            req.table.asQueryable(req.user).merge(queryable).toArrayAsync().then((result) => {
                 res.send(result);
             }).catch((e) => {
                 res.status(500).send(e);
