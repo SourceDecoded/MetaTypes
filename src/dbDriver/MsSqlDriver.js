@@ -42,32 +42,41 @@ export default class {
 
         this.options = options;
 
-        this._edmPoolPromse = mssql.connect({
+        this._edmPool = new mssql.ConnectionPool({
             user: options.user,
             password: options.password,
             server: options.server,
             database: options.edmDb
         });
+        this._edmPool.on("error", (e) => {
+            console.error(e);
+        });
+        this._edmPoolPromise = this._edmPool.connect();
 
-        this._dataPoolPromise = mssql.connect({
+        this._dataPool = new mssql.ConnectionPool({
             user: options.user,
             password: options.password,
             server: options.server,
-            database: options.edmDb
+            database: options.dataDb
         });
+        this._dataPool.on("error", (e) => {
+            console.error(e);
+        });
+        this._dataPoolPromise = this._dataPool.connect();
+
     }
 
     getEdmDbAsync() {
-        return this._edmPoolPromse;
+        return this._edmPoolPromise.then(() => this._edmPool);
     }
 
     getDataDbAsync() {
-        return this._dataPoolPromise;
+        return this._dataPoolPromise.then(() => this._dataPool);
     }
 
     getEdmListAsync() {
-        return _verifyEdmTableAsync().then((pool) => {
-            return pool.query(generateGetEdmsQuery(this.options));
+        return this._verifyEdmTableAsync().then((pool) => {
+            return pool.request().query(generateGetEdmsQuery(this.options));
         }).then((result) => {
             return result.recordset;
         });
@@ -78,7 +87,7 @@ export default class {
             return new MsSqlDatabase({
                 edm: edm,
                 mssqlDatabase: pool,
-                schema: this.options.schema
+                schema: this.options.dataSchema
             });
         });
     }
@@ -87,12 +96,21 @@ export default class {
         return new MsSqlMigrator();
     }
 
+    dispose() {
+        this.getEdmDbAsync().then((pool) => {
+            pool.close();
+        });
+        this.getDataDbAsync().then((pool) => {
+            pool.close();
+        });
+    }
+
     _checkEdmDbExistsAsync(pool) {
         return new Promise((resolve, reject) => {
-            pool.query(`SELECT * FROM INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA = ${this.options.edmSchema} 
-            AND  TABLE_NAME = ${this.options.edmTable}`).then((result) => {
-                if (result.length === 1) {
+            pool.request().query(`SELECT * FROM INFORMATION_SCHEMA.TABLES 
+            WHERE TABLE_SCHEMA = '${this.options.edmSchema}' 
+            AND TABLE_NAME = '${this.options.edmTable}'`).then((result) => {
+                if (result.recordset.length === 1) {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -105,7 +123,7 @@ export default class {
 
     _verifyEdmTableAsync() {
         return this.getEdmDbAsync().then((pool) => {
-            this._checkEdmDbExistsAsync(pool).then((exists) => {
+            return this._checkEdmDbExistsAsync(pool).then((exists) => {
                 if (exists) {
                     return pool;
                 } else {

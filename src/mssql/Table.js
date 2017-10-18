@@ -30,7 +30,8 @@ export default class Table {
         this.tableStatementBuilder = new TableStatementBuilder(name, options);
         this.provider = new Provider(name, {
             edm: this.edm,
-            mssqlDatabase: this.mssqlDatabase
+            mssqlDatabase: this.mssqlDatabase,
+            schema: this.schema
         });
     }
 
@@ -55,7 +56,7 @@ export default class Table {
     addEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createInsertStatement(this.schema, this.table, entity);
 
-        return this.mssqlDatabase.query(sql.statement, sql.values).then((result) => {
+        return this.mssqlDatabase.request().query(sql.statement, sql.values).then((result) => {
             let updatedEntity = this._clone(entity);
 
             // TODO: might need to be recordsets[1][0].id;
@@ -78,13 +79,13 @@ export default class Table {
 
         indexesStatements.unshift(tableStatement);
 
-        return this.mssqlDatabase.query(indexesStatements.join(";"));
+        return this.mssqlDatabase.request().query(indexesStatements.join(";"));
     }
 
     dropAsync() {
         var statement = this.tableStatementBuilder.createDropTableStatement(this.schema, this.table.name);
 
-        return this.mssqlDatabase.query(statement);
+        return this.mssqlDatabase.request().query(statement);
     }
 
     getQueryProvider() {
@@ -95,7 +96,7 @@ export default class Table {
     removeEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createDeleteStatement(this.schema, this.table, entity);
 
-        return this.mssqlDatabase.query(sql.statement, sql.values).then(() => {
+        return this.mssqlDatabase.request().query(sql.statement, sql.values).then(() => {
             return entity;
         });
     }
@@ -103,7 +104,7 @@ export default class Table {
     updateEntityAsync(entity, delta) {
         var sql = this.tableStatementBuilder.createUpdateStatement(this.schema, this.table, entity, delta);
 
-        return this.mssqlDatabase.query(sql.statement, sql.values).then((statement) => {
+        return this.mssqlDatabase.request().query(sql.statement, sql.values).then((statement) => {
             return Object.assign({}, entity, delta);
         });
     }

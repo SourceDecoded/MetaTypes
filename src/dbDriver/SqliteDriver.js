@@ -79,6 +79,15 @@ export default class {
         });
     }
 
+    dispose() {
+        this.getEdmDbAsync().then((db) => {
+            db.close();
+        });
+        this.getDataDbAsync().then((db) => {
+            db.close();
+        });
+    }
+
     _verifyEdmTableAsync() {
         return this.getEdmDbAsync().then((db) => {
             return db.run(generateCreateSql()).then(() => {

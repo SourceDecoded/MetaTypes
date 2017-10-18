@@ -8,19 +8,11 @@ let dbConfig = {
     user: "home_user",
     password: "3XV%t*oMeVF$79qZuW",
     server: "lgutsql01",
-    database: "Home"
-};
-
-exports["mssql.Database can connect"] = () => {
-
-    mssql.connect(dbConfig).then((pool) => {
-        return true;
-    }).catch((e) => {
-        return false;
-    }).then((connected) => {
-        assert(connected);
-    });
-
+    database: "Home",
+    dataDb: "Home",
+    edmDb: "Home",
+    edmSchema: "dbo",
+    dataSchema: "dbo"
 };
 
 exports["mssql.Database"] = () => {
@@ -32,18 +24,10 @@ exports["mssql.Database"] = () => {
             schema: "dbo"
         };
         
-        let db = new Database();
+        let db = new Database(config);
 
         assert(db);
     });
     
 };
 
-exports ["mssql.Database._getTableBuildOrder"] = () => {
-    let db = MsSqlDatabase
-    let options = {
-        mssqlDatabase: "",
-        edm: edm,
-        schema: "dbo"
-    };
-};
