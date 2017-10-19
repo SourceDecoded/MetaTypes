@@ -4,10 +4,10 @@ import busboy from "connect-busboy";
 import Queryable from "queryablejs";
 
 export default class {
-    constructor(mainApp, pane){
+    constructor(app, pane){
         this.enabled = true;
         this.pane = pane;
-        attach(apiRoot);
+        this.app = app;
     }
 
     // NOTE: sub-apps and routers can not be removed from an Express app stack,
@@ -17,7 +17,7 @@ export default class {
         this.enabled = false;
     }
 
-    attach(apiRoot) {
+    attach() {
         let handler = express.Router();
         handler.use((req, res, next) => {
             if (this.enabled) {
@@ -159,7 +159,7 @@ export default class {
             });
         });
 
-        this.mainApp.use(apiRoot + "/" + this.pane.edm.name, handler);
+        this.app.use(this.pane.edm.name, handler);
     }
 
 

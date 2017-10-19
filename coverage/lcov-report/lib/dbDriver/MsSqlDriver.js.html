@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/dbDriver/MsSqlDriver.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">lib/dbDriver/</a> MsSqlDriver.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">85.56% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>77/90</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">63.16% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>24/38</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">81.25% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>26/32</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">84.93% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>62/73</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }(); // SqlServerDriver.js
+&nbsp;
+&nbsp;
+var _mssql = require("mssql");
+&nbsp;
+var _mssql2 = _interopRequireDefault(_mssql);
+&nbsp;
+var _Database = require("../mssql/Database");
+&nbsp;
+var _Database2 = _interopRequireDefault(_Database);
+&nbsp;
+var _Migrator = require("../mssql/Migrator");
+&nbsp;
+var _Migrator2 = _interopRequireDefault(_Migrator);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var generateEdmCreateSql = <span class="fstat-no" title="function not covered" >function generateEdmCreateSql(options) {</span>
+<span class="cstat-no" title="statement not covered" >    return "CREATE TABLE " + options.edmSchema + "." + options.edmTable + "(\n        [id] [int] IDENTITY(1,1) NOT NULL,\n        [json] [text] NOT NULL,\n        [name] [varchar](100) NOT NULL,\n        [version] [int],\n     CONSTRAINT [PK_edm.edm] PRIMARY KEY CLUSTERED \n    (\n        [id] ASC\n    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]\n    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";</span>
+};
+&nbsp;
+var generateGetEdmsQuery = function generateGetEdmsQuery(options) {
+    return "SELECT [id], [json], [name], [version] \n    FROM " + options.edmSchema + "." + options.edmTable;
+};
+&nbsp;
+var _class = function () {
+    function _class() {
+        var options = arguments.length &gt; 0 &amp;&amp; arguments[0] !== undefined ? arguments[0] : <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
+&nbsp;
+        _classCallCheck(this, _class);
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!options.user) {
+<span class="cstat-no" title="statement not covered" >            throw new Error("MsSqlDriver requires a user");</span>
+        }
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!options.password) {
+<span class="cstat-no" title="statement not covered" >            throw new Error("MsSqlDriver requires a password");</span>
+        }
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!options.server) {
+<span class="cstat-no" title="statement not covered" >            throw new Error("MsSqlDriver requires a server");</span>
+        }
+&nbsp;
+        options.edmDb = options.edmDb || <span class="branch-1 cbranch-no" title="branch not covered" >"GLASS_edm";</span>
+        options.edmSchema = options.edmSchema || <span class="branch-1 cbranch-no" title="branch not covered" >"dbo";</span>
+        options.edmTable = options.edmTable || "edm";
+        options.dataSchema = options.dataSchema || <span class="branch-1 cbranch-no" title="branch not covered" >"dbo";</span>
+        options.dataDb = options.dataDb || <span class="branch-1 cbranch-no" title="branch not covered" >"GLASS_data";</span>
+&nbsp;
+        this.options = options;
+&nbsp;
+        this._edmPool = new _mssql2.default.ConnectionPool({
+            user: options.user,
+            password: options.password,
+            server: options.server,
+            database: options.edmDb
+        });
+        this._edmPool.on("error", <span class="fstat-no" title="function not covered" >function (e) {</span>
+<span class="cstat-no" title="statement not covered" >            console.error(e);</span>
+        });
+        this._edmPoolPromise = this._edmPool.connect();
+&nbsp;
+        this._dataPool = new _mssql2.default.ConnectionPool({
+            user: options.user,
+            password: options.password,
+            server: options.server,
+            database: options.dataDb
+        });
+        this._dataPool.on("error", <span class="fstat-no" title="function not covered" >function (e) {</span>
+<span class="cstat-no" title="statement not covered" >            console.error(e);</span>
+        });
+        this._dataPoolPromise = this._dataPool.connect();
+    }
+&nbsp;
+    _createClass(_class, [{
+        key: "getEdmDbAsync",
+        value: function getEdmDbAsync() {
+            var _this = this;
+&nbsp;
+            return this._edmPoolPromise.then(function () {
+                return _this._edmPool;
+            });
+        }
+    }, {
+        key: "getDataDbAsync",
+        value: function getDataDbAsync() {
+            var _this2 = this;
+&nbsp;
+            return this._dataPoolPromise.then(function () {
+                return _this2._dataPool;
+            });
+        }
+    }, {
+        key: "getEdmListAsync",
+        value: function getEdmListAsync() {
+            var _this3 = this;
+&nbsp;
+            return this._verifyEdmTableAsync().then(function (pool) {
+                return pool.request().query(generateGetEdmsQuery(_this3.options));
+            }).then(function (result) {
+                return result.recordset;
+            });
+        }
+    }, {
+        key: "getDatabaseForEdmAsync",
+        value: function getDatabaseForEdmAsync(edm) {
+            var _this4 = this;
+&nbsp;
+            return this.getDataDbAsync().then(function (pool) {
+                return new _Database2.default({
+                    edm: edm,
+                    mssqlDatabase: pool,
+                    schema: _this4.options.dataSchema
+                });
+            });
+        }
+    }, {
+        key: "getMigrator",
+        value: <span class="fstat-no" title="function not covered" >function getMigrator() {</span>
+<span class="cstat-no" title="statement not covered" >            return new _Migrator2.default();</span>
+        }
+    }, {
+        key: "dispose",
+        value: function dispose() {
+            this.getEdmDbAsync().then(function (pool) {
+                pool.close();
+            });
+            this.getDataDbAsync().then(function (pool) {
+                pool.close();
+            });
+        }
+    }, {
+        key: "_checkEdmDbExistsAsync",
+        value: function _checkEdmDbExistsAsync(pool) {
+            var _this5 = this;
+&nbsp;
+            return new Promise(function (resolve, reject) {
+                pool.request().query("SELECT * FROM INFORMATION_SCHEMA.TABLES \n            WHERE TABLE_SCHEMA = '" + _this5.options.edmSchema + "' \n            AND TABLE_NAME = '" + _this5.options.edmTable + "'").then(function (result) {
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (result.recordset.length === 1) {
+                        resolve(true);
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        resolve(false);</span>
+                    }
+                }).catch(<span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    reject(err);</span>
+                });
+            });
+        }
+    }, {
+        key: "_verifyEdmTableAsync",
+        value: function _verifyEdmTableAsync() {
+            var _this6 = this;
+&nbsp;
+            return this.getEdmDbAsync().then(function (pool) {
+                return _this6._checkEdmDbExistsAsync(pool).then(function (exists) {
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (exists) {
+                        return pool;
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        return pool.query(generateEdmCreateSql(_this6.options)).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            return pool;</span>
+                        });
+                    }
+                });
+            });
+        }
+    }]);
+&nbsp;
+    return _class;
+}();
+&nbsp;
+exports.default = _class;
+//# sourceMappingURL=MsSqlDriver.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Oct 19 2017 15:59:11 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

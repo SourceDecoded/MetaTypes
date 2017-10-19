@@ -3,10 +3,12 @@
 import GlassPane from "../glassPane/GlassPane";
 import MigrationRunner from "../migration/Runner";
 import MetaDatabase from "../meta/Database";
+import MsSqlDriver from "../dbDriver/MsSqlDriver";
+import SqliteDriver from "../dbDriver/SqliteDriver";
 
 supportedDrivers = {
-    "sqlite": "../dbDriver/SqliteDriver",
-    "mssql": "../dbDriver/MsSqlDriver"
+    "sqlite": SqliteDriver,
+    "mssql": MsSqlDriver
 };
 
 supportedFilesystems = {};
@@ -24,7 +26,7 @@ supportedDoors = {
     "fileSystem": {
         "name": "fsDriverName",
         "options": {(fs driver-specific options)}
-    }
+    },
     "doors": [
         {
             "name": "express",
@@ -52,7 +54,7 @@ export default class {
             throw new Error(`Unsupported dbDriver: ${dbDriver.name}`);
         }
         
-        let driver = new require(supportedDrivers[dbDriver.name])(dbDriver.options);
+        let driver = new supportedDrivers[dbDriver.name](dbDriver.options);
 
         driver.getEdmListAsync().then((edms) => {
             return _buildPanesAsync(edms);

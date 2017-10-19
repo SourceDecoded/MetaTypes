@@ -1,0 +1,1229 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/meta/Table.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">lib/meta/</a> Table.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">41.04% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>71/173</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">48.28% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>28/58</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">28.95% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>22/76</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">35.9% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>56/156</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }();
+&nbsp;
+var _Provider = require("./Provider");
+&nbsp;
+var _Provider2 = _interopRequireDefault(_Provider);
+&nbsp;
+var _queryablejs = require("queryablejs");
+&nbsp;
+var _User = require("./../user/User");
+&nbsp;
+var _User2 = _interopRequireDefault(_User);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var defaultDecorators = {
+    name: null,
+    edm: null,
+    table: null,
+    decorators: []
+};
+&nbsp;
+var Table = function () {
+    function Table() {
+        var _this = this;
+&nbsp;
+        var _ref = arguments.length &gt; 0 &amp;&amp; arguments[0] !== undefined ? arguments[0] : <span class="branch-1 cbranch-no" title="branch not covered" >{},</span>
+            _ref$table = _ref.table,
+            table = _ref$table === undefined ? <span class="branch-0 cbranch-no" title="branch not covered" >null </span>: _ref$table,
+            _ref$decorators = _ref.decorators,
+            decorators = _ref$decorators === undefined ? <span class="branch-0 cbranch-no" title="branch not covered" >[] </span>: _ref$decorators,
+            _ref$fileSystem = _ref.fileSystem,
+            fileSystem = _ref$fileSystem === undefined ? <span class="branch-0 cbranch-no" title="branch not covered" >null </span>: _ref$fileSystem;
+&nbsp;
+        _classCallCheck(this, Table);
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (table == null) {
+<span class="cstat-no" title="statement not covered" >            throw new Error("Null Argument Exception: MetaTable needs to have a table.");</span>
+        }
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (fileSystem == null) {
+<span class="cstat-no" title="statement not covered" >            throw new Error("Null Argument Exception: MetaTable needs to have a fileSystem.");</span>
+        }
+&nbsp;
+        this.table = table;
+        this.name = table.name;
+        this.edm = table.edm;
+        this.fileSystem = fileSystem;
+        this.edmTable = this._getEdmTable(this.name);
+        this.decoratorOptions = {};
+        this.decorators = decorators.filter(function (decorator) {
+            var decorators = _this.edmTable.decorators || [];
+&nbsp;
+            return decorators.findIndex(function (tableDecorator) {
+                _this.decoratorOptions[tableDecorator.name] = tableDecorator.options;
+                return tableDecorator.name === decorator.name;
+            }) &gt; -1;
+        });
+    }
+&nbsp;
+    _createClass(Table, [{
+        key: "_approveEntityToBeRemovedAsync",
+        value: <span class="fstat-no" title="function not covered" >function _approveEntityToBeRemovedAsync(user, entity) {</span>
+<span class="cstat-no" title="statement not covered" >            return this._invokeMethodOnDecoratorsAsync(user, "approveEntityToBeRemovedAsync", [this.name, entity]).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                return entity;</span>
+            });
+        }
+    }, {
+        key: "_assertUser",
+        value: function _assertUser(user) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!(user instanceof _User2.default)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Illegal Argument Exception: user needs to be an instance of User.");</span>
+            }
+        }
+    }, {
+        key: "_entityAddedAsync",
+        value: <span class="fstat-no" title="function not covered" >function _entityAddedAsync(user, entity) {</span>
+<span class="cstat-no" title="statement not covered" >            return this._invokeMethodWithRecoveryOnDecoratorsAsync(user, "entityAddedAsync", [this.name, entity]).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                return entity;</span>
+            });
+        }
+    }, {
+        key: "_entityRemovedAsync",
+        value: <span class="fstat-no" title="function not covered" >function _entityRemovedAsync(user, entity) {</span>
+<span class="cstat-no" title="statement not covered" >            return this._invokeMethodWithRecoveryOnDecoratorsAsync(user, "entityRemovedAsync", [this.name, entity]).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                return entity;</span>
+            });
+        }
+    }, {
+        key: "_entityUpdatedAsync",
+        value: <span class="fstat-no" title="function not covered" >function _entityUpdatedAsync(user, entity, delta) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this2 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.decorators.reduce(<span class="fstat-no" title="function not covered" >function (promise, decorator) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return promise.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    var options = Object.assign({ user: user }, _this2.decoratorOptions[decorator.name]);</span>
+<span class="cstat-no" title="statement not covered" >                    return _this2._invokeMethodWithRecoveryAsync(decorator, "entityUpdatedAsync", [_this2.name, entity, delta, options]);</span>
+                });
+            }, Promise.resolve());
+        }
+    }, {
+        key: "_getEdmTable",
+        value: function _getEdmTable(name) {
+            return this.edm.tables.find(function (table) {
+                return table.name === name;
+            });
+        }
+    }, {
+        key: "_getPrimaryKeyColumn",
+        value: <span class="fstat-no" title="function not covered" >function _getPrimaryKeyColumn() {</span>
+<span class="cstat-no" title="statement not covered" >            return this._getEdmTable(this.name).columns.find(<span class="fstat-no" title="function not covered" >function (column) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return column.isPrimaryKey;</span>
+            });
+        }
+    }, {
+        key: "_getPrimaryKeyName",
+        value: <span class="fstat-no" title="function not covered" >function _getPrimaryKeyName() {</span>
+<span class="cstat-no" title="statement not covered" >            return this._getPrimaryKeyColumn().name;</span>
+        }
+    }, {
+        key: "_getFilePathById",
+        value: <span class="fstat-no" title="function not covered" >function _getFilePathById(id) {</span>
+<span class="cstat-no" title="statement not covered" >            return this.edm.name + "_" + this.edm.version + "_" + this.edmTable.name + "_" + id;</span>
+        }
+    }, {
+        key: "_invokeMethodAsync",
+        value: function _invokeMethodAsync(obj, method) {
+            var args = arguments.length &gt; 2 &amp;&amp; arguments[2] !== undefined ? arguments[2] : <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+&nbsp;
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (obj != null &amp;&amp; typeof obj[method] === "function") {
+                var result = obj[method].apply(obj, args);
+&nbsp;
+                if (!(result instanceof Promise)) {
+                    result = Promise.resolve(result);
+                }
+&nbsp;
+                return result;
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return Promise.resolve();</span>
+        }
+    }, {
+        key: "_invokeMethodWithRecoveryAsync",
+        value: <span class="fstat-no" title="function not covered" >function _invokeMethodWithRecoveryAsync(obj, method) {</span>
+<span class="cstat-no" title="statement not covered" >            var args = arguments.length &gt; 2 &amp;&amp; arguments[2] !== undefined ? arguments[2] : [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var promise = Promise.resolve();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (obj != null &amp;&amp; typeof obj[method] === "function") {</span>
+<span class="cstat-no" title="statement not covered" >                promise = obj[method].apply(obj, args);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (!(promise instanceof Promise)) {</span>
+<span class="cstat-no" title="statement not covered" >                    promise = Promise.resolve(promise);</span>
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return promise.catch(<span class="fstat-no" title="function not covered" >function (eror) {</span></span>
+                // Log error.
+<span class="cstat-no" title="statement not covered" >                return null;</span>
+            });
+        }
+    }, {
+        key: "_invokeMethodOnDecoratorsAsync",
+        value: function _invokeMethodOnDecoratorsAsync(user, method, args) {
+            var _this3 = this;
+&nbsp;
+            return this.decorators.reduce(function (promise, decorator) {
+                return promise.then(function () {
+                    var options = Object.assign({ user: user }, _this3.decoratorOptions[decorator.name]);
+&nbsp;
+                    var customArgs = args.slice();
+                    customArgs.push(options);
+&nbsp;
+                    return _this3._invokeMethodAsync(decorator, method, customArgs);
+                });
+            }, Promise.resolve());
+        }
+    }, {
+        key: "_invokeMethodWithRecoveryOnDecoratorsAsync",
+        value: <span class="fstat-no" title="function not covered" >function _invokeMethodWithRecoveryOnDecoratorsAsync(user, method) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this4 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var args = arguments.length &gt; 2 &amp;&amp; arguments[2] !== undefined ? arguments[2] : [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.decorators.reduce(<span class="fstat-no" title="function not covered" >function (promise, decorator) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return promise.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    var options = Object.assign({ user: user }, _this4.decoratorOptions[decorator.name]);</span>
+<span class="cstat-no" title="statement not covered" >                    var customArgs = args.slice();</span>
+<span class="cstat-no" title="statement not covered" >                    customArgs.push(options);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    return _this4._invokeMethodWithRecoveryAsync(decorator, method, customArgs);</span>
+                });
+            }, Promise.resolve());
+        }
+    }, {
+        key: "_prepareEntityToBeAddedAsync",
+        value: function _prepareEntityToBeAddedAsync(user, entity) {
+            return this._invokeMethodOnDecoratorsAsync(user, "prepareEntityToBeAddedAsync", [this.name, entity]);
+        }
+    }, {
+        key: "_prepareEntityToBeUpdatedAsync",
+        value: <span class="fstat-no" title="function not covered" >function _prepareEntityToBeUpdatedAsync(user, entity, delta) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this5 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.decorators.reduce(<span class="fstat-no" title="function not covered" >function (promise, decorator) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return promise.then(<span class="fstat-no" title="function not covered" >function (delta) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    var options = Object.assign({ user: user }, _this5.decoratorOptions[decorator.name]);</span>
+<span class="cstat-no" title="statement not covered" >                    return _this5._invokeMethodAsync(decorator, "prepareEntityToBeUpdatedAsync", [_this5.name, entity, delta, options]);</span>
+                }).then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                    return delta;</span>
+                });
+            }, Promise.resolve(delta));
+        }
+    }, {
+        key: "_validateEntityToBeAddedAsync",
+        value: function _validateEntityToBeAddedAsync(user, entity) {
+            Object.freeze(entity);
+&nbsp;
+            return this._invokeMethodOnDecoratorsAsync(user, "validateEntityToBeAddedAsync", [this.name, entity]).then(function () {
+                return entity;
+            });
+        }
+    }, {
+        key: "_validateEntityToBeUpdatedAsync",
+        value: <span class="fstat-no" title="function not covered" >function _validateEntityToBeUpdatedAsync(user, entity, delta) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this6 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Object.freeze(delta);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.decorators.reduce(<span class="fstat-no" title="function not covered" >function (promise, decorator) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return promise.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    var options = Object.assign({ user: user }, _this6.decoratorOptions[decorator.name]);</span>
+<span class="cstat-no" title="statement not covered" >                    return _this6._invokeMethodAsync(decorator, "validateEntityToBeUpdatedAsync", [_this6.name, entity, delta, options]);</span>
+                });
+            }, Promise.resolve()).then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                return delta;</span>
+            });
+        }
+    }, {
+        key: "addEntityAsync",
+        value: function addEntityAsync(user, entity) {
+            var _this7 = this;
+&nbsp;
+            this._assertUser(user);
+&nbsp;
+            return this._prepareEntityToBeAddedAsync(user, entity).then(function () {
+                return _this7._validateEntityToBeAddedAsync(user, entity);
+            }).then(function () {
+                return _this7.table.addEntityAsync(entity);
+            }).then(<span class="fstat-no" title="function not covered" >function (entity) {</span>
+<span class="cstat-no" title="statement not covered" >                return _this7._entityAddedAsync(user, entity);</span>
+            });
+        }
+    }, {
+        key: "asQueryable",
+        value: <span class="fstat-no" title="function not covered" >function asQueryable(user) {</span>
+<span class="cstat-no" title="statement not covered" >            this._assertUser(user);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var provider = this.getQueryProvider(user);</span>
+<span class="cstat-no" title="statement not covered" >            var queryable = new _queryablejs.Queryable();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            queryable.provider = provider;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return queryable;</span>
+        }
+    }, {
+        key: "getFileSizeByIdAsync",
+        value: <span class="fstat-no" title="function not covered" >function getFileSizeByIdAsync(user, id) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this8 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.getEntityByIdAsync(user, id).then(<span class="fstat-no" title="function not covered" >function (entity) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return _this8.getFileSizeAsync(_this8._getFilePathById(id));</span>
+            });
+        }
+    }, {
+        key: "getFileReadStreamByIdAsync",
+        value: <span class="fstat-no" title="function not covered" >function getFileReadStreamByIdAsync(user, id) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this9 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.getEntityByIdAsync(user, id).then(<span class="fstat-no" title="function not covered" >function (entity) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return _this9.fileSystem.getReadStreamAsync(_this9._getFilePathById(id));</span>
+            });
+        }
+    }, {
+        key: "getFileWriteStreamByIdAsync",
+        value: <span class="fstat-no" title="function not covered" >function getFileWriteStreamByIdAsync(user, id) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this10 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var filePath = this._getFilePathById(id);</span>
+<span class="cstat-no" title="statement not covered" >            return this.getEntityByIdAsync(user, id).then(<span class="fstat-no" title="function not covered" >function (entity) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return _this10.fileSystem.getWriteStreamAsync(filePath);</span>
+            }).then(<span class="fstat-no" title="function not covered" >function (writable) {</span>
+<span class="cstat-no" title="statement not covered" >                writable.on("finish", <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    _this10._invokeMethodWithRecoveryOnDecoratorsAsync(user, "fileUpdatedAsync", [id, filePath]);</span>
+                });
+<span class="cstat-no" title="statement not covered" >                return writable;</span>
+            });
+        }
+    }, {
+        key: "getEntityByIdAsync",
+        value: <span class="fstat-no" title="function not covered" >function getEntityByIdAsync(user, id) {</span>
+<span class="cstat-no" title="statement not covered" >            var primaryKey = this._getPrimaryKeyName();</span>
+<span class="cstat-no" title="statement not covered" >            return this.asQueryable(user).where(<span class="fstat-no" title="function not covered" >function (expBuilder) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return expBuilder.property(primaryKey).isEqualTo(id);</span>
+            }).toArrayAsync().then(<span class="fstat-no" title="function not covered" >function (results) {</span>
+<span class="cstat-no" title="statement not covered" >                if (results.length === 1) {</span>
+<span class="cstat-no" title="statement not covered" >                    return results[0];</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                throw new Error("Entity Not Found");</span>
+            });
+        }
+    }, {
+        key: "getQueryProvider",
+        value: <span class="fstat-no" title="function not covered" >function getQueryProvider(user) {</span>
+<span class="cstat-no" title="statement not covered" >            this._assertUser(user);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return new _Provider2.default(user, this);</span>
+        }
+    }, {
+        key: "removeEntityAsync",
+        value: <span class="fstat-no" title="function not covered" >function removeEntityAsync(user, entity) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this11 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            this._assertUser(user);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Object.freeze(entity);</span>
+<span class="cstat-no" title="statement not covered" >            return this._approveEntityToBeRemovedAsync(user, entity).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                var primaryKey = _this11._getPrimaryKeyName();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return _this11.removeFileByIdAsync(user, entity[primaryKey]).catch(<span class="fstat-no" title="function not covered" >function (error) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return;</span>
+                });
+            }).then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                return _this11.table.removeEntityAsync(entity);</span>
+            }).then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                return _this11._entityRemovedAsync(user, entity);</span>
+            });
+        }
+    }, {
+        key: "removeFileByIdAsync",
+        value: <span class="fstat-no" title="function not covered" >function removeFileByIdAsync(user, id) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this12 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var filePath = this._getFilePathById(id);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.getEntityByIdAsync(user, id).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                return _this12.fileSystem.removeFileAsync(filePath);</span>
+            }).then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                return _this12._invokeMethodWithRecoveryOnDecoratorsAsync(user, "fileRemovedAsync", [id, filePath]);</span>
+            });
+        }
+    }, {
+        key: "updateEntityAsync",
+        value: <span class="fstat-no" title="function not covered" >function updateEntityAsync(user, entity, delta) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this13 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            this._assertUser(user);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Object.freeze(entity);</span>
+<span class="cstat-no" title="statement not covered" >            var updatedEntity = void 0;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this._prepareEntityToBeUpdatedAsync(user, entity, delta).then(<span class="fstat-no" title="function not covered" >function (delta) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return _this13._validateEntityToBeUpdatedAsync(user, entity, delta);</span>
+            }).then(<span class="fstat-no" title="function not covered" >function (delta) {</span>
+<span class="cstat-no" title="statement not covered" >                return _this13.table.updateEntityAsync(user, entity, delta).then(<span class="fstat-no" title="function not covered" >function (entity) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    updatedEntity = entity;</span>
+<span class="cstat-no" title="statement not covered" >                    return delta;</span>
+                });
+            }).then(<span class="fstat-no" title="function not covered" >function (delta) {</span>
+<span class="cstat-no" title="statement not covered" >                return _this13._entityUpdatedAsync(user, updatedEntity, delta);</span>
+            }).then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                return updatedEntity;</span>
+            });
+        }
+    }]);
+&nbsp;
+    return Table;
+}();
+&nbsp;
+exports.default = Table;
+//# sourceMappingURL=Table.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Oct 19 2017 15:59:11 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
