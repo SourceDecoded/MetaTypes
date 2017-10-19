@@ -5,12 +5,12 @@ import mssql from "mssql";
 import MsSqlDriver from "../dbDriver/MsSqlDriver";
 
 let dbConfig = {
-    user: "home_user",
-    password: "3XV%t*oMeVF$79qZuW",
-    server: "lgutsql01",
-    database: "Home",
-    dataDb: "Home",
-    edmDb: "Home",
+    user: process.env.META_DB_TEST_USER,
+    password: process.env.META_DB_TEST_PW,
+    server: process.env.META_DB_TEST_SERVER,
+    database: process.env.META_DB_TEST_DB,
+    dataDb: process.env.META_DB_TEST_DB_DATA,
+    edmDb: process.env.META_DB_TEST_DB_EDM,
     edmSchema: "dbo",
     dataSchema: "dbo"
 };
