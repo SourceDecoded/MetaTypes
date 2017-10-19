@@ -15,7 +15,7 @@ export default class Runner {
         this.edm = options.edm;
         this.migrator = options.migrator;
         this.edmValidator = new Validator();
-        this.edmMigrator = new Migrator();
+        this.edmMigrator = new Migrator(this.edm);
         this.decorators = options.decorators;
 
         this._executeCommandAsync = this._executeCommandAsync.bind(this);
@@ -25,12 +25,10 @@ export default class Runner {
 
     }
 
-    _executeCommandAsync(promise, command, index) {
+    _executeCommandAsync(promise, command, consequentialCommands) {
         let actionName = `${command.execute.action}Async`;
         let options = command.execute.options;
-        let edm = this.edm;
         let migratorCommand = this.migrator[actionName];
-        var consequentialCommands;
 
         return promise.then(() => {
 
@@ -43,11 +41,13 @@ export default class Runner {
             return this.decorators.reduce((promise, decorator) => {
 
                 return promise.then(() => {
-                    return this._invokeMethodAsyncWithRecovery(decorator, actionName, [edm, options])
-                }).then((consequentialCommands) => {
+                    return this._invokeMethodAsyncWithRecovery(decorator, actionName, [options])
+                }).then((commands) => {
 
-                    if (Array.isArray(consequentialCommands) && consequentialCommands.length > 0) {
-                        return this.migrateAsync(consequentialCommands);
+                    if (Array.isArray(commands)) {
+                        commands.forEach((command) => {
+                            consequentialCommands.push(command);
+                        });
                     }
 
                 });
@@ -55,18 +55,19 @@ export default class Runner {
             }, Promise.resolve());
 
         }).then(() => {
-            return migratorCommand.apply(this.migrator, [edm, options]);
+            return migratorCommand.apply(this.migrator, [options]);
         }).then((commands) => {
-            consequentialCommands = commands;
-            return this.edmMigrator[actionName](edm, options);
-        }).then(() => {
-            if (Array.isArray(consequentialCommands) && consequentialCommands.length > 0) {
-                return this.migrateAsync(consequentialCommands);
+
+            if (Array.isArray(commands)) {
+                commands.forEach((command) => {
+                    consequentialCommands.push(command);
+                });
             }
+
+            return this.edmMigrator[actionName](options);
         }).catch((error) => {
             let executionError = new Error(error.message);
-            executionError.stack = error.stack;
-            executionError.index = index;
+            executionError.inner = error;
 
             throw executionError;
         });
@@ -95,18 +96,17 @@ export default class Runner {
     }
 
     _revertCommandAsync(promise, command) {
-        let edm = this.edm;
         let actionName = `${command.revert.action}Async`;
         let migratorCommand = this.migrator[actionName];
 
         return promise.then(() => {
             if (typeof migratorCommand !== "function") {
-                throw new Error(`Migrator doesn't support this command. ${actionName}`);
+                throw new Error(`The ${this.migrator} migrator doesn't support this command. ${actionName}`);
             }
 
-            return migratorCommand.apply(this.migrator, [edm, command.revert.options]);
+            return migratorCommand.apply(this.migrator, [command.revert.options]);
         }).then(() => {
-            return this.edmMigrator[actionName](edm, command.revert.options);
+            return this.edmMigrator[actionName](command.revert.options);
         });
     }
 
@@ -148,23 +148,44 @@ export default class Runner {
     }
 
     migrateAsync(commands) {
-        return commands.reduce(this._executeCommandAsync, Promise.resolve()).catch((error) => {
-            let index = error.index;
+        if (commands.length === 0) {
+            return Promise.resolve();
+        }
 
+        let commandsCopy = commands.slice();
+        let consequentialCommands = [];
+        let promise = Promise.resolve();
+
+        while (commandsCopy.length > 0) {
+            let command = commandsCopy.shift();
+
+            promise = this._executeCommandAsync(promise, command, consequentialCommands).catch((error) => {
+                commandsCopy.unshift(command);
+                throw error;
+            });
+        }
+
+        return promise.then(() => {
+            return this.migrateAsync(consequentialCommands);
+        }).catch((error) => {
+
+            let index = commands.length - commandsCopy.length;
             let reverseCommands = commands.slice(0, index).reverse();
 
-            return reverseCommands.reduce(this._revertCommandAsync, Promise.resolve()).catch((error) => {
+            return reverseCommands.reduce(this._revertCommandAsync, Promise.resolve()).catch((revertError) => {
                 let modifiedError = Error("Failed to revert commands on a failed migration. Current edm state is corrupted.");
-                modifiedError.stack = error.stack;
+                modifiedError.revertError = revertError;
+                modifiedError.innerError = error;
 
                 throw modifiedError;
             }).then(() => {
                 let modifiedError = new Error("Failed Migration. Successfully reverted commands.");
-                modifiedError.stack = error.stack;
+                modifiedError.innerError = error;
 
                 throw modifiedError;
             });
 
         });
+
     }
 }

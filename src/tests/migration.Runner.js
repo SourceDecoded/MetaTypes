@@ -165,7 +165,8 @@ exports["migration.Runner.migrateAction: addTableAsync, addColumnAsync and with 
         type: "Integer",
         name: "id",
         label: "Identifier",
-        isPrimaryKey: true
+        isPrimaryKey: true,
+        isIndexed: false
     });
 
     let invalidCommand = new Command();
@@ -178,5 +179,80 @@ exports["migration.Runner.migrateAction: addTableAsync, addColumnAsync and with 
         assert.equal(edm.tables.length, 0);
         assert.equal(addTableAsyncCount, 0);
         assert.equal(addColumnAsyncCount, 0);
+    });
+}
+
+exports["migration.Runner.migrateAction: addTableAsync, addColumnAsync with consequential commands and with a invalid action and successfully rollback."] = () => {
+    let addTableAsyncCount = 0;
+    let addColumnAsyncCount = 0;
+    let updateColumnAsyncCount = 0;
+
+    let edm = new Edm();
+    edm.name = "Test";
+    edm.label = "Test";
+    edm.version = "0.0.1";
+
+    let migrator = {
+        name: "mockMigrator",
+        addTableAsync() {
+            addTableAsyncCount++;
+        },
+        addColumnAsync(options) {
+            addColumnAsyncCount++;
+
+            let newColumn = Object.assign({}, options.column, {
+                isIndexed: true
+            });
+
+            let invalidCommand = new Command();
+            invalidCommand.execute.action = "badAction";
+            invalidCommand.revert.action = "anotherBadAction";
+
+            return [
+                commandBuilder.createUpdateColumnCommand(options.tableName, options.column, newColumn),
+                invalidCommand
+            ];
+        },
+        removeTableAsync() {
+            addTableAsyncCount--;
+        },
+        removeColumnAsync() {
+            addColumnAsyncCount--;
+        },
+        updateColumnAsync(options) {
+            if (updateColumnAsyncCount === 0) {
+                assert.equal(options.column.isIndexed, true);
+            } else if (updateColumnAsyncCount === 1) {
+                assert.equal(options.column.isIndexed, false);
+            }
+            updateColumnAsyncCount++;
+        }
+    };
+
+    let runner = new MigrationRunner({
+        edm: edm,
+        migrator: migrator
+    });
+
+    let tableCommand = commandBuilder.createAddTableCommand({
+        name: "Person",
+        label: "Person",
+        pluralLabel: "People"
+    });
+
+    let columnCommand = commandBuilder.createAddColumnCommand("Person", {
+        type: "Integer",
+        name: "id",
+        label: "Identifier",
+        isPrimaryKey: true
+    });
+
+    return runner.migrateAsync([tableCommand, columnCommand]).then(() => {
+        assert.ok(false, "Supposed to fail with invalid action.");
+    }).catch((error) => {
+        assert.equal(edm.tables.length, 0);
+        assert.equal(addTableAsyncCount, 0);
+        assert.equal(addColumnAsyncCount, 0);
+        assert.equal(updateColumnAsyncCount % 2, 0);
     });
 }

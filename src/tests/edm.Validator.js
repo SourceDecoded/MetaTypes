@@ -293,7 +293,7 @@ exports["EdmValidator.validate: Invalid table with no primary key."] = () => {
                 oneToMany: []
             }
         });
-    }, /Invalid Argument: If the column is the primary key, it needs to be of typex Integer/);
+    }, /Invalid Argument: If the column is the primary key, it needs to be of type Integer/);
 
 }
 
