@@ -11,14 +11,18 @@ export default class TableStatementBuilder {
     }
 
     _escapeName(name) {
-        return `"${name.replace(/\"/g, '""')}"`;
+        return `[${name}]`;
     }
 
-    createDropTableStatment(table) {
-        return `DROP TABLE IF EXISTS ${this._escapeName(table.name)}`;
+    createDropTableStatment(schema, table) {
+        return `IF OBJECT_ID('${schema}.${table.name}', 'U') IS NOT NULL DROP TABLE ${schema}.${table.name};`
     }
 
-    createInsertStatement(table, entity) {
+    createInsertStatement(schema, table, entity) {
+        if (table == null) {
+            throw new Error("null Argument Exception: schema cannot be null or undefined.");
+        }
+
         if (table == null) {
             throw new Error("Null Argument Exception: table cannot be null or undefined.");
         }
@@ -39,9 +43,9 @@ export default class TableStatementBuilder {
                 columns.push(this._escapeName(columnName));
 
                 if (entity[columnName] === null) {
-                    values.push(this.toSqliteValue(defaultValue));
+                    values.push(this.toMssqlValue(defaultValue));
                 } else {
-                    values.push(this.toSqliteValue(entity[columnName]));
+                    values.push(this.toMssqlValue(entity[columnName]));
                 }
             }
         });
@@ -51,24 +55,28 @@ export default class TableStatementBuilder {
 
         if (values.length === 0) {
             return {
-                statement: `INSERT INTO ${this._escapeName(table.name)} DEFAULT VALUES`,
+                statement: `INSERT INTO ${this._escapeName(schema+"."+table.name)} () VALUES (); SELECT SCOPE_IDENTITY() AS id;`,
                 values: values
             };
         }
 
         return {
-            statement: `INSERT INTO ${this._escapeName(table.name)} (${columnsStatement}) VALUES (${valuesStatement})`,
+            statement: `INSERT INTO ${this._escapeName(schema+"."+table.name)} (${columnsStatement}) VALUES (${valuesStatement}); SELECT SCOPE_IDENTITY() AS id`,
             values: values
         };
 
     }
 
-    createUpdateStatement(table, entity, delta) {
+    createUpdateStatement(schema, table, entity, delta) {
         let values = [];
         const primaryKeyExpr = [];
         const primaryKeyValues = [];
         const columnSet = [];
         const columns = table.columns;
+
+        if (schema == null) {
+            throw new Error("Null Argument Exception: schema cannot be null or undefined.");
+        }
 
         if (table == null) {
             throw new Error("Null Argument Exception: table cannot be null or undefined.");
@@ -103,12 +111,16 @@ export default class TableStatementBuilder {
         values = values.concat(primaryKeyValues);
 
         return {
-            statement: `UPDATE ${this._escapeName(table.name)} SET ${columnSet.join(", ")} WHERE ${primaryKeyExpr.join(" AND ")}`,
+            statement: `UPDATE ${this._escapeName(schema+"."+table.name)} SET ${columnSet.join(", ")} WHERE ${primaryKeyExpr.join(" AND ")}`,
             values: values
         };
     }
 
-    createDeleteStatement(table, entity) {
+    createDeleteStatement(schema, table, entity) {
+        if (schema == null) {
+            throw new Error("Null Argument Exception: schema cannot be null or undefined.");
+        }
+
         if (table == null) {
             throw new Error("Null Argument Exception: table cannot be null or undefined.");
         }
@@ -133,7 +145,7 @@ export default class TableStatementBuilder {
         });
 
         return {
-            statement: `DELETE FROM ${this._escapeName(table.name)} WHERE ${primaryKeysExpr.join(" AND ")}`,
+            statement: `DELETE FROM ${this._escapeName(schema+"."+table.name)} WHERE ${primaryKeysExpr.join(" AND ")}`,
             values: values
         };
     }
@@ -175,11 +187,13 @@ export default class TableStatementBuilder {
         return columnsDefinition;
     }
 
-    createIndexStatement(table, column) {
-        return `CREATE INDEX IF NOT EXISTS ${this._escapeName(column)} ON ${this._escapeName(table)} (${this._escapeName(column)})`;
+    createIndexStatement(schema, table, column) {
+        return `IF NOT EXISTS (SELECT * FROM sys.index WHERE object_id = OBJECT_ID(N'${this._escapeName(schema+"."+table)}') AND name = N'index_${column.replace(/\"/g, "")}'
+                  CREATE INDEX index_${column.replace(/\"/g, "")} ON ${this._escapeName(schema+"."+table)} (${this._escapeName(column)})`;
     }
 
-    createTableIndexesStatements(table, relationships) {
+    // TODO: Update for mssql
+    createTableIndexesStatements(schema, table, relationships) {
         if (relationships == null) {
             throw new Error("Null Argument Exception: relationships cannot be null or undefined.");
         }
@@ -209,13 +223,12 @@ export default class TableStatementBuilder {
         });
 
         return Object.keys(indexedColumns).map((columnName) => {
-            return this.createIndexStatement(table.name, columnName);
+            return this.createIndexStatement(schema, table.name, columnName);
         });
 
     }
 
-    createForeignKeysStatement(table, relationships) {
-        const tableName = table.name;
+    createForeignKeysStatement(schema, table, relationships) {
         const tableRelationships = this.getTablesRelationshipsAsTargets(table, relationships);
 
         return tableRelationships.map((relationship) => {
@@ -223,8 +236,8 @@ export default class TableStatementBuilder {
         }).join("/n/t");
     }
 
-    createForeignKeyStatement(relationship) {
-        return `FOREIGN KEY (${this._escapeName(relationship.withForeignKey)}) REFERENCES ${this._escapeName(relationship.type)} (${this._escapeName(relationship.hasKey)})`;
+    createForeignKeyStatement(schema, relationship) {
+        return `CONSTRAINT (${this._escapeName(schema+"."+relationship.withForeignKey)}) REFERENCES ${this._escapeName(schema+"."+relationship.type)} (${this._escapeName(relationship.hasKey)})`;
     }
 
     createPrimaryKeyStatement(table) {
@@ -239,18 +252,19 @@ export default class TableStatementBuilder {
         }
     }
 
-    createTableStatement(table, relationships) {
+    // TODO: Update for mssql
+    createTableStatement(schema, table, relationships) {
         relationships = Object.assign({}, defaultRelationships, relationships);
 
         const columnDefinitionsStatement = this.createColumnsDefinitionStatement(table);
-        const foreignKeysStatement = this.createForeignKeysStatement(table, relationships);
+        const foreignKeysStatement = this.createForeignKeysStatement(schema, table, relationships);
 
         if (columnDefinitionsStatement && foreignKeysStatement) {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} (${columnDefinitionsStatement}, ${foreignKeysStatement})`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(schema+"."+table)} (${columnDefinitionsStatement}, ${foreignKeysStatement})`;
         } else if (columnDefinitionsStatement) {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} (${columnDefinitionsStatement})`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(schema+"."+table)} (${columnDefinitionsStatement})`;
         } else {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)}`;
+            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(schema+"."+table)}`;
         }
 
     }
@@ -317,7 +331,8 @@ export default class TableStatementBuilder {
         });
     }
 
-    toSqliteValue(value) {
+    // TODO: update for MSSQL
+    toMssqlValue(value) {
         if (typeof value === "string") {
             return value;
         } else if (typeof value === "number") {
@@ -332,4 +347,5 @@ export default class TableStatementBuilder {
             throw new Error("Unknown value.");
         }
     }
+
 }

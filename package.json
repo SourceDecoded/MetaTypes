@@ -17,8 +17,10 @@
     "webpack": "^3.5.6"
   },
   "dependencies": {
-    "fs-extra": "^3.0.1",
+    "body-parser": "^1.18.2",
+    "connect-busboy": "0.0.2",
     "express": "^4.15.4",
+    "fs-extra": "^3.0.1",
     "queryablejs": "0.0.3",
     "sqlite": "^2.8.0"
   }
