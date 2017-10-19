@@ -78,8 +78,8 @@ export default class Table {
         var indexesStatements = this.tableStatementBuilder.createTableIndexesStatements(this.schema, this.table, this.edm.relationships);
 
         indexesStatements.unshift(tableStatement);
-
-        return this.mssqlDatabase.request().query(indexesStatements.join(";"));
+        let fullStatement = indexesStatements.join(";");
+        return this.mssqlDatabase.request().query(fullStatement);
     }
 
     dropAsync() {

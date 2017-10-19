@@ -14,7 +14,15 @@ export default class TableStatementBuilder {
         return `[${name}]`;
     }
 
-    createDropTableStatment(schema, table) {
+    _wrapIfTableExists(table, schema, query) {
+        return `IF NOT (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES 
+            WHERE TABLE_SCHEMA = '${schema}' AND TABLE_NAME = '${table.name}'))
+            BEGIN
+            ${query}
+            END`
+    }
+
+    createDropTableStatement(schema, table) {
         return `IF OBJECT_ID('${schema}.${table.name}', 'U') IS NOT NULL DROP TABLE ${schema}.${table.name};`
     }
 
@@ -55,13 +63,13 @@ export default class TableStatementBuilder {
 
         if (values.length === 0) {
             return {
-                statement: `INSERT INTO ${this._escapeName(schema+"."+table.name)} () VALUES (); SELECT SCOPE_IDENTITY() AS id;`,
+                statement: `INSERT INTO [${schema}].[${table.name}] () VALUES (); SELECT SCOPE_IDENTITY() AS id;`,
                 values: values
             };
         }
 
         return {
-            statement: `INSERT INTO ${this._escapeName(schema+"."+table.name)} (${columnsStatement}) VALUES (${valuesStatement}); SELECT SCOPE_IDENTITY() AS id`,
+            statement: `INSERT INTO [${schema}].[${table.name}] (${columnsStatement}) VALUES (${valuesStatement}); SELECT SCOPE_IDENTITY() AS id`,
             values: values
         };
 
@@ -111,7 +119,7 @@ export default class TableStatementBuilder {
         values = values.concat(primaryKeyValues);
 
         return {
-            statement: `UPDATE ${this._escapeName(schema+"."+table.name)} SET ${columnSet.join(", ")} WHERE ${primaryKeyExpr.join(" AND ")}`,
+            statement: `UPDATE [${schema}].[${table.name}] SET ${columnSet.join(", ")} WHERE ${primaryKeyExpr.join(" AND ")}`,
             values: values
         };
     }
@@ -145,7 +153,7 @@ export default class TableStatementBuilder {
         });
 
         return {
-            statement: `DELETE FROM ${this._escapeName(schema+"."+table.name)} WHERE ${primaryKeysExpr.join(" AND ")}`,
+            statement: `DELETE FROM [${schema}].[${table.name}] WHERE ${primaryKeysExpr.join(" AND ")}`,
             values: values
         };
     }
@@ -165,7 +173,7 @@ export default class TableStatementBuilder {
                 }
 
                 if (column.isAutoIncrement) {
-                    primaryKey += " AUTOINCREMENT";
+                    primaryKey += " IDENTITY(1,1)";
                 }
             }
 
@@ -188,8 +196,8 @@ export default class TableStatementBuilder {
     }
 
     createIndexStatement(schema, table, column) {
-        return `IF NOT EXISTS (SELECT * FROM sys.index WHERE object_id = OBJECT_ID(N'${this._escapeName(schema+"."+table)}') AND name = N'index_${column.replace(/\"/g, "")}'
-                  CREATE INDEX index_${column.replace(/\"/g, "")} ON ${this._escapeName(schema+"."+table)} (${this._escapeName(column)})`;
+        return `IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[${schema}].[${table}]') AND name = N'index_${column.replace(/\"/g, '""')}')
+                  CREATE INDEX index_${column.replace(/\"/g, '""')} ON [${schema}].[${table}] (${this._escapeName(column)})`;
     }
 
     // TODO: Update for mssql
@@ -232,12 +240,12 @@ export default class TableStatementBuilder {
         const tableRelationships = this.getTablesRelationshipsAsTargets(table, relationships);
 
         return tableRelationships.map((relationship) => {
-            return this.createForeignKeyStatement(relationship);
+            return this.createForeignKeyStatement(schema, relationship);
         }).join("/n/t");
     }
 
     createForeignKeyStatement(schema, relationship) {
-        return `CONSTRAINT (${this._escapeName(schema+"."+relationship.withForeignKey)}) REFERENCES ${this._escapeName(schema+"."+relationship.type)} (${this._escapeName(relationship.hasKey)})`;
+        return `CONSTRAINT [c_${relationship.ofType}.${relationship.withForeignKey}_to_${relationship.type}.${relationship.hasKey}] FOREIGN KEY([${relationship.withForeignKey}]) REFERENCES [${schema}].[${relationship.type}] ([${relationship.hasKey}])`;
     }
 
     createPrimaryKeyStatement(table) {
@@ -260,11 +268,14 @@ export default class TableStatementBuilder {
         const foreignKeysStatement = this.createForeignKeysStatement(schema, table, relationships);
 
         if (columnDefinitionsStatement && foreignKeysStatement) {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(schema+"."+table)} (${columnDefinitionsStatement}, ${foreignKeysStatement})`;
+            return this._wrapIfTableExists(table, schema,
+                `CREATE TABLE [${schema}].[${table.name}] (${columnDefinitionsStatement}, ${foreignKeysStatement})`);
         } else if (columnDefinitionsStatement) {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(schema+"."+table)} (${columnDefinitionsStatement})`;
+            return this._wrapIfTableExists(table, schema,
+                `CREATE TABLE [${schema}].[${table.name}] (${columnDefinitionsStatement})`);
         } else {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(schema+"."+table)}`;
+            return this._wrapIfTableExists(table, schema,
+                `CREATE TABLE [${schema}].[${table.name}]`);
         }
 
     }
