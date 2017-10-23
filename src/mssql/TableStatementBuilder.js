@@ -20,14 +20,14 @@ export default class TableStatementBuilder {
 
     _wrapIfTableExists(table, query) {
         return `IF NOT (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA = '${this.schema}' AND TABLE_NAME = '${table.name}'))
+            WHERE TABLE_SCHEMA = '${this.schema}' AND TABLE_NAME = '${this._getDbTableName(table.name)}'))
             BEGIN
             ${query}
             END`
     }
 
     _getDbTableName(table) {
-        return `${table}_${this.edm.version}`;
+        return `${table}__${this.edm.version.replace(/\./g, "_")}`;
     }
 
     _getQualifiedDbTableName(table) {
@@ -35,7 +35,7 @@ export default class TableStatementBuilder {
     }
 
     createDropTableStatement() {
-        return `IF OBJECT_ID('${this.schema}.${this._getDbTableName(this.table.name)}', 'U') IS NOT NULL DROP TABLE ${this._getQualifiedDbTableName(table.name)};`
+        return `IF OBJECT_ID('${this.schema}.${this._getDbTableName(this.table.name)}', 'U') IS NOT NULL DROP TABLE ${this._getQualifiedDbTableName(this.table.name)};`
     }
 
     createInsertStatement(entity) {
@@ -251,7 +251,9 @@ export default class TableStatementBuilder {
         relationships = Object.assign({}, defaultRelationships, relationships);
 
         const columnDefinitionsStatement = this.createColumnsDefinitionStatement();
-        const foreignKeysStatement = this.createForeignKeysStatement(relationships);
+        //const foreignKeysStatement = this.createForeignKeysStatement(relationships);
+        // not sure we want to be enforcing these in the DB.
+        const foreignKeysStatement = "";
 
         if (columnDefinitionsStatement && foreignKeysStatement) {
             return this._wrapIfTableExists(this.table,

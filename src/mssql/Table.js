@@ -27,7 +27,7 @@ export default class Table {
             throw new Error(`Cannot find table called '${name}' within ${this.edm.name}.`);
         }
 
-        this.tableStatementBuilder = new TableStatementBuilder(table, options);
+        this.tableStatementBuilder = new TableStatementBuilder(this.table, options);
         this.provider = new Provider(name, {
             edm: this.edm,
             mssqlDatabase: this.mssqlDatabase,

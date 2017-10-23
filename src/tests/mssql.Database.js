@@ -85,7 +85,7 @@ exports["mssql.Database.dropAsync"] = () => {
         setup.instance.dropAsync().then(() => {
             assert(true);
         }).catch((e) => {
-            assert.fail(e.message);
+            assert.fail(e.message); //
         }).then(() => {
             setup.dbDriver.dispose();
         });

@@ -9,7 +9,7 @@ let generateEdmCreateSql = function(options) {
         [id] [int] IDENTITY(1,1) NOT NULL,
         [json] [text] NOT NULL,
         [name] [varchar](100) NOT NULL,
-        [version] [int],
+        [version] [varchar](10),
      CONSTRAINT [PK_edm.edm] PRIMARY KEY CLUSTERED 
     (
         [id] ASC
@@ -136,9 +136,10 @@ export default class {
 
     _checkEdmDbExistsAsync(pool) {
         return new Promise((resolve, reject) => {
-            pool.request().query(`SELECT * FROM INFORMATION_SCHEMA.TABLES 
+            let q = `SELECT * FROM INFORMATION_SCHEMA.TABLES 
             WHERE TABLE_SCHEMA = '${this.options.edmSchema}' 
-            AND TABLE_NAME = '${this.options.edmTable}'`).then((result) => {
+            AND TABLE_NAME = '${this.options.edmTable}'`;
+            pool.request().query(q).then((result) => {
                 if (result.recordset.length === 1) {
                     resolve(true);
                 } else {
@@ -156,7 +157,8 @@ export default class {
                 if (exists) {
                     return pool;
                 } else {
-                    return pool.query(generateEdmCreateSql(this.options)).then(() => {
+                    let q = generateEdmCreateSql(this.options);
+                    return pool.request().query(q).then(() => {
                         return pool;
                     });
                 }
