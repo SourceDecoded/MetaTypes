@@ -1,9 +1,21 @@
 import TableStatementBuilder from "./TableStatementBuilder";
 
 export default class Migrator {
-    constructor() { }
+    constructor(edmPoolPromise) {
+        this._edmPoolPromise = edmPoolPromise;
+        this._tableStatementBuilder = new TableStatementBuilder();
+    }
+
+    _executeAsync(query) {
+        this._edmPoolPromise.then((pool) => {
+            return pool.query(query);
+        });
+    }
 
     addColumnAsync(edm, options = {}) {
+        let query = `ALTER TABLE `;
+
+        return this._executeAsync(query);
     }
 
     addDecoratorAsync(edm, options = {}) {

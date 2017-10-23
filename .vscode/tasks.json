@@ -16,6 +16,15 @@
             ]
         },
         {
+            "taskName": "clean",
+            "isBuildCommand": true,
+            "isTestCommand": true,
+            "args": [
+                "${workspaceRoot}/.clarity/clean.js",
+                "lib"
+            ]
+        },
+        {
             "taskName": "compile",
             "isBuildCommand": true,
             "isTestCommand": true,

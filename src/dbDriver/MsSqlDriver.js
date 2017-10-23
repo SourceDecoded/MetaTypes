@@ -2,6 +2,7 @@
 import mssql from "mssql";
 import MsSqlDatabase from "../mssql/Database";
 import MsSqlMigrator  from "../mssql/Migrator";
+import Edm from "../edm/Edm";
 
 let generateEdmCreateSql = function(options) {
     return `CREATE TABLE ${options.edmSchema}.${options.edmTable}(
@@ -82,6 +83,34 @@ export default class {
         });
     }
 
+    getEdmAsync(name, version) {
+        return this._getEdmDbAsync().then((pool) => {
+            return pool.request().query(`SELECT * FROM [${this.options.edmSchema}].[${this.options.edmTable}] WHERE
+            [version]=${version} AND [name]='${name}'`).then((result) => {
+                return result.recordset[0];
+            });
+        });
+    };
+
+    addEdmAsync(name, version) {
+        var newEdm = new Edm();
+        return this._getEdmDbAsync().then((pool) => {
+            return pool.request().query(`INSERT INTO [${this.options.edmSchema}].[${this.options.edmTable}] 
+            (name, version, json) VALUES ('${name}', '${version}', '${JSON.stringify(newEdm)}')`).then((result) => {
+                return;
+            });
+        });
+    };
+
+    deleteEdmAsync(name, version) {
+        return this._getEdmDbAsync().then((pool) => {
+            return pool.request().query(`DELETE FROM [${this.options.edmSchema}].[${this.options.edmTable}]
+            WHERE [version]=${version} AND [name]='${name}'`).then(() => {
+                return;
+            });
+        });
+    };
+
     getDatabaseForEdmAsync(edm) {
         return this.getDataDbAsync().then((pool) => {
             return new MsSqlDatabase({
@@ -93,7 +122,7 @@ export default class {
     }
 
     getMigrator() {
-        return new MsSqlMigrator();
+        return new MsSqlMigrator(this._edmPoolPromise);
     }
 
     dispose() {

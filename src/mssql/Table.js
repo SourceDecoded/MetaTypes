@@ -27,7 +27,7 @@ export default class Table {
             throw new Error(`Cannot find table called '${name}' within ${this.edm.name}.`);
         }
 
-        this.tableStatementBuilder = new TableStatementBuilder(name, options);
+        this.tableStatementBuilder = new TableStatementBuilder(table, options);
         this.provider = new Provider(name, {
             edm: this.edm,
             mssqlDatabase: this.mssqlDatabase,
@@ -54,7 +54,7 @@ export default class Table {
     }
 
     addEntityAsync(entity) {
-        var sql = this.tableStatementBuilder.createInsertStatement(this.schema, this.table, entity);
+        var sql = this.tableStatementBuilder.createInsertStatement(entity);
 
         return this.mssqlDatabase.request().query(sql.statement, sql.values).then((result) => {
             let updatedEntity = this._clone(entity);
@@ -74,8 +74,8 @@ export default class Table {
     }
 
     createAsync() {
-        var tableStatement = this.tableStatementBuilder.createTableStatement(this.schema, this.table, this.edm.relationships);
-        var indexesStatements = this.tableStatementBuilder.createTableIndexesStatements(this.schema, this.table, this.edm.relationships);
+        var tableStatement = this.tableStatementBuilder.createTableStatement(this.edm.relationships);
+        var indexesStatements = this.tableStatementBuilder.createTableIndexesStatements(this.edm.relationships);
 
         indexesStatements.unshift(tableStatement);
         let fullStatement = indexesStatements.join(";");
@@ -83,7 +83,7 @@ export default class Table {
     }
 
     dropAsync() {
-        var statement = this.tableStatementBuilder.createDropTableStatement(this.schema, this.table.name);
+        var statement = this.tableStatementBuilder.createDropTableStatement();
 
         return this.mssqlDatabase.request().query(statement);
     }
@@ -94,7 +94,7 @@ export default class Table {
 
 
     removeEntityAsync(entity) {
-        var sql = this.tableStatementBuilder.createDeleteStatement(this.schema, this.table, entity);
+        var sql = this.tableStatementBuilder.createDeleteStatement(entity);
 
         return this.mssqlDatabase.request().query(sql.statement, sql.values).then(() => {
             return entity;
@@ -102,7 +102,7 @@ export default class Table {
     }
 
     updateEntityAsync(entity, delta) {
-        var sql = this.tableStatementBuilder.createUpdateStatement(this.schema, this.table, entity, delta);
+        var sql = this.tableStatementBuilder.createUpdateStatement(entity, delta);
 
         return this.mssqlDatabase.request().query(sql.statement, sql.values).then((statement) => {
             return Object.assign({}, entity, delta);

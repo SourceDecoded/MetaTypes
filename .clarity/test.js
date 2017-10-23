@@ -27,7 +27,11 @@ const promisify = (fn) => {
 }
 
 fs.readdir(testDirectory).then((files) => {
-    return files.reduce((promise, file) => {
+    let testFiles = files.filter((file) => {
+        // skip anything prefixed with an underscore;
+        return file[0] !== "_";
+    });
+    return testFiles.reduce((promise, file) => {
 
         return promise.then(() => {
             if (path.extname(file) === ".js") {

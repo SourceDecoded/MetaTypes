@@ -9,6 +9,12 @@ export default class {
         this.metaDatabase = options.metaDatabase;
         this.migrator = options.migrator;
     }
-    // I can't quite remember what the GlassPane is supposed to do, but it is currently very good at holding
+
+    dispose() {
+        // nothing to see here now, but stay tuned!
+    }
+    
+    // I can't quite remember what the GlassPane is supposed to do, but it is 
+    // currently very good at holding
     // on to an EDM and its related things.
 }
