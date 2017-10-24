@@ -6,12 +6,12 @@ const edmValidator = new Validator(dataTypeMapping);
 
 export default class Database {
     constructor(options = {}) {
-        let mssqlDatabase = options.mssqlDatabase;
+        let connectionPool = options.connectionPool;
         let edm = options.edm;
         let schema = options.schema;
 
-        if (mssqlDatabase == null) {
-            throw new Error("Database needs to have an mssqlDatabase.");
+        if (connectionPool == null) {
+            throw new Error("Database needs to have a connectionPool.");
         }
         if (edm == null) {
             throw new Error("Database needs to have an edm.");
@@ -20,7 +20,7 @@ export default class Database {
         this.schema = schema;
         this.name = edm.name;
         this.edm = edm;
-        this.mssqlDatabase = mssqlDatabase;
+        this.connectionPool = connectionPool;
         this.tables = {};
 
         edmValidator.validate(edm);
@@ -29,7 +29,7 @@ export default class Database {
 
     _createTables() {
         let options = {
-            mssqlDatabase: this.mssqlDatabase,
+            connectionPool: this.connectionPool,
             edm: this.edm,
             schema: this.schema
         };

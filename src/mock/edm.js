@@ -58,11 +58,6 @@ const edm = {
             "name": "Foreign",
             "label": "Foreign",
             "pluralLabel": "Foreigners",
-            "gemDecorators": [
-                {
-                    "name": "one-to-many" // We need to think about how we can configure the front end with the edm.
-                }
-            ],
             "columns": [
                 {
                     "type": "Integer",

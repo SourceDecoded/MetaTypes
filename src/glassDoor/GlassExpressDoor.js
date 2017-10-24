@@ -2,7 +2,7 @@
 // Implements GlassDoor to expose a GlassDb by HTTP
 import express from "express";
 import DataRouter from "./GlassExpressDataRouter";
-import EDMApp from "./GlassExpressEDMApp";
+import EDMApp from "./GlassExpressEDMRouter";
 import bodyParser from "body-parser";
 
 export default class {

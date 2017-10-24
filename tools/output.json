@@ -1,0 +1,567 @@
+[
+  {
+    "id": "6a3efd3b-8afb-51df-2cf5-cd1d488c3f51",
+    "execute": {
+      "action": "addTable",
+      "options": {
+        "name": "Source",
+        "label": "Source",
+        "pluralLabel": "Sources",
+        "decorators": [
+          {
+            "name": "Test",
+            "options": {
+              "option1": true
+            }
+          }
+        ]
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeTable",
+      "options": {
+        "name": "Source",
+        "label": "Source",
+        "pluralLabel": "Sources",
+        "decorators": [
+          {
+            "name": "Test",
+            "options": {
+              "option1": true
+            }
+          }
+        ]
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "8ae39ecd-cce1-acfd-17dc-a2f617569d4",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Integer",
+          "name": "id",
+          "label": "Identifier",
+          "isPrimaryKey": true,
+          "isAutoIncrement": true,
+          "isNullable": false,
+          "isIndexed": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Integer",
+          "name": "id",
+          "label": "Identifier",
+          "isPrimaryKey": true,
+          "isAutoIncrement": true,
+          "isNullable": false,
+          "isIndexed": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "516b2a95-2bd2-b1d9-e82c-cb79567cb84d",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "String",
+          "name": "string",
+          "label": "String",
+          "defaultStringValue": "",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "String",
+          "name": "string",
+          "label": "String",
+          "defaultStringValue": "",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "f5cbf625-8b98-cca5-a1b3-75ed79d2ebfb",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Number",
+          "name": "number",
+          "label": "Number",
+          "defaultNumberValue": 1,
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Number",
+          "name": "number",
+          "label": "Number",
+          "defaultNumberValue": 1,
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "4542b781-cc72-5dfd-cd3c-e2ce4646f756",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Date",
+          "name": "date",
+          "label": "Date",
+          "defaultDateValue": "1970-01-01",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Date",
+          "name": "date",
+          "label": "Date",
+          "defaultDateValue": "1970-01-01",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "68f2f37d-9d53-527e-719d-b27852bf2861",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Boolean",
+          "name": "boolean",
+          "label": "Boolean",
+          "defaultBooleanValue": false,
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Boolean",
+          "name": "boolean",
+          "label": "Boolean",
+          "defaultBooleanValue": false,
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "54889a15-59d7-eb16-982c-1cc15c74657",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Float",
+          "name": "float",
+          "label": "Float",
+          "defaultFloatValue": 0,
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "Source",
+        "column": {
+          "type": "Float",
+          "name": "float",
+          "label": "Float",
+          "defaultFloatValue": 0,
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "5018ce0e-c6e6-f193-7eed-ebe5a1f3f54",
+    "execute": {
+      "action": "addTable",
+      "options": {
+        "name": "Foreign",
+        "label": "Foreign",
+        "pluralLabel": "Foreigners"
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeTable",
+      "options": {
+        "name": "Foreign",
+        "label": "Foreign",
+        "pluralLabel": "Foreigners"
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "dc0a82c-59cb-4725-bce-dbabeb2c7270",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "Foreign",
+        "column": {
+          "type": "Integer",
+          "name": "id",
+          "label": "Identifier",
+          "isPrimaryKey": true,
+          "isAutoIncrement": true,
+          "isNullable": false,
+          "isIndexed": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "Foreign",
+        "column": {
+          "type": "Integer",
+          "name": "id",
+          "label": "Identifier",
+          "isPrimaryKey": true,
+          "isAutoIncrement": true,
+          "isNullable": false,
+          "isIndexed": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "3844f18c-d12e-e6a6-ad60-4a97f9475c74",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "Foreign",
+        "column": {
+          "type": "Integer",
+          "name": "foreignKey",
+          "label": "ForeignKey",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "Foreign",
+        "column": {
+          "type": "Integer",
+          "name": "foreignKey",
+          "label": "ForeignKey",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "d0a7b170-e005-6b8-327c-710282f0e484",
+    "execute": {
+      "action": "addTable",
+      "options": {
+        "name": "OtherForeign",
+        "label": "Other Foreigner",
+        "pluralLabel": "Other Foreigners"
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeTable",
+      "options": {
+        "name": "OtherForeign",
+        "label": "Other Foreigner",
+        "pluralLabel": "Other Foreigners"
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "c8cc2c94-8b20-ceed-a180-f03fe71c98b",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "OtherForeign",
+        "column": {
+          "type": "Integer",
+          "name": "id",
+          "label": "Identifier",
+          "isPrimaryKey": true,
+          "isAutoIncrement": true,
+          "isNullable": false,
+          "isIndexed": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "OtherForeign",
+        "column": {
+          "type": "Integer",
+          "name": "id",
+          "label": "Identifier",
+          "isPrimaryKey": true,
+          "isAutoIncrement": true,
+          "isNullable": false,
+          "isIndexed": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "1bfe7fc9-cf75-5292-54a6-e72894ad906e",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "OtherForeign",
+        "column": {
+          "type": "Integer",
+          "name": "foreignKey",
+          "label": "ForeignKey",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "OtherForeign",
+        "column": {
+          "type": "Integer",
+          "name": "foreignKey",
+          "label": "ForeignKey",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "1458af37-97dc-6d0e-2704-2538ee35cc14",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "OtherForeign",
+        "column": {
+          "type": "String",
+          "name": "string",
+          "label": "String",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "OtherForeign",
+        "column": {
+          "type": "String",
+          "name": "string",
+          "label": "String",
+          "isIndexed": false,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "19072e17-1ca8-3202-3242-a13699d7f781",
+    "execute": {
+      "action": "addColumn",
+      "options": {
+        "tableName": "OtherForeign",
+        "column": {
+          "type": "Integer",
+          "name": "indexedColumn",
+          "label": "Indexed Column",
+          "isIndexed": true,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeColumn",
+      "options": {
+        "tableName": "OtherForeign",
+        "column": {
+          "type": "Integer",
+          "name": "indexedColumn",
+          "label": "Indexed Column",
+          "isIndexed": true,
+          "isNullable": true,
+          "isAutoIncrement": false
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "9fcbb574-5c94-bb1b-a935-b23082b67b5",
+    "execute": {
+      "action": "addOneToOneRelationship",
+      "options": {
+        "relationship": {
+          "type": "Source",
+          "hasKey": "id",
+          "hasOneLabel": "Foreigner",
+          "hasOne": "foreigner",
+          "ofType": "OtherForeign",
+          "withKey": "id",
+          "withForeignKey": "foreignKey",
+          "withOne": "source",
+          "withOneLabel": "Source"
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeOneToOneRelationship",
+      "options": {
+        "relationship": {
+          "type": "Source",
+          "hasKey": "id",
+          "hasOneLabel": "Foreigner",
+          "hasOne": "foreigner",
+          "ofType": "OtherForeign",
+          "withKey": "id",
+          "withForeignKey": "foreignKey",
+          "withOne": "source",
+          "withOneLabel": "Source"
+        }
+      },
+      "response": null
+    }
+  },
+  {
+    "id": "b13433c7-a776-a3b-a781-82454d25a6a",
+    "execute": {
+      "action": "addOneToManyRelationship",
+      "options": {
+        "relationship": {
+          "type": "Source",
+          "hasKey": "id",
+          "hasManyLabel": "Foreigners",
+          "hasMany": "foreigners",
+          "ofType": "Foreign",
+          "withKey": "id",
+          "withForeignKey": "foreignKey",
+          "withOne": "source",
+          "withOneLabel": "Source"
+        }
+      },
+      "response": null
+    },
+    "revert": {
+      "action": "removeOneToManyRelationship",
+      "options": {
+        "relationship": {
+          "type": "Source",
+          "hasKey": "id",
+          "hasManyLabel": "Foreigners",
+          "hasMany": "foreigners",
+          "ofType": "Foreign",
+          "withKey": "id",
+          "withForeignKey": "foreignKey",
+          "withOne": "source",
+          "withOneLabel": "Source"
+        }
+      },
+      "response": null
+    }
+  }
+]

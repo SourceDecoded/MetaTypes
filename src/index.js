@@ -10,7 +10,7 @@ import User from "./user/User";
 import LocalFileSystem from "./util/LocalFileSystem";
 import MockFileSystem from "./mock/FileSystem";
 import GlassDb from "./glassDb/GlassDb";
-import ExpressDoor from "./glassDoor/ExpressDoor";
+import GlassExpressDoor from "./glassDoor/GlassExpressDoor";
 import MsSqlDatabase from "./mssql/Database";
 import MsSqlTable from "./mssql/Table";
 import MsSqlProvider from "./mssql/Provider";
@@ -28,7 +28,7 @@ export {
     User,
     LocalFileSystem,
     MockFileSystem,
-    ExpressDoor,
+    GlassExpressDoor,
     MsSqlDatabase,
     MsSqlTable,
     MsSqlProvider

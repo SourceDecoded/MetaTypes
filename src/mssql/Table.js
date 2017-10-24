@@ -4,7 +4,7 @@ import Provider from "./Provider";
 
 export default class Table {
     constructor(name, options = {}) {
-        this.mssqlDatabase = options.mssqlDatabase;
+        this.connectionPool = options.connectionPool;
         this.edm = options.edm;
         this.name = name;
         this.schema = options.schema;
@@ -13,8 +13,8 @@ export default class Table {
             throw new Error("The table needs to have a name.");
         }
 
-        if (this.mssqlDatabase == null) {
-            throw new Error("The table needs to have a mssqlDatabase database.");
+        if (this.connectionPool == null) {
+            throw new Error("The table needs to have a connectionPool.");
         }
 
         if (this.edm == null) {
@@ -30,7 +30,7 @@ export default class Table {
         this.tableStatementBuilder = new TableStatementBuilder(this.table, options);
         this.provider = new Provider(name, {
             edm: this.edm,
-            mssqlDatabase: this.mssqlDatabase,
+            connectionPool: this.connectionPool,
             schema: this.schema
         });
     }
@@ -56,7 +56,7 @@ export default class Table {
     addEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createInsertStatement(entity);
 
-        return this.mssqlDatabase.request().query(sql.statement, sql.values).then((result) => {
+        return this.connectionPool.request().query(sql.statement, sql.values).then((result) => {
             let updatedEntity = this._clone(entity);
 
             // TODO: might need to be recordsets[1][0].id;
@@ -79,24 +79,23 @@ export default class Table {
 
         indexesStatements.unshift(tableStatement);
         let fullStatement = indexesStatements.join(";");
-        return this.mssqlDatabase.request().query(fullStatement);
+        return this.connectionPool.request().query(fullStatement);
     }
 
     dropAsync() {
         var statement = this.tableStatementBuilder.createDropTableStatement();
 
-        return this.mssqlDatabase.request().query(statement);
+        return this.connectionPool.request().query(statement);
     }
 
     getQueryProvider() {
         return this.provider;
     }
 
-
     removeEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createDeleteStatement(entity);
 
-        return this.mssqlDatabase.request().query(sql.statement, sql.values).then(() => {
+        return this.connectionPool.request().query(sql.statement, sql.values).then(() => {
             return entity;
         });
     }
@@ -104,7 +103,7 @@ export default class Table {
     updateEntityAsync(entity, delta) {
         var sql = this.tableStatementBuilder.createUpdateStatement(entity, delta);
 
-        return this.mssqlDatabase.request().query(sql.statement, sql.values).then((statement) => {
+        return this.connectionPool.request().query(sql.statement, sql.values).then((statement) => {
             return Object.assign({}, entity, delta);
         });
     }

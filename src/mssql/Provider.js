@@ -3,8 +3,8 @@ import EntityBuilder from "./EntityBuilder";
 
 export default class Provider {
     constructor(name, options = {}) {
-        if (options.mssqlDatabase == null) {
-            throw new Error("Null Argument Exception: mssqlDatabase is required in options.");
+        if (options.connectionPool == null) {
+            throw new Error("Null Argument Exception: connectionPool is required in options.");
         }
 
         if (options.edm == null) {
@@ -16,7 +16,7 @@ export default class Provider {
         }
 
         this.edm = options.edm;
-        this.mssqlDatabase = options.mssqlDatabase;
+        this.connectionPool = options.connectionPool;
         this.schema = options.schema;
         this.name = name;
 
@@ -28,7 +28,7 @@ export default class Provider {
         let visitor = new Visitor(this.name, this.edm, this.schema);
         let statement = visitor.createSelectStatement(query);
 
-        return this.mssqlDatabase.all(statement).then((results) => {
+        return this.connectionPool.request().query(statement).then((results) => {
             return this.entityBuilder.convert(results);
         });
     }

@@ -33,10 +33,6 @@ export default class CommandBuilder {
             decorator: decorator
         };
 
-        if (typeof options.name != "string") {
-            throw new Error("Decorators need to have a name.");
-        }
-
         command.execute.action = "addDecorator";
         command.execute.options = options;
 
@@ -278,6 +274,9 @@ export default class CommandBuilder {
     }
 
     createCommandsFromEdm(edm) {
+
+        //TODO: clean decorators out of table, do separately
+        
         let commands = edm.tables.reduce((accumulator, table) => {
             let tableTemplate = Object.assign({}, table);
             delete tableTemplate.columns;
@@ -285,24 +284,22 @@ export default class CommandBuilder {
             accumulator.push(this.createAddTableCommand(tableTemplate));
 
             table.columns.forEach((column) => {
-                accumulator.push(this.createAddColumnCommand({
-                    tableName: table.name,
-                    column: column
-                }));
+                accumulator.push(this.createAddColumnCommand(table.name, column));
             });
 
+            return accumulator;
         }, []);
 
-        edm.relationships.oneToOne((relationship) => {
-            accumulator.push(this.createAddOneToOneRelationshipCommand({
-                relationship: relationship
-            }));
+        edm.relationships.oneToOne.reduce((accumulator, relationship) => {
+            accumulator.push(this.createAddOneToOneRelationshipCommand(relationship));
+            return accumulator;
+
         }, commands);
 
-        edm.relationships.oneToMany((relationship) => {
-            accumulator.push(this.createAddOneToManyRelationshipCommand({
-                relationship: relationship
-            }));
+        edm.relationships.oneToMany.reduce((accumulator, relationship) => {
+            accumulator.push(this.createAddOneToManyRelationshipCommand(relationship));
+            return accumulator;
+
         }, commands);
 
         return commands;

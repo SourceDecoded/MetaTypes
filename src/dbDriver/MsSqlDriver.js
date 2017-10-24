@@ -115,7 +115,7 @@ export default class {
         return this.getDataDbAsync().then((pool) => {
             return new MsSqlDatabase({
                 edm: edm,
-                mssqlDatabase: pool,
+                connectionPool: pool,
                 schema: this.options.dataSchema
             });
         });

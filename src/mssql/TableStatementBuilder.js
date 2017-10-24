@@ -11,7 +11,6 @@ export default class TableStatementBuilder {
         this.table = table;
         this.edm = options.edm;
         this.schema = options.schema;
-        this.version = options.edm.version;
     }
 
     _escapeName(name) {
@@ -32,6 +31,10 @@ export default class TableStatementBuilder {
 
     _getQualifiedDbTableName(table) {
         return `[${this.schema}].[${this._getDbTableName(table)}]`;
+    }
+
+    getQualifiedDbTableName() {
+        return _getQualifiedDbTableName(table.name);
     }
 
     createDropTableStatement() {
@@ -247,7 +250,7 @@ export default class TableStatementBuilder {
         }
     }
 
-    createTableStatement(relationships) {
+    createTableStatement(relationships = {}) {
         relationships = Object.assign({}, defaultRelationships, relationships);
 
         const columnDefinitionsStatement = this.createColumnsDefinitionStatement();

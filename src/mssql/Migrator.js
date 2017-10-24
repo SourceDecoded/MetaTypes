@@ -1,44 +1,72 @@
 import TableStatementBuilder from "./TableStatementBuilder";
 
 export default class Migrator {
-    constructor(edmPoolPromise) {
-        this._edmPoolPromise = edmPoolPromise;
-        this._tableStatementBuilder = new TableStatementBuilder();
+    constructor(iDb) {
+        this.schema = iDb.schema;
+        this.iDb = iDb;
+        this.connectionPool = iDb.connectionPool;
     }
 
-    _executeAsync(query) {
-        this._edmPoolPromise.then((pool) => {
-            return pool.query(query);
+    _getQualifiedDbTableName(table, version) {
+        return `[${this.schema}].[${table}__${version.replace(/\./g, "_")}]`;
+    }
+
+    addColumnAsync(edm, command = {}) {
+        let metaTable = this.iDb.getTable(command.options.tableName).table;
+        let builder = new TableStatementBuilder(metaTable, {
+            edm: edm,
+            schema: this.schema
         });
+        let query = `ALTER TABLE ${this._getQualifiedDbTableName(command.options.tableName, edm.version)} ADD `;
+        query += builder.createColumnDefinitionStatement(command.options.column);
+
+        return this.connectionPool.request().query(query);
     }
 
-    addColumnAsync(edm, options = {}) {
-        let query = `ALTER TABLE `;
-
-        return this._executeAsync(query);
+    addDecoratorAsync(edm, command = {}) {
+        // nothing to do here
     }
 
-    addDecoratorAsync(edm, options = {}) {
+    addOneToOneRelationshipAsync(edm, command = {}) {
+        // nothing to do here
     }
 
-    addTableAsync(edm, options = {}) {
+    addOneToManyRelationshipAsync(edm, command = {}) {
+        // nothing to do here
     }
 
-    removeColumnAsync(edm, options = {}) {
+    addTableAsync(edm, command = {}) {
+        let table = command.options;
+        let builder = new TableStatementBuilder(table, {
+            edm: edm,
+            schema: this.schema
+        });
+        let query = builder.createTableStatement();
+
+        return this.connectionPool.request().query(query);
     }
 
-    removeDecoratorAsync(edm, options = {}) {
+    removeColumnAsync(edm, command = {}) {
     }
 
-    removeTableAsync(edm, options = {}) {
+    removeDecoratorAsync(edm, command = {}) {
     }
 
-    updateColumnAsync(edm, options = {}) {
+    removeOneToOneRelationshipCommand(edm, command = {}){
     }
 
-    updateDecoratorAsync(edm, options = {}) {
+    removeOneToManyRelationshipCommand(edm, command = {}){
     }
 
-    updateTableAsync(edm, options = {}) {
+    removeTableAsync(edm, command = {}) {
+    }
+
+    updateColumnAsync(edm, command = {}) {
+    }
+
+    updateDecoratorAsync(edm, command = {}) {
+    }
+
+    updateTableAsync(edm, command = {}) {
     }
 }
