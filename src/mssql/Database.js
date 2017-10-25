@@ -1,4 +1,5 @@
 import Table from "./Table";
+import Migrator from "./Migrator";
 import Validator from "./../edm/Validator";
 import dataTypeMapping from "./dataTypeMapping";
 
@@ -106,6 +107,10 @@ export default class Database {
         return Object.keys(this.tables).map((name) => {
             return this.tables[name];
         });
+    }
+
+    getMigrator() {
+        return new Migrator(this);
     }
 
 }

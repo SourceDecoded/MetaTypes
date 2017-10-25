@@ -21,7 +21,7 @@ exports["mssql.Migrator.addColumnAsync string"] = () => {
         "label": "New Column"
     };
     let command = builder.createAddColumnCommand("Source", column);
-    migrator.addColumnAsync(edm, command.execute).then(() => {
+    migrator.addColumnAsync(edm, command.execute.options).then(() => {
         let query = pool.query;
         assert.equal(query, "ALTER TABLE [dbo].[Source__0_0_1] ADD [newColumn] ntext");
     });
@@ -60,7 +60,7 @@ exports["mssql.Migrator.addTableAsync"] = () => {
     };
 
     let command = builder.createAddTableCommand(table);
-    migrator.addTableAsync(edm, command.execute).then(() => {
+    migrator.addTableAsync(edm, command.execute.options).then(() => {
         let query = pool.query;
         let passingResult = `IF NOT (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES 
             WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'testTable__0_0_1'))

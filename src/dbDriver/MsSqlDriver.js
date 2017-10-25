@@ -134,10 +134,6 @@ export default class {
         });
     }
 
-    getMigrator(iDb) {
-        return new MsSqlMigrator(iDb);
-    }
-
     dispose() {
         this.getEdmDbAsync().then((pool) => {
             pool.close();

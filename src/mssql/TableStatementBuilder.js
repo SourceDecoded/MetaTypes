@@ -176,7 +176,7 @@ export default class TableStatementBuilder {
     }
 
     createColumnsDefinitionStatement() {
-        const columns = this.table.columns;
+        const columns = this.table.columns || [];
         const columnsDefinition = columns.map((column) => {
             return this.createColumnDefinitionStatement(column);
         }).filter((value) => {
@@ -252,6 +252,7 @@ export default class TableStatementBuilder {
 
     createTableStatement(relationships = {}) {
         relationships = Object.assign({}, defaultRelationships, relationships);
+
 
         const columnDefinitionsStatement = this.createColumnsDefinitionStatement();
         //const foreignKeysStatement = this.createForeignKeysStatement(relationships);
