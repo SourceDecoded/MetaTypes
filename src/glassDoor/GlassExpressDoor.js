@@ -94,7 +94,7 @@ export default class {
         this.edmApp.get("/:name/:version", (req, res, next) => {
             let {name, version} = req.params;
             this.glass.getEdmAsync(name, version).then((edm) => {
-                res.type("json").send(edm.json);
+                res.type("json").send(JSON.stringify(edm));
             });
         });
         

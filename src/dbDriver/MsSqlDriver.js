@@ -134,8 +134,8 @@ export default class {
         });
     }
 
-    getMigrator() {
-        return new MsSqlMigrator(this._edmPoolPromise);
+    getMigrator(iDb) {
+        return new MsSqlMigrator(iDb);
     }
 
     dispose() {
@@ -149,9 +149,9 @@ export default class {
 
     _checkEdmDbExistsAsync(pool) {
         return new Promise((resolve, reject) => {
-            let q = `SELECT * FROM INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA = '${this.options.edmSchema}' 
-            AND TABLE_NAME = '${this.options.edmTable}'`;
+            let q = `SELECT * FROM INFORMATION_SCHEMA.TABLES ` + 
+            `WHERE TABLE_SCHEMA = '${this.options.edmSchema}' ` +
+            `AND TABLE_NAME = '${this.options.edmTable}'`;
             pool.request().query(q).then((result) => {
                 if (result.recordset.length === 1) {
                     resolve(true);

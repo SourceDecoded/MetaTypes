@@ -7,7 +7,7 @@ export default class {
     constructor(options) {
         this.edm = options.edm;
         this.metaDatabase = options.metaDatabase;
-        this.migrator = options.migrator;
+        this.migrationRunner = options.migrationRunner;
     }
 
     dispose() {

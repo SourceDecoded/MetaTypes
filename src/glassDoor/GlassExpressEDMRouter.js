@@ -1,8 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
 
-// listen to
-
 export default class {
     constructor (app, pane){
         this.app = app;
@@ -28,9 +26,17 @@ export default class {
 
         handler.post("/:name/:version", (req, res, next) => {
             let {name, version} = req.params;
-            // get the commands
+            let commands = req.body;
+            if (!Array.isArray(req.body)) {
+                commands = [commands];
+            }
+            this.pane.migrationRunner.migrateAsync(commands).then(() => {
+                res.send('ok');
+            }).catch((e) => {
+                res.status(500).send(e.message);
+            });
         });
 
-        this.app.use(`/${this.pane.edm.name}/${this.pane.edm.version}`, handler);
+        this.app.use(handler);
     }
 }

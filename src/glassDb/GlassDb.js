@@ -129,7 +129,7 @@ export default class {
 
             let paneOptions = {
                 metaDatabase: metaDatabase,
-                migrationRunner: new MigrationRunner({edm:edm, migrator:this._driver.getMigrator()}),
+                migrationRunner: new MigrationRunner({edm:edm, migrator:this._driver.getMigrator(db)}),
                 edm: edm
             };
 
