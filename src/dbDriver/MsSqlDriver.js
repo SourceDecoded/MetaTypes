@@ -60,6 +60,7 @@ export default class {
             server: options.server,
             database: options.dataDb
         });
+
         this._dataPool.on("error", (e) => {
             console.error(e);
         });
@@ -79,35 +80,47 @@ export default class {
         return this._verifyEdmTableAsync().then((pool) => {
             return pool.request().query(generateGetEdmsQuery(this.options));
         }).then((result) => {
-            return result.recordset;
+            return result.recordset.map((result) => {
+                return JSON.parse(result.json);
+            });
         });
     }
 
     getEdmAsync(name, version) {
-        return this._getEdmDbAsync().then((pool) => {
-            return pool.request().query(`SELECT * FROM [${this.options.edmSchema}].[${this.options.edmTable}] WHERE
-            [version]=${version} AND [name]='${name}'`).then((result) => {
-                return result.recordset[0];
+        return this.getEdmDbAsync().then((pool) => {
+            return pool.request().query(`SELECT * FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
+                   `WHERE [version]='${version}' AND [name]='${name}'`).then((result) => {
+                if (result.recordset[0]) {
+                    return JSON.parse(result.recordset[0].json);
+                } else {
+                    return null;
+                }
             });
         });
     };
 
-    addEdmAsync(name, version) {
+    addEdmAsync(name, version, label = "") {
         var newEdm = new Edm();
-        return this._getEdmDbAsync().then((pool) => {
-            return pool.request().query(`INSERT INTO [${this.options.edmSchema}].[${this.options.edmTable}] 
-            (name, version, json) VALUES ('${name}', '${version}', '${JSON.stringify(newEdm)}')`).then((result) => {
-                return;
-            });
+        newEdm.name = name;
+        newEdm.version = version;
+        newEdm.label = label;
+        return this.getEdmAsync(name, version).then((edm) => {
+            if (edm) {
+                return Promise.reject(new Error("An EDM with that name and version already exists"));
+            } else {
+                return this.getEdmDbAsync().then((pool) => {
+                    return pool.request().query(`INSERT INTO [${this.options.edmSchema}].[${this.options.edmTable}] ` + 
+                        `(name, version, json) VALUES ('${name}', '${version}', '${JSON.stringify(newEdm)}')`);
+                });
+            }
         });
     };
 
     deleteEdmAsync(name, version) {
-        return this._getEdmDbAsync().then((pool) => {
-            return pool.request().query(`DELETE FROM [${this.options.edmSchema}].[${this.options.edmTable}]
-            WHERE [version]=${version} AND [name]='${name}'`).then(() => {
-                return;
-            });
+        return this.getEdmDbAsync().then((pool) => {
+            let query = `DELETE FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
+            `WHERE [version]='${version}' AND [name]='${name}'`;
+            return pool.request().query(query);
         });
     };
 

@@ -5,6 +5,7 @@ export default class Migrator {
         this.schema = iDb.schema;
         this.iDb = iDb;
         this.connectionPool = iDb.connectionPool;
+        this.name = "MsSqlMigrator";
     }
 
     _getQualifiedDbTableName(table, version) {

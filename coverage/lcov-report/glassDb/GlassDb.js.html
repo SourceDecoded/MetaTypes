@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for glassDb/GlassDb.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">glassDb/</a> GlassDb.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">64.95% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>63/97</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">53.57% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>15/28</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">46.67% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>14/30</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">60% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>48/80</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }(); // GlassDb
+// Manages a set of GlassPanes
+&nbsp;
+&nbsp;
+var _GlassPane = require("../glassPane/GlassPane");
+&nbsp;
+var _GlassPane2 = _interopRequireDefault(_GlassPane);
+&nbsp;
+var _Runner = require("../migration/Runner");
+&nbsp;
+var _Runner2 = _interopRequireDefault(_Runner);
+&nbsp;
+var _Database = require("../meta/Database");
+&nbsp;
+var _Database2 = _interopRequireDefault(_Database);
+&nbsp;
+var _MsSqlDriver = require("../dbDriver/MsSqlDriver");
+&nbsp;
+var _MsSqlDriver2 = _interopRequireDefault(_MsSqlDriver);
+&nbsp;
+var _SqliteDriver = require("../dbDriver/SqliteDriver");
+&nbsp;
+var _SqliteDriver2 = _interopRequireDefault(_SqliteDriver);
+&nbsp;
+var _GlassExpressDoor = require("../glassDoor/GlassExpressDoor");
+&nbsp;
+var _GlassExpressDoor2 = _interopRequireDefault(_GlassExpressDoor);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var supportedDrivers = {
+    "sqlite": _SqliteDriver2.default,
+    "mssql": _MsSqlDriver2.default
+};
+&nbsp;
+var supportedFilesystems = {};
+&nbsp;
+var supportedDoors = {
+    "express": _GlassExpressDoor2.default
+};
+&nbsp;
+/*
+{
+    "dbDriver": {
+        "name": "mssql" || "sqlite",
+        "options": {(driver-specific options)}
+    },
+    "fileSystem": {
+        "name": "fsDriverName",
+        "options": {(fs driver-specific options)}
+    },
+    "doors": [
+        {
+            "name": "express",
+            "options": {
+                "address":"0.0.0.0",
+                "port":"9000"
+            }
+        }
+    ]
+}
+*/
+&nbsp;
+var _class = function () {
+    function _class() {
+        var _this = this;
+&nbsp;
+        var options = arguments.length &gt; 0 &amp;&amp; arguments[0] !== undefined ? arguments[0] : <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
+&nbsp;
+        _classCallCheck(this, _class);
+&nbsp;
+        this.glassPanes = {};
+        this.glassDoors = [];
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!options.dbDriver) {
+<span class="cstat-no" title="statement not covered" >            throw new Error("Need dbDriver info");</span>
+        }
+&nbsp;
+        var dbDriver = options.dbDriver;
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (Object.keys(supportedDrivers).indexOf(dbDriver.name) === -1) {
+<span class="cstat-no" title="statement not covered" >            throw new Error("Unsupported dbDriver: " + dbDriver.name);</span>
+        }
+&nbsp;
+        this._driver = new supportedDrivers[dbDriver.name](dbDriver.options);
+&nbsp;
+        this._driver.getEdmListAsync().then(function (edms) {
+            return _this._buildPanesAsync(edms);
+        }).then(function () {
+            return _this._openDoorsAsync(options.doors);
+        });
+    }
+&nbsp;
+    _createClass(_class, [{
+        key: "dispose",
+        value: function dispose() {
+            this.glassDoors.forEach(<span class="fstat-no" title="function not covered" >function (door) {</span>
+<span class="cstat-no" title="statement not covered" >                if (typeof door.dispose === "function") {</span>
+<span class="cstat-no" title="statement not covered" >                    door.dispose();</span>
+                }
+            });
+&nbsp;
+            this.glassPanes.forEach(<span class="fstat-no" title="function not covered" >function (pane) {</span>
+<span class="cstat-no" title="statement not covered" >                pane.dispose();</span>
+            });
+        }
+    }, {
+        key: "getEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function getEdmAsync(name, version) {</span>
+<span class="cstat-no" title="statement not covered" >            return this._driver.getEdmAsync(name, version);</span>
+        }
+    }, {
+        key: "addEdmAsync",
+        value: function addEdmAsync(name, version) {
+            var _this2 = this;
+&nbsp;
+            return this._driver.addEdmAsync(name, version).then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                return _this2._driver.getEdmAsync(name, version);</span>
+            }).then(<span class="fstat-no" title="function not covered" >function (edm) {</span>
+<span class="cstat-no" title="statement not covered" >                _this2._buildPaneAsync(edm);</span>
+            }).then(<span class="fstat-no" title="function not covered" >function (pane) {</span>
+<span class="cstat-no" title="statement not covered" >                Object.keys(_this2.glassDoors).map(<span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return _this2.glassDoors[key];</span>
+                }).forEach(<span class="fstat-no" title="function not covered" >function (door) {</span>
+<span class="cstat-no" title="statement not covered" >                    door.addPane(pane);</span>
+                });
+            });
+        }
+    }, {
+        key: "deleteEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function deleteEdmAsync(name, version) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this3 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var thePane = this.glassPanes[name + version];</span>
+<span class="cstat-no" title="statement not covered" >            if (!thePane) {</span>
+<span class="cstat-no" title="statement not covered" >                return Promise.reject("Not an active EDM: " + name + " " + version);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            return this._driver.deleteEdmAsync(name, version).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                _this3.glassPanes[name + version] = null;</span>
+            });
+        }
+    }, {
+        key: "_buildPanesAsync",
+        value: function _buildPanesAsync(edms) {
+            return edms.reduce(<span class="fstat-no" title="function not covered" >function (previous, current) {</span>
+<span class="cstat-no" title="statement not covered" >                return previous.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return _buildPaneAsync(current);</span>
+                });
+            }, Promise.resolve());
+        }
+    }, {
+        key: "_buildPaneAsync",
+        value: <span class="fstat-no" title="function not covered" >function _buildPaneAsync(edm) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this4 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return driver.getDatabaseForEdmAsync(edm).then(<span class="fstat-no" title="function not covered" >function (db) {</span></span>
+                // TODO: instantiate decorators
+<span class="cstat-no" title="statement not covered" >                var decorators = [];</span>
+&nbsp;
+                // TODO: instantiate filesystem
+<span class="cstat-no" title="statement not covered" >                var fileSystem = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var metaOptions = {</span>
+                    database: db,
+                    decorators: decorators,
+                    fileSystem: fileSystem
+                };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var metaDatabase = new _Database2.default(metaOptions);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var paneOptions = {</span>
+                    metaDatabase: metaDatabase,
+                    migrationRunner: new _Runner2.default({ migrator: driver.getMigrator() }),
+                    edm: edm
+                };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var pane = new _GlassPane2.default(paneOptions);</span>
+<span class="cstat-no" title="statement not covered" >                _this4.glassPanes[edm.name + edm.version] = pane;</span>
+<span class="cstat-no" title="statement not covered" >                return pane;</span>
+            });
+        }
+    }, {
+        key: "_openDoorsAsync",
+        value: function _openDoorsAsync(doorsConfig) {
+            var _this5 = this;
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (doorsConfig.length === 0) {
+<span class="cstat-no" title="statement not covered" >                console.warn("GlassDB is running, but there is no way to access it. Include one or more doors in the options.");</span>
+            }
+            doorsConfig.forEach(function (doorConfig) {
+                doorConfig.options['glass'] = _this5;
+                var door = new supportedDoors[doorConfig.name](doorConfig.options);
+                Object.keys(_this5.glassPanes).map(<span class="fstat-no" title="function not covered" >function (key) {</span>
+<span class="cstat-no" title="statement not covered" >                    return _this5.glassPanes[key];</span>
+                }).forEach(<span class="fstat-no" title="function not covered" >function (pane) {</span>
+<span class="cstat-no" title="statement not covered" >                    door.addPane(pane);</span>
+                });
+                _this5.glassDoors.push(door);
+            });
+        }
+    }]);
+&nbsp;
+    return _class;
+}();
+&nbsp;
+exports.default = _class;
+//# sourceMappingURL=GlassDb.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:31:25 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

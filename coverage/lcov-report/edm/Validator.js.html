@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for edm/Validator.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">edm/</a> Validator.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">80.92% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>106/131</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">70.94% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>83/117</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">95.65% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>22/23</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">80.53% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>91/113</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">37×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">422×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">23×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">76×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">75×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">74×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">74×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">73×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">73×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">73×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">65×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">65×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">33×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _typeof = typeof Symbol === "function" &amp;&amp; typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : <span class="fstat-no" title="function not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >function (obj) {</span> <span class="cstat-no" title="statement not covered" >return obj &amp;&amp; typeof Symbol === "function" &amp;&amp; obj.constructor === Symbol &amp;&amp; obj !== Symbol.prototype ? "symbol" : typeof obj; </span>};</span>
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }();
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var defaultDataTypeMapping = {
+    "String": "String",
+    "Number": "Number",
+    "Boolean": "Boolean",
+    "Float": "Float",
+    "Decimal": "Decimal",
+    "Double": "Double",
+    "Integer": "Integer",
+    "Date": "Date",
+    "Enum": "Enum"
+};
+&nbsp;
+var Validator = function () {
+    function Validator(dataTypeMapping) {
+        _classCallCheck(this, Validator);
+&nbsp;
+        this.dataTypeMapping = dataTypeMapping || defaultDataTypeMapping;
+    }
+&nbsp;
+    _createClass(Validator, [{
+        key: "_isEmptyString",
+        value: function _isEmptyString(string) {
+            return string == null || typeof string !== "string" || string === "";
+        }
+    }, {
+        key: "validate",
+        value: function validate(edm) {
+            var _this = this;
+&nbsp;
+            if (edm == null) {
+                throw new Error("Invalid Argument: Edm cannot be null.");
+            }
+&nbsp;
+            if (this._isEmptyString(edm.name)) {
+                throw new Error("Invalid Argument: Edm needs to have a name of type string.");
+            }
+&nbsp;
+            if (this._isEmptyString(edm.label)) {
+                throw new Error("Invalid Argument: Edm needs to have a label of type string.");
+            }
+&nbsp;
+            if (this._isEmptyString(edm.version)) {
+                throw new Error("Invalid Argument: Edm needs to have a version of type string.");
+            }
+&nbsp;
+            if (!Array.isArray(edm.tables)) {
+                throw new Error("Invalid Argument: Edm needs an array of tables.");
+            }
+&nbsp;
+            edm.tables.forEach(function (table) {
+                _this.validateTable(table);
+            });
+&nbsp;
+            this.validateRelationships(edm);
+        }
+    }, {
+        key: "validateColumn",
+        value: function validateColumn(column) {
+            if (this._isEmptyString(column.name)) {
+                throw new Error("Invalid Argument: Column needs to have a name.");
+            }
+&nbsp;
+            if (this._isEmptyString(column.label)) {
+                throw new Error("Invalid Argument: Column needs to hava a label.");
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this.dataTypeMapping[column.type] == null) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: Unknown Column Type: " + column.type + ".");</span>
+            }
+&nbsp;
+            if (column.isPrimaryKey &amp;&amp; column.type !== "Integer") {
+                throw new Error("Invalid Argument: If the column is the primary key, it needs to be of type Integer.");
+            }
+&nbsp;
+            if (typeof column.isIndexed !== "boolean") {
+                column.isIndexed = false;
+            }
+&nbsp;
+            if (typeof column.isNullable !== "boolean") {
+                column.isNullable = true;
+            }
+&nbsp;
+            if (typeof column.isAutoIncrement !== "boolean") {
+                column.isAutoIncrement = false;
+            }
+        }
+    }, {
+        key: "validateDecorator",
+        value: function validateDecorator(decorator) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(decorator.name)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: Decorators need to have a name property.");</span>
+            }
+        }
+    }, {
+        key: "validateOneToOneRelationship",
+        value: function validateOneToOneRelationship(relationship) {
+            if (this._isEmptyString(relationship.type)) {
+                throw new Error("Invalid Argument: One to one relationships needs to have a type property.");
+            }
+&nbsp;
+            if (this._isEmptyString(relationship.hasKey)) {
+                throw new Error("Invalid Argument: One to one relationships needs to have a hasKey property.");
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.hasOne)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to one relationships needs to have a hasOne property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.hasOneLabel)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to one relationships needs to have a hasOneLabel property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.ofType)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to one relationships needs to have a ofType property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.withKey)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to one relationships needs to have a withKey property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.withForeignKey)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to one relationships needs to have a withForeignKey property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.withOne)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to one relationships needs to have a withOne property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.withOneLabel)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to one relationships needs to have a withOneLabel property.");</span>
+            }
+        }
+    }, {
+        key: "validateOneToManyRelationship",
+        value: function validateOneToManyRelationship(relationship) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.type)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a type property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.hasKey)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a hasKey property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.hasMany)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a hasMany property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.hasManyLabel)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a hasManyLabel property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.ofType)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a ofType property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.withKey)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a withKey property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.withForeignKey)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a withForeignKey property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.withOne)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a withOne property.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (this._isEmptyString(relationship.withOneLabel)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: One to many relationships needs to have a withOneLabel property.");</span>
+            }
+        }
+    }, {
+        key: "validateRelationships",
+        value: function validateRelationships(edm) {
+            var _this2 = this;
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (edm.relationships == null) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: Edm needs to have a relationships object.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!Array.isArray(edm.relationships.oneToOne)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: Edm needs to have a oneToOne array describing one to one relationships. It can be an empty array.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!Array.isArray(edm.relationships.oneToMany)) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: Edm needs to have a oneToMany array describing one to many relationships. It can be an empty array.");</span>
+            }
+&nbsp;
+            edm.relationships.oneToOne.forEach(function (relationship) {
+                _this2.validateOneToOneRelationship(relationship);
+            });
+            edm.relationships.oneToMany.forEach(function (relationship) {
+                _this2.validateOneToManyRelationship(relationship);
+            });
+        }
+    }, {
+        key: "validateTable",
+        value: function validateTable(table) {
+            var _this3 = this;
+&nbsp;
+            this.validateTableDescriptors(table);
+&nbsp;
+            if (!Array.isArray(table.columns)) {
+                throw new Error("Invalid Argument: Table needs to have an array of columns.");
+            }
+&nbsp;
+            if (Array.isArray(table.decorators)) {
+                table.decorators.forEach(function (decorator) {
+                    _this3.validateDecorator(decorator);
+                });
+            }
+&nbsp;
+            var primaryKeyColumns = table.columns.filter(function (column) {
+                return column.isPrimaryKey;
+            });
+&nbsp;
+            table.columns.forEach(function (column) {
+                _this3.validateColumn(column);
+            });
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (table.columns.length &gt; 0 &amp;&amp; primaryKeyColumns.length !== 1) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Invalid Argument: Tables can only have one primary key.");</span>
+            }
+        }
+    }, {
+        key: "validateTableDescriptors",
+        value: function validateTableDescriptors(table) {
+            if (table == null) {
+                throw new Error("Invalid Argument: Table cannot be null or undefined.");
+            }
+&nbsp;
+            if ((typeof table === "undefined" ? <span class="branch-0 cbranch-no" title="branch not covered" >"undefined" </span>: _typeof(table)) !== "object" || Array.isArray(table)) {
+                throw new Error("Invalid Argument: Table needs to be an object.");
+            }
+&nbsp;
+            if (this._isEmptyString(table.name)) {
+                throw new Error("Invalid Argument: Table needs to have a name.");
+            }
+&nbsp;
+            if (this._isEmptyString(table.label)) {
+                throw new Error("Invalid Argument: Table needs to have a label.");
+            }
+&nbsp;
+            if (this._isEmptyString(table.pluralLabel)) {
+                throw new Error("Invalid Argument: Table needs to have a pluralLabel.");
+            }
+        }
+    }]);
+&nbsp;
+    return Validator;
+}();
+&nbsp;
+exports.default = Validator;
+//# sourceMappingURL=Validator.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:31:25 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

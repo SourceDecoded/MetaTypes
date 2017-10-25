@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for sqlite/EntityBuilder.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">sqlite/</a> EntityBuilder.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">19.28% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>32/166</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10.71% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>6/56</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">18.6% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>8/43</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">12% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>18/150</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }();
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var flattenMultiKeyMap = <span class="fstat-no" title="function not covered" >function flattenMultiKeyMap(multiKeyMap) {</span>
+<span class="cstat-no" title="statement not covered" >    var keys = multiKeyMap.getKeys();</span>
+<span class="cstat-no" title="statement not covered" >    return keys.reduce(<span class="fstat-no" title="function not covered" >function (array, key) {</span></span>
+<span class="cstat-no" title="statement not covered" >        return array.concat(multiKeyMap.get(key).getValues());</span>
+    }, []);
+};
+&nbsp;
+var getValues = <span class="fstat-no" title="function not covered" >function getValues(object) {</span>
+<span class="cstat-no" title="statement not covered" >    return Object.keys(object).map(<span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >        return object[key];</span>
+    });
+};
+&nbsp;
+var EntityBuilder = function () {
+    function EntityBuilder(name, edm) {
+        _classCallCheck(this, EntityBuilder);
+&nbsp;
+        this.name = name;
+        this.edm = edm;
+        this.relationships = this.edm.relationships;
+        this.table = this._getTable(name);
+        this.delimiter = "___";
+    }
+&nbsp;
+    _createClass(EntityBuilder, [{
+        key: "_attachEntityRelationships",
+        value: <span class="fstat-no" title="function not covered" >function _attachEntityRelationships(tableName, entity, entityMap, attachedEntities) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var table = this._getTable(tableName);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var sourceRelationships = this._getTablesRelationshipsAsSources(table, this.relationships);</span>
+<span class="cstat-no" title="statement not covered" >            var targetRelationships = this._getTablesRelationshipsAsTargets(table, this.relationships);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var oneToOneRelationships = sourceRelationships.filter(<span class="fstat-no" title="function not covered" >function (relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return relationship.hasOne != null;</span>
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var oneToManyRelationships = sourceRelationships.filter(<span class="fstat-no" title="function not covered" >function (relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return relationship.hasMany != null;</span>
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            oneToOneRelationships.forEach(<span class="fstat-no" title="function not covered" >function (relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var foreignTableName = relationship.ofType;</span>
+<span class="cstat-no" title="statement not covered" >                var foreignKey = relationship.withForeignKey;</span>
+<span class="cstat-no" title="statement not covered" >                var key = relationship.hasKey;</span>
+<span class="cstat-no" title="statement not covered" >                var hasOne = relationship.hasOne;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var target = getValues(entityMap[foreignTableName]).find(<span class="fstat-no" title="function not covered" >function (target) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return target[foreignKey] === entity[key];</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (target != null &amp;&amp; attachedEntities.indexOf(target) === -1) {</span>
+<span class="cstat-no" title="statement not covered" >                    entity[hasOne] = target;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    _this._attachEntityRelationships(foreignTableName, target, entityMap, attachedEntities.concat([entity]));</span>
+                }
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            oneToManyRelationships.forEach(<span class="fstat-no" title="function not covered" >function (relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var foreignTableName = relationship.ofType;</span>
+<span class="cstat-no" title="statement not covered" >                var foreignKey = relationship.withForeignKey;</span>
+<span class="cstat-no" title="statement not covered" >                var key = relationship.hasKey;</span>
+<span class="cstat-no" title="statement not covered" >                var hasMany = relationship.hasMany;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var targets = getValues(entityMap[foreignTableName]).filter(<span class="fstat-no" title="function not covered" >function (target) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return target[foreignKey] === entity[key];</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                entity[hasMany] = [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                targets.forEach(<span class="fstat-no" title="function not covered" >function (target) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    if (attachedEntities.indexOf(target) === -1) {</span>
+<span class="cstat-no" title="statement not covered" >                        entity[hasMany].push(target);</span>
+<span class="cstat-no" title="statement not covered" >                        _this._attachEntityRelationships(foreignTableName, target, entityMap, attachedEntities.concat([entity]));</span>
+                    }
+                });
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            targetRelationships.forEach(<span class="fstat-no" title="function not covered" >function (relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var sourceTableName = relationship.type;</span>
+<span class="cstat-no" title="statement not covered" >                var foreignKey = relationship.withForeignKey;</span>
+<span class="cstat-no" title="statement not covered" >                var key = relationship.hasKey;</span>
+<span class="cstat-no" title="statement not covered" >                var withOne = relationship.withOne;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var source = getValues(entityMap[sourceTableName]).find(<span class="fstat-no" title="function not covered" >function (source) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return source[key] === entity[foreignKey];</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (source != null &amp;&amp; attachedEntities.indexOf(source) === -1) {</span>
+<span class="cstat-no" title="statement not covered" >                    entity[withOne] = source;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    _this._attachEntityRelationships(sourceTableName, source, entityMap, attachedEntities.concat([entity]));</span>
+                }
+            });
+        }
+    }, {
+        key: "_convertRow",
+        value: <span class="fstat-no" title="function not covered" >function _convertRow(row, entityMap) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this2 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var edm = this.edm;</span>
+<span class="cstat-no" title="statement not covered" >            var name = this.name;</span>
+<span class="cstat-no" title="statement not covered" >            var key = this._getKeyForRow(row);</span>
+<span class="cstat-no" title="statement not covered" >            var entity = entityMap[this.name][key];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (entity == null) {</span>
+<span class="cstat-no" title="statement not covered" >                entity = entityMap[this.name][key] = this._createEntity(name, row);</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Object.keys(row).forEach(<span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var parts = key.split("___");</span>
+<span class="cstat-no" title="statement not covered" >                var tableName = parts[0];</span>
+<span class="cstat-no" title="statement not covered" >                var columnName = parts[1];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var entity = _this2._createEntity(tableName, row);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (entity == null) {</span>
+<span class="cstat-no" title="statement not covered" >                    entityMap[tableName][key] = entity;</span>
+                }
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return entity;</span>
+        }
+    }, {
+        key: "_convertValue",
+        value: <span class="fstat-no" title="function not covered" >function _convertValue(type, value) {</span>
+<span class="cstat-no" title="statement not covered" >            if (value == null) {</span>
+<span class="cstat-no" title="statement not covered" >                return null;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (type === "String") {</span>
+<span class="cstat-no" title="statement not covered" >                return value;</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === "Numeric") {</span>
+<span class="cstat-no" title="statement not covered" >                return parseFloat(value);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === "Boolean") {</span>
+<span class="cstat-no" title="statement not covered" >                return type == "1" ? true : false;</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === "Float") {</span>
+<span class="cstat-no" title="statement not covered" >                return parseFloat(value);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === "Decimal") {</span>
+<span class="cstat-no" title="statement not covered" >                return parseFloat(value);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === "Double") {</span>
+<span class="cstat-no" title="statement not covered" >                return parseFloat(value);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === "Integer") {</span>
+<span class="cstat-no" title="statement not covered" >                return parseInt(value, 10);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === "Date") {</span>
+<span class="cstat-no" title="statement not covered" >                return new Date(value);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === "Enum") {</span>
+<span class="cstat-no" title="statement not covered" >                return parseInt(value, 10);</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Unknown type.");</span>
+            }
+        }
+    }, {
+        key: "_createEntity",
+        value: <span class="fstat-no" title="function not covered" >function _createEntity(type, row) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this3 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var entity = {};</span>
+<span class="cstat-no" title="statement not covered" >            var columns = this._getTable(type).columns;</span>
+<span class="cstat-no" title="statement not covered" >            var delimiter = this.delimiter;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            columns.forEach(<span class="fstat-no" title="function not covered" >function (column) {</span></span>
+<span class="cstat-no" title="statement not covered" >                entity[column.name] = _this3._convertValue(column.type, row["" + type + delimiter + column.name]);</span>
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return entity;</span>
+        }
+    }, {
+        key: "_createEntityMap",
+        value: <span class="fstat-no" title="function not covered" >function _createEntityMap() {</span>
+<span class="cstat-no" title="statement not covered" >            return this.edm.tables.reduce(<span class="fstat-no" title="function not covered" >function (accumulator, table) {</span></span>
+<span class="cstat-no" title="statement not covered" >                accumulator[table.name] = {};</span>
+<span class="cstat-no" title="statement not covered" >                return accumulator;</span>
+            }, {});
+        }
+    }, {
+        key: "_getKeyForEntity",
+        value: <span class="fstat-no" title="function not covered" >function _getKeyForEntity(entity) {</span>
+<span class="cstat-no" title="statement not covered" >            return this._getPrimaryKeys(this.name).map(<span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return entity[key];</span>
+            }).join("|");
+        }
+    }, {
+        key: "_getKeyForRow",
+        value: <span class="fstat-no" title="function not covered" >function _getKeyForRow(row) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this4 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this._getPrimaryKeys(this.name).map(<span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return row["" + _this4.name + _this4.delimiter + key];</span>
+            }).join("|");
+        }
+    }, {
+        key: "_getPrimaryKeys",
+        value: <span class="fstat-no" title="function not covered" >function _getPrimaryKeys(name) {</span>
+<span class="cstat-no" title="statement not covered" >            return this._getTable(name).columns.filter(<span class="fstat-no" title="function not covered" >function (column) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return column.isPrimaryKey;</span>
+            }).map(<span class="fstat-no" title="function not covered" >function (column) {</span>
+<span class="cstat-no" title="statement not covered" >                return column.name;</span>
+            });
+        }
+    }, {
+        key: "_getTable",
+        value: function _getTable(name) {
+            return this.edm.tables.find(function (table) {
+                return table.name === name;
+            });
+        }
+    }, {
+        key: "_getTablesRelationshipsAsTargets",
+        value: <span class="fstat-no" title="function not covered" >function _getTablesRelationshipsAsTargets(table, relationships) {</span>
+<span class="cstat-no" title="statement not covered" >            var foreignKeyNames = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var filter = <span class="fstat-no" title="function not covered" >function filter(relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var foreignKey = relationship.withForeignKey;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (relationship.ofType === table.name &amp;&amp; foreignKeyNames[foreignKey] == null) {</span>
+<span class="cstat-no" title="statement not covered" >                    foreignKeyNames[foreignKey];</span>
+<span class="cstat-no" title="statement not covered" >                    return true;</span>
+                }
+<span class="cstat-no" title="statement not covered" >                return false;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var oneToOne = relationships.oneToOne.filter(filter);</span>
+<span class="cstat-no" title="statement not covered" >            var oneToMany = relationships.oneToMany.filter(filter);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return oneToOne.concat(oneToMany);</span>
+        }
+    }, {
+        key: "_getTablesRelationshipsAsSources",
+        value: <span class="fstat-no" title="function not covered" >function _getTablesRelationshipsAsSources(table, relationships) {</span>
+<span class="cstat-no" title="statement not covered" >            var keyNames = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var filter = <span class="fstat-no" title="function not covered" >function filter(relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var key = relationship.hasKey;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (relationship.type === table.name &amp;&amp; keyNames[key] == null) {</span>
+<span class="cstat-no" title="statement not covered" >                    keyNames[key];</span>
+<span class="cstat-no" title="statement not covered" >                    return true;</span>
+                }
+<span class="cstat-no" title="statement not covered" >                return false;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var oneToOne = relationships.oneToOne.filter(filter);</span>
+<span class="cstat-no" title="statement not covered" >            var oneToMany = relationships.oneToMany.filter(filter);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return oneToOne.concat(oneToMany);</span>
+        }
+    }, {
+        key: "convert",
+        value: <span class="fstat-no" title="function not covered" >function convert(sqlResults) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this5 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var name = this.name;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (sqlResults.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                var entityMap = this._createEntityMap();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var results = sqlResults.map(<span class="fstat-no" title="function not covered" >function (row) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return _this5._convertRow(row, entityMap);</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                Object.keys(entityMap).forEach(<span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    var parts = key.split("_|_");</span>
+<span class="cstat-no" title="statement not covered" >                    var tableName = parts[0];</span>
+<span class="cstat-no" title="statement not covered" >                    var entity = entityMap[key];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    _this5._attachEntityRelationships(tableName, entity, entityMap, []);</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return results;</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                return [];</span>
+            }
+        }
+    }]);
+&nbsp;
+    return EntityBuilder;
+}();
+&nbsp;
+exports.default = EntityBuilder;
+//# sourceMappingURL=EntityBuilder.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:31:25 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

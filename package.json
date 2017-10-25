@@ -1,8 +1,8 @@
 {
   "name": "meta-database",
-  "version": "0.0.10",
-  "description": "Allows for you to decorate your databases with functionality.",
-  "main": "./dist/index.js",
+  "version": "0.0.21",
+  "description": "Decorate data types with functionality.",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "node ./.clarity/test.js",
     "build": "node ./.clarity/build.js"
@@ -21,6 +21,7 @@
     "connect-busboy": "0.0.2",
     "express": "^4.15.4",
     "fs-extra": "^3.0.1",
+    "mssql": "^4.1.0",
     "queryablejs": "0.0.3",
     "sqlite": "^2.8.0"
   }

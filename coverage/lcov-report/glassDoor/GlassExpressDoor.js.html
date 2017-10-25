@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for glassDoor/GlassExpressDoor.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">glassDoor/</a> GlassExpressDoor.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">63.33% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>57/90</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">53.13% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>17/32</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">52.94% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>9/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">57.53% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>42/73</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }(); // GlassExpress
+// Implements GlassDoor to expose a GlassDb by HTTP
+&nbsp;
+&nbsp;
+var _express = require("express");
+&nbsp;
+var _express2 = _interopRequireDefault(_express);
+&nbsp;
+var _GlassExpressDataRouter = require("./GlassExpressDataRouter");
+&nbsp;
+var _GlassExpressDataRouter2 = _interopRequireDefault(_GlassExpressDataRouter);
+&nbsp;
+var _GlassExpressEDMRouter = require("./GlassExpressEDMRouter");
+&nbsp;
+var _GlassExpressEDMRouter2 = _interopRequireDefault(_GlassExpressEDMRouter);
+&nbsp;
+var _bodyParser = require("body-parser");
+&nbsp;
+var _bodyParser2 = _interopRequireDefault(_bodyParser);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var _class = function () {
+    function _class(options) {
+        var _this = this;
+&nbsp;
+        _classCallCheck(this, _class);
+&nbsp;
+        this.port = options.port || <span class="branch-1 cbranch-no" title="branch not covered" >"8888";</span>
+        this.address = options.address || <span class="branch-1 cbranch-no" title="branch not covered" >"127.0.0.1";</span>
+        this.apiRoot = options.apiRoot || "/api";
+        this.edmRoot = options.edmRoot || "/edm";
+        this.glass = options.glass;
+        this.panes = {};
+        this.entityRouters = {};
+        this.edmRouters = {};
+&nbsp;
+        this.mainApp = (0, _express2.default)();
+        this.dataApp = (0, _express2.default)();
+        this.edmApp = (0, _express2.default)();
+        this.edmApp.use(_bodyParser2.default.json());
+&nbsp;
+        this._nativeHTTPServer = this.mainApp.listen(this.port, this.address, function (err) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!err) {
+                _this.mainApp.use(_this.apiRoot, _this.dataApp);
+                _this.mainApp.use(_this.edmRoot, _this.edmApp);
+                console.log("ExpressDoor is listening on " + _this.address + ":" + _this.port + " ");
+                console.log("Data API mounted at " + _this.apiRoot);
+                console.log("EDM API mounted at " + _this.edmRoot);
+                _this._init();
+            } else {
+<span class="cstat-no" title="statement not covered" >                throw err;</span>
+            }
+        });
+    }
+&nbsp;
+    _createClass(_class, [{
+        key: "dispose",
+        value: <span class="fstat-no" title="function not covered" >function dispose() {</span>
+<span class="cstat-no" title="statement not covered" >            if (this._nativeHTTPServer) {</span>
+<span class="cstat-no" title="statement not covered" >                this._nativeHTTPServer.close();</span>
+<span class="cstat-no" title="statement not covered" >                this._nativeHTTPServer = null;</span>
+            }
+        }
+    }, {
+        key: "addPane",
+        value: <span class="fstat-no" title="function not covered" >function addPane(pane) {</span>
+<span class="cstat-no" title="statement not covered" >            var router = new _GlassExpressDataRouter2.default(this.dataApp, pane);</span>
+<span class="cstat-no" title="statement not covered" >            this.entityRouters[edm.name + edm.version] = router;</span>
+<span class="cstat-no" title="statement not covered" >            router.attach();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var edmRouter = new GlassExpressEdmRouter(this.edmApp, pane);</span>
+<span class="cstat-no" title="statement not covered" >            this.edmRouters[edm.name + edm.version] = edmRouter;</span>
+<span class="cstat-no" title="statement not covered" >            edmRouter.attach();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            this.panes[pane.edm.name + pane.edm.version] = pane;</span>
+        }
+    }, {
+        key: "removePane",
+        value: <span class="fstat-no" title="function not covered" >function removePane(pane) {</span>
+<span class="cstat-no" title="statement not covered" >            var _pane$edm = pane.edm,</span>
+                name = _pane$edm.name,
+                version = _pane$edm.version;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var myPane = this.panes[name + version];</span>
+<span class="cstat-no" title="statement not covered" >            var edmRouter = this.edmRouters[name + version];</span>
+<span class="cstat-no" title="statement not covered" >            var entityRouter = this.entityRouters[name + version];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            edmRouter.dispose();</span>
+<span class="cstat-no" title="statement not covered" >            entityRouter.dispose();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            this.panes[name + version] = null;</span>
+<span class="cstat-no" title="statement not covered" >            this.edmRouters[name + version] = null;</span>
+<span class="cstat-no" title="statement not covered" >            this.entityRouters[name + version] = null;</span>
+        }
+    }, {
+        key: "_init",
+        value: function _init() {
+            var _this2 = this;
+&nbsp;
+            // Set up Express handlers for dealing with EDMs
+            // add a new EDM
+            this.edmApp.post("/", <span class="fstat-no" title="function not covered" >function (req, res, next) {</span>
+<span class="cstat-no" title="statement not covered" >                var _req$body = req.body,</span>
+                    name = _req$body.name,
+                    version = _req$body.version;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (!name || !version) {</span>
+<span class="cstat-no" title="statement not covered" >                    res.status(500).send("Name and version required");</span>
+                }
+<span class="cstat-no" title="statement not covered" >                _this2.glass.getEdmAsync(name, version).then(<span class="fstat-no" title="function not covered" >function (edm) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    if (edm) {</span>
+<span class="cstat-no" title="statement not covered" >                        res.status(500).send("EDM with that name and version already exists");</span>
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        _this2.glass.addEdmAsync(name, version).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            res.status(200).end();</span>
+                        });
+                    }
+                });
+            });
+&nbsp;
+            // get an EDM
+            this.edmApp.get("/:name/:version", <span class="fstat-no" title="function not covered" >function (req, res, next) {</span>
+<span class="cstat-no" title="statement not covered" >                var _req$params = req.params,</span>
+                    name = _req$params.name,
+                    version = _req$params.version;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                _this2.glass.getEdmAsync(name, version).then(<span class="fstat-no" title="function not covered" >function (edm) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    res.type("json").send(edm.json);</span>
+                });
+            });
+&nbsp;
+            // Let's not implement delete yet, we will need to have some
+            // kind of premission set up around all this at some point
+        }
+    }]);
+&nbsp;
+    return _class;
+}();
+&nbsp;
+exports.default = _class;
+//# sourceMappingURL=GlassExpressDoor.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:31:25 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

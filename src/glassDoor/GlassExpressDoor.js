@@ -25,7 +25,7 @@ export default class {
             if (!err) {
                 this.mainApp.use(this.apiRoot, this.dataApp);
                 this.mainApp.use(this.edmRoot, this.edmApp);
-                console.log(`ExpressDoor is listening on ${this.port}:${this.address} `);
+                console.log(`ExpressDoor is listening on ${this.address}:${this.port} `);
                 console.log(`Data API mounted at ${this.apiRoot}`);
                 console.log(`EDM API mounted at ${this.edmRoot}`);
                 this._init();
@@ -43,15 +43,16 @@ export default class {
     }
 
     addPane(pane) {
+        let {name, version} = pane.edm;
         let router = new DataRouter(this.dataApp, pane);
-        this.entityRouters[edm.name + edm.version] = router;
+        this.entityRouters[name + version] = router;
         router.attach();
 
-        let edmRouter = new GlassExpressEdmRouter(this.edmApp, pane);
-        this.edmRouters[edm.name + edm.version] = edmRouter;
+        let edmRouter = new EDMApp(this.edmApp, pane);
+        this.edmRouters[name + version] = edmRouter;
         edmRouter.attach();
 
-        this.panes[pane.edm.name + pane.edm.version] = pane;
+        this.panes[name + version] = pane;
     }
 
     removePane(pane) {
@@ -73,19 +74,20 @@ export default class {
         // Set up Express handlers for dealing with EDMs
         // add a new EDM
         this.edmApp.post("/", (req, res, next) => {
-            let {name, version} = req.body;
+            let {name, version, label} = req.body;
             if(!name || !version) {
                 res.status(500).send("Name and version required");
+            } else {
+                this.glass.getEdmAsync(name, version).then((edm) => {
+                    if (edm) {
+                        res.status(500).send("EDM with that name and version already exists");
+                    } else {
+                        this.glass.addEdmAsync(name, version, label).then(()=> {
+                            res.status(200).end();
+                        });
+                    }
+                });
             }
-            this.glass.getEdmAsync(name, version).then((edm) => {
-                if (edm) {
-                    res.status(500).send("EDM with that name and version already exists");
-                } else {
-                    this.glass.addEdmAsync(name, version).then(()=> {
-                        res.status(200).end();
-                    });
-                }
-            });
         });
 
         // get an EDM

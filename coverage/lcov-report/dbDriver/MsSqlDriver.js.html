@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for dbDriver/MsSqlDriver.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">dbDriver/</a> MsSqlDriver.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">29.73% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>33/111</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">22.5% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>9/40</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">12.5% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/40</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">20.21% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>19/94</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }(); // SqlServerDriver.js
+&nbsp;
+&nbsp;
+var _mssql = require("mssql");
+&nbsp;
+var _mssql2 = _interopRequireDefault(_mssql);
+&nbsp;
+var _Database = require("../mssql/Database");
+&nbsp;
+var _Database2 = _interopRequireDefault(_Database);
+&nbsp;
+var _Migrator = require("../mssql/Migrator");
+&nbsp;
+var _Migrator2 = _interopRequireDefault(_Migrator);
+&nbsp;
+var _Edm = require("../edm/Edm");
+&nbsp;
+var _Edm2 = _interopRequireDefault(_Edm);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
+&nbsp;
+<span class="fstat-no" title="function not covered" >function _classCallCheck(instance, Constructor) {</span> <span class="cstat-no" title="statement not covered" >if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} </span>}
+&nbsp;
+var generateEdmCreateSql = <span class="fstat-no" title="function not covered" >function generateEdmCreateSql(options) {</span>
+<span class="cstat-no" title="statement not covered" >    return "CREATE TABLE " + options.edmSchema + "." + options.edmTable + "(\n        [id] [int] IDENTITY(1,1) NOT NULL,\n        [json] [text] NOT NULL,\n        [name] [varchar](100) NOT NULL,\n        [version] [varchar](10),\n     CONSTRAINT [PK_edm.edm] PRIMARY KEY CLUSTERED \n    (\n        [id] ASC\n    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]\n    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";</span>
+};
+&nbsp;
+var generateGetEdmsQuery = <span class="fstat-no" title="function not covered" >function generateGetEdmsQuery(options) {</span>
+<span class="cstat-no" title="statement not covered" >    return "SELECT [id], [json], [name], [version] \n    FROM " + options.edmSchema + "." + options.edmTable;</span>
+};
+&nbsp;
+var _class = function () {
+<span class="fstat-no" title="function not covered" >    function _class() {</span>
+<span class="cstat-no" title="statement not covered" >        var options = arguments.length &gt; 0 &amp;&amp; arguments[0] !== undefined ? arguments[0] : {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        _classCallCheck(this, _class);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (!options.user) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new Error("MsSqlDriver requires a user");</span>
+        }
+<span class="cstat-no" title="statement not covered" >        if (!options.password) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new Error("MsSqlDriver requires a password");</span>
+        }
+<span class="cstat-no" title="statement not covered" >        if (!options.server) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new Error("MsSqlDriver requires a server");</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        options.edmDb = options.edmDb || "GLASS_edm";</span>
+<span class="cstat-no" title="statement not covered" >        options.edmSchema = options.edmSchema || "dbo";</span>
+<span class="cstat-no" title="statement not covered" >        options.edmTable = options.edmTable || "edm";</span>
+<span class="cstat-no" title="statement not covered" >        options.dataSchema = options.dataSchema || "dbo";</span>
+<span class="cstat-no" title="statement not covered" >        options.dataDb = options.dataDb || "GLASS_data";</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this._edmPool = new _mssql2.default.ConnectionPool({</span>
+            user: options.user,
+            password: options.password,
+            server: options.server,
+            database: options.edmDb
+        });
+<span class="cstat-no" title="statement not covered" >        this._edmPool.on("error", <span class="fstat-no" title="function not covered" >function (e) {</span></span>
+<span class="cstat-no" title="statement not covered" >            console.error(e);</span>
+        });
+<span class="cstat-no" title="statement not covered" >        this._edmPoolPromise = this._edmPool.connect();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this._dataPool = new _mssql2.default.ConnectionPool({</span>
+            user: options.user,
+            password: options.password,
+            server: options.server,
+            database: options.dataDb
+        });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this._dataPool.on("error", <span class="fstat-no" title="function not covered" >function (e) {</span></span>
+<span class="cstat-no" title="statement not covered" >            console.error(e);</span>
+        });
+<span class="cstat-no" title="statement not covered" >        this._dataPoolPromise = this._dataPool.connect();</span>
+    }
+&nbsp;
+    _createClass(_class, [{
+        key: "getEdmDbAsync",
+        value: <span class="fstat-no" title="function not covered" >function getEdmDbAsync() {</span>
+<span class="cstat-no" title="statement not covered" >            var _this = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this._edmPoolPromise.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                return _this._edmPool;</span>
+            });
+        }
+    }, {
+        key: "getDataDbAsync",
+        value: <span class="fstat-no" title="function not covered" >function getDataDbAsync() {</span>
+<span class="cstat-no" title="statement not covered" >            var _this2 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this._dataPoolPromise.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                return _this2._dataPool;</span>
+            });
+        }
+    }, {
+        key: "getEdmListAsync",
+        value: <span class="fstat-no" title="function not covered" >function getEdmListAsync() {</span>
+<span class="cstat-no" title="statement not covered" >            var _this3 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this._verifyEdmTableAsync().then(<span class="fstat-no" title="function not covered" >function (pool) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return pool.request().query(generateGetEdmsQuery(_this3.options));</span>
+            }).then(<span class="fstat-no" title="function not covered" >function (result) {</span>
+<span class="cstat-no" title="statement not covered" >                return result.recordset;</span>
+            });
+        }
+    }, {
+        key: "getEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function getEdmAsync(name, version) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this4 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.getEdmDbAsync().then(<span class="fstat-no" title="function not covered" >function (pool) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return pool.request().query("SELECT * FROM [" + _this4.options.edmSchema + "].[" + _this4.options.edmTable + "] " + ("WHERE [version]='" + version + "' AND [name]='" + name + "'")).then(<span class="fstat-no" title="function not covered" >function (result) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return result.recordset[0];</span>
+                });
+            });
+        }
+    }, {
+        key: "addEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function addEdmAsync(name, version) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this5 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var newEdm = new _Edm2.default();</span>
+<span class="cstat-no" title="statement not covered" >            newEdm.name = name;</span>
+<span class="cstat-no" title="statement not covered" >            newEdm.version = version;</span>
+<span class="cstat-no" title="statement not covered" >            return this.getEdmAsync(name, version).then(<span class="fstat-no" title="function not covered" >function (edm) {</span></span>
+<span class="cstat-no" title="statement not covered" >                if (edm) {</span>
+<span class="cstat-no" title="statement not covered" >                    return Promise.reject(new Error("An EDM with that name and version already exists"));</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    return _this5.getEdmDbAsync().then(<span class="fstat-no" title="function not covered" >function (pool) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        return pool.request().query("INSERT INTO [" + _this5.options.edmSchema + "].[" + _this5.options.edmTable + "] " + ("(name, version, json) VALUES ('" + name + "', '" + version + "', '" + JSON.stringify(newEdm) + "')"));</span>
+                    });
+                }
+            });
+        }
+    }, {
+        key: "deleteEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function deleteEdmAsync(name, version) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this6 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.getEdmDbAsync().then(<span class="fstat-no" title="function not covered" >function (pool) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var query = "DELETE FROM [" + _this6.options.edmSchema + "].[" + _this6.options.edmTable + "] " + ("WHERE [version]='" + version + "' AND [name]='" + name + "'");</span>
+<span class="cstat-no" title="statement not covered" >                return pool.request().query(query);</span>
+            });
+        }
+    }, {
+        key: "getDatabaseForEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function getDatabaseForEdmAsync(edm) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this7 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.getDataDbAsync().then(<span class="fstat-no" title="function not covered" >function (pool) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return new _Database2.default({</span>
+                    edm: edm,
+                    connectionPool: pool,
+                    schema: _this7.options.dataSchema
+                });
+            });
+        }
+    }, {
+        key: "getMigrator",
+        value: <span class="fstat-no" title="function not covered" >function getMigrator() {</span>
+<span class="cstat-no" title="statement not covered" >            return new _Migrator2.default(this._edmPoolPromise);</span>
+        }
+    }, {
+        key: "dispose",
+        value: <span class="fstat-no" title="function not covered" >function dispose() {</span>
+<span class="cstat-no" title="statement not covered" >            this.getEdmDbAsync().then(<span class="fstat-no" title="function not covered" >function (pool) {</span></span>
+<span class="cstat-no" title="statement not covered" >                pool.close();</span>
+            });
+<span class="cstat-no" title="statement not covered" >            this.getDataDbAsync().then(<span class="fstat-no" title="function not covered" >function (pool) {</span></span>
+<span class="cstat-no" title="statement not covered" >                pool.close();</span>
+            });
+        }
+    }, {
+        key: "_checkEdmDbExistsAsync",
+        value: <span class="fstat-no" title="function not covered" >function _checkEdmDbExistsAsync(pool) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this8 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return new Promise(<span class="fstat-no" title="function not covered" >function (resolve, reject) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var q = "SELECT * FROM INFORMATION_SCHEMA.TABLES \n            WHERE TABLE_SCHEMA = '" + _this8.options.edmSchema + "' \n            AND TABLE_NAME = '" + _this8.options.edmTable + "'";</span>
+<span class="cstat-no" title="statement not covered" >                pool.request().query(q).then(<span class="fstat-no" title="function not covered" >function (result) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    if (result.recordset.length === 1) {</span>
+<span class="cstat-no" title="statement not covered" >                        resolve(true);</span>
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        resolve(false);</span>
+                    }
+                }).catch(<span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    reject(err);</span>
+                });
+            });
+        }
+    }, {
+        key: "_verifyEdmTableAsync",
+        value: <span class="fstat-no" title="function not covered" >function _verifyEdmTableAsync() {</span>
+<span class="cstat-no" title="statement not covered" >            var _this9 = this;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return this.getEdmDbAsync().then(<span class="fstat-no" title="function not covered" >function (pool) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return _this9._checkEdmDbExistsAsync(pool).then(<span class="fstat-no" title="function not covered" >function (exists) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    if (exists) {</span>
+<span class="cstat-no" title="statement not covered" >                        return pool;</span>
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        var q = generateEdmCreateSql(_this9.options);</span>
+<span class="cstat-no" title="statement not covered" >                        return pool.request().query(q).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            return pool;</span>
+                        });
+                    }
+                });
+            });
+        }
+    }]);
+&nbsp;
+    return _class;
+}();
+&nbsp;
+exports.default = _class;
+//# sourceMappingURL=MsSqlDriver.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:31:25 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

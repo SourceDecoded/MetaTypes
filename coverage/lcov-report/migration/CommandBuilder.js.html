@@ -1,0 +1,1106 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for migration/CommandBuilder.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">migration/</a> CommandBuilder.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">31.95% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>54/169</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">56.25% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>9/16</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">37.04% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>10/27</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">25.66% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>39/152</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }();
+&nbsp;
+var _Command = require("./../migration/Command");
+&nbsp;
+var _Command2 = _interopRequireDefault(_Command);
+&nbsp;
+var _Validator = require("./../edm/Validator");
+&nbsp;
+var _Validator2 = _interopRequireDefault(_Validator);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var CommandBuilder = function () {
+    function CommandBuilder() {
+        _classCallCheck(this, CommandBuilder);
+&nbsp;
+        this.edmValidator = new _Validator2.default();
+    }
+&nbsp;
+    _createClass(CommandBuilder, [{
+        key: "createAddColumnCommand",
+        value: function createAddColumnCommand(tableName, column) {
+            this.edmValidator.validateColumn(column);
+&nbsp;
+            var command = new _Command2.default();
+            var options = {
+                tableName: tableName,
+                column: column
+            };;
+&nbsp;
+            command.execute.action = "addColumn";
+            command.execute.options = options;
+&nbsp;
+            command.revert.action = "removeColumn";
+            command.revert.options = options;
+&nbsp;
+            return command;
+        }
+    }, {
+        key: "createAddDecoratorCommand",
+        value: <span class="fstat-no" title="function not covered" >function createAddDecoratorCommand(tableName, decorator) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateDecorator(decorator);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+<span class="cstat-no" title="statement not covered" >            var options = {</span>
+                tableName: tableName,
+                decorator: decorator
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "addDecorator";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "removeDecorator";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createAddOneToOneRelationshipCommand",
+        value: <span class="fstat-no" title="function not covered" >function createAddOneToOneRelationshipCommand(relationship) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateOneToOneRelationship(relationship);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+<span class="cstat-no" title="statement not covered" >            var options = {</span>
+                relationship: relationship
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "addOneToOneRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "removeOneToOneRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createAddOneToManyRelationshipCommand",
+        value: <span class="fstat-no" title="function not covered" >function createAddOneToManyRelationshipCommand(relationship) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateOneToManyRelationship(relationship);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+<span class="cstat-no" title="statement not covered" >            var options = {</span>
+                relationship: relationship
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "addOneToManyRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "removeOneToManyRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createAddTableCommand",
+        value: function createAddTableCommand(table) {
+            this.edmValidator.validateTableDescriptors(table);
+&nbsp;
+            var command = new _Command2.default();
+            var options = table;
+&nbsp;
+            command.execute.action = "addTable";
+            command.execute.options = options;
+&nbsp;
+            command.revert.action = "removeTable";
+            command.revert.options = options;
+&nbsp;
+            return command;
+        }
+    }, {
+        key: "createRemoveColumnCommand",
+        value: <span class="fstat-no" title="function not covered" >function createRemoveColumnCommand(tableName, column) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateColumn(column);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+<span class="cstat-no" title="statement not covered" >            var options = {</span>
+                tableName: tableName,
+                column: column
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "removeColumn";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "addColumn";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createRemoveDecoratorCommand",
+        value: <span class="fstat-no" title="function not covered" >function createRemoveDecoratorCommand(tableName, decorator) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateDecorator(decorator);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+<span class="cstat-no" title="statement not covered" >            var options = {</span>
+                tableName: tableName,
+                decorator: decorator
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (typeof options.name != "string") {</span>
+<span class="cstat-no" title="statement not covered" >                throw new Error("Decorators need to have a name.");</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "removeDecorator";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "addDecorator";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createRemoveOneToOneRelationshipCommand",
+        value: <span class="fstat-no" title="function not covered" >function createRemoveOneToOneRelationshipCommand(relationship) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateOneToOneRelationship(relationship);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+<span class="cstat-no" title="statement not covered" >            var options = {</span>
+                relationship: relationship
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "removeOneToOneRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "addOneToOneRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createRemoveOneToManyRelationshipCommand",
+        value: <span class="fstat-no" title="function not covered" >function createRemoveOneToManyRelationshipCommand(relationship) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateOneToManyRelationship(relationship);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+<span class="cstat-no" title="statement not covered" >            var options = {</span>
+                relationship: relationship
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "removeOneToManyRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "addOneToManyRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createRemoveTableCommand",
+        value: <span class="fstat-no" title="function not covered" >function createRemoveTableCommand(table) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateTableDescriptors(table);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+<span class="cstat-no" title="statement not covered" >            var options = table;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "removeTable";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "addTable";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = options;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createUpdateColumnCommand",
+        value: function createUpdateColumnCommand(tableName, oldColumn, newColumn) {
+            this.edmValidator.validateColumn(oldColumn);
+            this.edmValidator.validateColumn(newColumn);
+&nbsp;
+            var command = new _Command2.default();
+&nbsp;
+            command.execute.action = "updateColumn";
+            command.execute.options = {
+                tableName: tableName,
+                column: newColumn
+            };
+&nbsp;
+            command.revert.action = "updateColumn";
+            command.revert.options = {
+                tableName: tableName,
+                column: oldColumn
+            };
+&nbsp;
+            return command;
+        }
+    }, {
+        key: "createUpdateDecoratorCommand",
+        value: <span class="fstat-no" title="function not covered" >function createUpdateDecoratorCommand(tableName, oldDecorator, newDecorator) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateDecorator(oldDecorator);</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateDecorator(newDecorator);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "updateDecorator";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = {</span>
+                tableName: tableName,
+                decorator: newDecorator
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "updateDecorator";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = {</span>
+                tableName: tableName,
+                decorator: oldDecorator
+            };;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createUpdateOneToOneCommand",
+        value: <span class="fstat-no" title="function not covered" >function createUpdateOneToOneCommand(oldOneToOneRelationship, newOneToOneRelationship) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateOneToOneRelationship(oldOneToOneRelationship);</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateOneToOneRelationship(newOneToOneRelationship);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "updateOneToOneRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = newOneToOneRelationship;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "updateOneToOneRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = oldOneToOneRelationship;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createUpdateOneToManyCommand",
+        value: <span class="fstat-no" title="function not covered" >function createUpdateOneToManyCommand(oldOneToManyRelationship, newOneToManyRelationship) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateOneToOneRelationship(oldOneToManyRelationship);</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateOneToOneRelationship(newOneToManyRelationship);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "updateOneToManyRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = newOneToManyRelationship;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "updateOneToManyRelationship";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = oldOneToManyRelationship;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createUpdateTableCommand",
+        value: <span class="fstat-no" title="function not covered" >function createUpdateTableCommand(tableName, oldTable, newTable) {</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateTableDescriptors(oldTable);</span>
+<span class="cstat-no" title="statement not covered" >            this.edmValidator.validateTableDescriptors(newTable);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var command = new _Command2.default();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.execute.action = "updateTable";</span>
+<span class="cstat-no" title="statement not covered" >            command.execute.options = {</span>
+                tableName: tableName,
+                table: newTable
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            command.revert.action = "updateTable";</span>
+<span class="cstat-no" title="statement not covered" >            command.revert.options = {</span>
+                tableName: tableName,
+                table: oldTable
+            };;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return command;</span>
+        }
+    }, {
+        key: "createCommandsFromEdm",
+        value: <span class="fstat-no" title="function not covered" >function createCommandsFromEdm(edm) {</span>
+<span class="cstat-no" title="statement not covered" >            var _this = this;</span>
+&nbsp;
+            //TODO: clean decorators out of table, do separately
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var commands = edm.tables.reduce(<span class="fstat-no" title="function not covered" >function (accumulator, table) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var tableTemplate = Object.assign({}, table);</span>
+<span class="cstat-no" title="statement not covered" >                delete tableTemplate.columns;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                accumulator.push(_this.createAddTableCommand(tableTemplate));</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                table.columns.forEach(<span class="fstat-no" title="function not covered" >function (column) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    accumulator.push(_this.createAddColumnCommand(table.name, column));</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return accumulator;</span>
+            }, []);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            edm.relationships.oneToOne.reduce(<span class="fstat-no" title="function not covered" >function (accumulator, relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                accumulator.push(_this.createAddOneToOneRelationshipCommand(relationship));</span>
+<span class="cstat-no" title="statement not covered" >                return accumulator;</span>
+            }, commands);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            edm.relationships.oneToMany.reduce(<span class="fstat-no" title="function not covered" >function (accumulator, relationship) {</span></span>
+<span class="cstat-no" title="statement not covered" >                accumulator.push(_this.createAddOneToManyRelationshipCommand(relationship));</span>
+<span class="cstat-no" title="statement not covered" >                return accumulator;</span>
+            }, commands);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return commands;</span>
+        }
+    }]);
+&nbsp;
+    return CommandBuilder;
+}();
+&nbsp;
+exports.default = CommandBuilder;
+//# sourceMappingURL=CommandBuilder.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:31:25 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

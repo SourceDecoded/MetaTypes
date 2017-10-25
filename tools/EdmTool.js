@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 const CommandBuilder = require('../lib/migration/CommandBuilder').default;
 const fs = require('fs');
 const path = require('path');
@@ -51,9 +52,14 @@ let command = process.argv[2];
 if (!command) {
     console.log(Object.keys(commandHandlers).join("\n"));
 } else {
-    console.log("=========");
-    console.log(JSON.stringify(commandHandlers[command](), null, 2));
-    console.log("=========");
+    let handler = commandHandlers[command];
+    if (!handler) {
+        console.log(`Unknown command: ${command}`);
+    } else {
+        console.log("=========");
+        console.log(JSON.stringify(handler(), null, 2));
+        console.log("=========");
+    }
 }
 
 

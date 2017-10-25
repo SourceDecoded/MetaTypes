@@ -71,8 +71,8 @@ export default class {
             }
         });
         
-        this.glassPanes.forEach((pane) => {
-            pane.dispose();
+        Object.keys(this.glassPanes).forEach((key) => {
+            this.glassPanes[key].dispose();
         });
     }
 
@@ -80,11 +80,11 @@ export default class {
         return this._driver.getEdmAsync(name, version);
     }
 
-    addEdmAsync(name, version) {
-        return this._driver.addEdmAsync(name, version).then(() => {
+    addEdmAsync(name, version, label) {
+        return this._driver.addEdmAsync(name, version, label).then(() => {
             return this._driver.getEdmAsync(name, version);
         }).then((edm) => {
-            this._buildPaneAsync(edm);
+            return this._buildPaneAsync(edm);
         }).then((pane) => {
             Object.keys(this.glassDoors).map((key) => this.glassDoors[key]).forEach((door) => {
                 door.addPane(pane);
@@ -98,21 +98,21 @@ export default class {
             return Promise.reject(`Not an active EDM: ${name} ${version}`);
         }
         return this._driver.deleteEdmAsync(name, version).then(() => {
-            this.glassPanes[name + version] = null;
-            
+            this.glassPanes[name + version].dispose();
+            delete this.glassPanes[name + version];
         });
     }
 
     _buildPanesAsync(edms) {
         return edms.reduce((previous, current) => {
             return previous.then(() => {
-                return _buildPaneAsync(current);
+                return this._buildPaneAsync(current);
             });
         }, Promise.resolve());
     }
 
     _buildPaneAsync(edm) {
-        return driver.getDatabaseForEdmAsync(edm).then((db) => {
+        return this._driver.getDatabaseForEdmAsync(edm).then((db) => {
             // TODO: instantiate decorators
             let decorators = [];
 
@@ -129,7 +129,7 @@ export default class {
 
             let paneOptions = {
                 metaDatabase: metaDatabase,
-                migrationRunner: new MigrationRunner({migrator:driver.getMigrator()}),
+                migrationRunner: new MigrationRunner({edm:edm, migrator:this._driver.getMigrator()}),
                 edm: edm
             };
 

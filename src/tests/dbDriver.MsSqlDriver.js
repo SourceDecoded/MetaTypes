@@ -11,7 +11,14 @@ let dbConfig = {
     dataDb: process.env.META_DB_TEST_DB_DATA,
     edmDb: process.env.META_DB_TEST_DB_EDM,
     edmSchema: "dbo",
-    dataSchema: "dbo"
+    dataSchema: "dbo",
+    edmTable: "edm"
+};
+
+let cleanEdmDbAsync = function(dbDriver){
+    return dbDriver.getEdmDbAsync().then((pool) => {
+        return pool.request().query(`DELETE FROM [${dbConfig.edmSchema}].[${dbConfig.edmTable}]`);
+    });
 };
 
 exports["dbDriver.MsSqlDriver can connect"] = () => {
@@ -83,3 +90,34 @@ exports["dbDriver.MsSqlDriver.getDatabaseForEdmAsync"] = () => {
     });
 };
 
+exports["dbDriver.MsSqlDriver add and get EDM"] = () => {
+    var dbDriver = new MsSqlDriver(dbConfig);
+    cleanEdmDbAsync(dbDriver).then(() => {
+        dbDriver.addEdmAsync("testEDM", "0.0.1", "a label").then(() => {
+            return dbDriver.getEdmAsync("testEDM", "0.0.1").then((edm) => {
+                assert(edm);
+            });
+        }).catch((e) => {
+            assert.fail(e.message);
+        }).then(() => {
+            dbDriver.deleteEdmAsync("testEDM", "0.0.1").then(() => {
+                dbDriver.dispose();
+            });
+        });
+    });
+};
+
+exports["dbDriver.MsSqlDriver add duplicate EDM"] = () => {
+    var dbDriver = new MsSqlDriver(dbConfig);
+    dbDriver.addEdmAsync("dupetest", "0.0.1", "label").then(() => {
+        return dbDriver.addEdmAsync("dupetest", "0.0.1").then(() => {});
+    }).then(() => {
+        assert.fail("Duplicate EDM allowed to be added");
+    }).catch((e) => {
+        assert.equal(e.message, "An EDM with that name and version already exists");
+    }).then(() => {
+        return dbDriver.deleteEdmAsync("dupetest", "0.0.1");
+    }).then(() => {
+        dbDriver.dispose();
+    });
+}

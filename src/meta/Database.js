@@ -1,4 +1,3 @@
-import Database from "./../sqlite/Database";
 import Table from "./Table";
 import path from "path";
 import fileSystem from "fs";

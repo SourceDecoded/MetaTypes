@@ -9,8 +9,8 @@
     "tasks": [
         {
             "taskName": "clean",
-            "isBuildCommand": true,
-            "isTestCommand": true,
+            "isBuildCommand": false,
+            "isTestCommand": false,
             "args": [
                 "${workspaceRoot}/.clarity/clean.js",
                 "lib"
