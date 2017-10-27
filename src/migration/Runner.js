@@ -55,7 +55,7 @@ export default class Runner {
             }, Promise.resolve());
 
         }).then(() => {
-            return migratorCommand.apply(this.migrator, [options]);
+            return migratorCommand.apply(this.migrator, [this.edm, options]);
         }).then((commands) => {
 
             if (Array.isArray(commands)) {

@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for dbDriver/SqliteDriver.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">dbDriver/</a> SqliteDriver.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">76.47% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>52/68</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">64.71% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>22/34</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">59.26% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>16/27</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">72.55% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>37/51</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }(); // SqliteDriver.js
+&nbsp;
+&nbsp;
+var _sqlite = require("sqlite");
+&nbsp;
+var _sqlite2 = _interopRequireDefault(_sqlite);
+&nbsp;
+var _path = require("path");
+&nbsp;
+var _path2 = _interopRequireDefault(_path);
+&nbsp;
+var _Database = require("../sqlite/Database");
+&nbsp;
+var _Database2 = _interopRequireDefault(_Database);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var generateCreateSql = function generateCreateSql() {
+    return "CREATE TABLE IF NOT EXISTS edm \n    (\"id\" INTEGER PRIMARY KEY AUTOINCREMENT,\n     \"json\" TEXT,\n     \"name\" TEXT,\n     \"version\" INTEGER)";
+};
+&nbsp;
+/*
+{
+    storageMode: ["file" || "memory"]
+    path: "path/to/data/dir/if/file",
+    edmDb: "filenameIfFileMode.sqlite",
+    dataDb: "filenameIfFileMode.sqlite"
+}
+*/
+&nbsp;
+var _class = function () {
+    function _class() {
+        var options = arguments.length &gt; 0 &amp;&amp; arguments[0] !== undefined ? arguments[0] : <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
+&nbsp;
+        _classCallCheck(this, _class);
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (options.storageMode === "file" &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >typeof options.path !== "string")</span> {
+<span class="cstat-no" title="statement not covered" >            throw new Error("SqliteDriver needs a path to the data folder");</span>
+        }
+&nbsp;
+        options.edmDb = options.edmDb || "glassEDM.sqlite3";
+        options.dataDb = options.dataDb || "data.sqlite3";
+        options.storageMode = options.storageMode || <span class="branch-1 cbranch-no" title="branch not covered" >"memory";</span>
+&nbsp;
+        this._edmDbPromise = null;
+        this._dataDbPromise = null;
+&nbsp;
+        this._storageMode = options.storageMode;
+        this._storageModes = {
+            "file": {
+                getEdmDbAsync: <span class="fstat-no" title="function not covered" >function getEdmDbAsync() {</span>
+<span class="cstat-no" title="statement not covered" >                    return _sqlite2.default.open(_path2.default.resolve(options.path, options.edmDb));</span>
+                },
+                getDataDbAsync: <span class="fstat-no" title="function not covered" >function getDataDbAsync() {</span>
+<span class="cstat-no" title="statement not covered" >                    return _sqlite2.default.open(_path2.default.resolve(options.path, options.dataDb));</span>
+                }
+            },
+            "memory": {
+                "getEdmDbAsync": function getEdmDbAsync() {
+                    return _sqlite2.default.open(":memory:");
+                },
+                "getDataDbAsync": <span class="fstat-no" title="function not covered" >function getDataDbAsync() {</span>
+<span class="cstat-no" title="statement not covered" >                    return _sqlite2.default.open(":memory:");</span>
+                }
+            }
+        };
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (options.path === ":memory:") {
+<span class="cstat-no" title="statement not covered" >            console.warn("SQLite using an in-memory databases, data will not persist");</span>
+        }
+    }
+&nbsp;
+    _createClass(_class, [{
+        key: "getEdmDbAsync",
+        value: function getEdmDbAsync() {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!this._edmDbPromise) {
+                this._edmDbPromise = this._storageModes[this._storageMode].getEdmDbAsync();
+            }
+            return this._edmDbPromise;
+        }
+    }, {
+        key: "getDataDbAsync",
+        value: <span class="fstat-no" title="function not covered" >function getDataDbAsync() {</span>
+<span class="cstat-no" title="statement not covered" >            if (!this._dataDbPromise) {</span>
+<span class="cstat-no" title="statement not covered" >                this._dataDbPromise = this._storageModes[this._storageMode].getDataDbAsync();</span>
+            }
+<span class="cstat-no" title="statement not covered" >            return this._dataDbPromise;</span>
+        }
+    }, {
+        key: "getEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function getEdmAsync(name, version) {</span>}
+    }, {
+        key: "addEdmAsync",
+        value: function addEdmAsync(name, version) {}
+    }, {
+        key: "deleteEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function deleteEdmAsync(name, version) {</span>}
+    }, {
+        key: "getDatabaseForEdmAsync",
+        value: <span class="fstat-no" title="function not covered" >function getDatabaseForEdmAsync(edm) {</span>
+<span class="cstat-no" title="statement not covered" >            return this.getDataDbAsync().then(<span class="fstat-no" title="function not covered" >function (db) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return new _Database2.default({</span>
+                    edm: edm,
+                    sqliteDatabase: db
+                });
+            });
+        }
+    }, {
+        key: "getEdmListAsync",
+        value: function getEdmListAsync() {
+            return this._verifyEdmTableAsync().then(function (db) {
+                return db.all("SELECT * FROM edm");
+            });
+        }
+    }, {
+        key: "dispose",
+        value: <span class="fstat-no" title="function not covered" >function dispose() {</span>
+<span class="cstat-no" title="statement not covered" >            this.getEdmDbAsync().then(<span class="fstat-no" title="function not covered" >function (db) {</span></span>
+<span class="cstat-no" title="statement not covered" >                db.close();</span>
+            });
+<span class="cstat-no" title="statement not covered" >            this.getDataDbAsync().then(<span class="fstat-no" title="function not covered" >function (db) {</span></span>
+<span class="cstat-no" title="statement not covered" >                db.close();</span>
+            });
+        }
+    }, {
+        key: "_verifyEdmTableAsync",
+        value: function _verifyEdmTableAsync() {
+            return this.getEdmDbAsync().then(function (db) {
+                return db.run(generateCreateSql()).then(function () {
+                    return db;
+                });
+            });
+        }
+    }]);
+&nbsp;
+    return _class;
+}();
+&nbsp;
+exports.default = _class;
+//# sourceMappingURL=SqliteDriver.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:31:25 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

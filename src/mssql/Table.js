@@ -4,7 +4,7 @@ import Provider from "./Provider";
 
 export default class Table {
     constructor(name, options = {}) {
-        this.mssqlDatabase = options.mssqlDatabase;
+        this.connectionPool = options.connectionPool;
         this.edm = options.edm;
         this.name = name;
         this.schema = options.schema;
@@ -13,8 +13,8 @@ export default class Table {
             throw new Error("The table needs to have a name.");
         }
 
-        if (this.mssqlDatabase == null) {
-            throw new Error("The table needs to have a mssqlDatabase database.");
+        if (this.connectionPool == null) {
+            throw new Error("The table needs to have a connectionPool.");
         }
 
         if (this.edm == null) {
@@ -27,10 +27,10 @@ export default class Table {
             throw new Error(`Cannot find table called '${name}' within ${this.edm.name}.`);
         }
 
-        this.tableStatementBuilder = new TableStatementBuilder(name, options);
+        this.tableStatementBuilder = new TableStatementBuilder(this.table, options);
         this.provider = new Provider(name, {
             edm: this.edm,
-            mssqlDatabase: this.mssqlDatabase,
+            connectionPool: this.connectionPool,
             schema: this.schema
         });
     }
@@ -54,9 +54,9 @@ export default class Table {
     }
 
     addEntityAsync(entity) {
-        var sql = this.tableStatementBuilder.createInsertStatement(this.schema, this.table, entity);
+        var sql = this.tableStatementBuilder.createInsertStatement(entity);
 
-        return this.mssqlDatabase.request().query(sql.statement, sql.values).then((result) => {
+        return this.connectionPool.request().query(sql.statement, sql.values).then((result) => {
             let updatedEntity = this._clone(entity);
 
             // TODO: might need to be recordsets[1][0].id;
@@ -74,37 +74,36 @@ export default class Table {
     }
 
     createAsync() {
-        var tableStatement = this.tableStatementBuilder.createTableStatement(this.schema, this.table, this.edm.relationships);
-        var indexesStatements = this.tableStatementBuilder.createTableIndexesStatements(this.schema, this.table, this.edm.relationships);
+        var tableStatement = this.tableStatementBuilder.createTableStatement(this.edm.relationships);
+        var indexesStatements = this.tableStatementBuilder.createTableIndexesStatements(this.edm.relationships);
 
         indexesStatements.unshift(tableStatement);
-
-        return this.mssqlDatabase.request().query(indexesStatements.join(";"));
+        let fullStatement = indexesStatements.join(";");
+        return this.connectionPool.request().query(fullStatement);
     }
 
     dropAsync() {
-        var statement = this.tableStatementBuilder.createDropTableStatement(this.schema, this.table.name);
+        var statement = this.tableStatementBuilder.createDropTableStatement();
 
-        return this.mssqlDatabase.request().query(statement);
+        return this.connectionPool.request().query(statement);
     }
 
     getQueryProvider() {
         return this.provider;
     }
 
-
     removeEntityAsync(entity) {
-        var sql = this.tableStatementBuilder.createDeleteStatement(this.schema, this.table, entity);
+        var sql = this.tableStatementBuilder.createDeleteStatement(entity);
 
-        return this.mssqlDatabase.request().query(sql.statement, sql.values).then(() => {
+        return this.connectionPool.request().query(sql.statement, sql.values).then(() => {
             return entity;
         });
     }
 
     updateEntityAsync(entity, delta) {
-        var sql = this.tableStatementBuilder.createUpdateStatement(this.schema, this.table, entity, delta);
+        var sql = this.tableStatementBuilder.createUpdateStatement(entity, delta);
 
-        return this.mssqlDatabase.request().query(sql.statement, sql.values).then((statement) => {
+        return this.connectionPool.request().query(sql.statement, sql.values).then((statement) => {
             return Object.assign({}, entity, delta);
         });
     }

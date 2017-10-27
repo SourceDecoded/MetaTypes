@@ -2,13 +2,14 @@
 import mssql from "mssql";
 import MsSqlDatabase from "../mssql/Database";
 import MsSqlMigrator  from "../mssql/Migrator";
+import Edm from "../edm/Edm";
 
 let generateEdmCreateSql = function(options) {
     return `CREATE TABLE ${options.edmSchema}.${options.edmTable}(
         [id] [int] IDENTITY(1,1) NOT NULL,
         [json] [text] NOT NULL,
         [name] [varchar](100) NOT NULL,
-        [version] [int],
+        [version] [varchar](10),
      CONSTRAINT [PK_edm.edm] PRIMARY KEY CLUSTERED 
     (
         [id] ASC
@@ -59,6 +60,7 @@ export default class {
             server: options.server,
             database: options.dataDb
         });
+
         this._dataPool.on("error", (e) => {
             console.error(e);
         });
@@ -78,22 +80,58 @@ export default class {
         return this._verifyEdmTableAsync().then((pool) => {
             return pool.request().query(generateGetEdmsQuery(this.options));
         }).then((result) => {
-            return result.recordset;
+            return result.recordset.map((result) => {
+                return JSON.parse(result.json);
+            });
         });
     }
+
+    getEdmAsync(name, version) {
+        return this.getEdmDbAsync().then((pool) => {
+            return pool.request().query(`SELECT * FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
+                   `WHERE [version]='${version}' AND [name]='${name}'`).then((result) => {
+                if (result.recordset[0]) {
+                    return JSON.parse(result.recordset[0].json);
+                } else {
+                    return null;
+                }
+            });
+        });
+    };
+
+    addEdmAsync(name, version, label = "") {
+        var newEdm = new Edm();
+        newEdm.name = name;
+        newEdm.version = version;
+        newEdm.label = label;
+        return this.getEdmAsync(name, version).then((edm) => {
+            if (edm) {
+                return Promise.reject(new Error("An EDM with that name and version already exists"));
+            } else {
+                return this.getEdmDbAsync().then((pool) => {
+                    return pool.request().query(`INSERT INTO [${this.options.edmSchema}].[${this.options.edmTable}] ` + 
+                        `(name, version, json) VALUES ('${name}', '${version}', '${JSON.stringify(newEdm)}')`);
+                });
+            }
+        });
+    };
+
+    deleteEdmAsync(name, version) {
+        return this.getEdmDbAsync().then((pool) => {
+            let query = `DELETE FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
+            `WHERE [version]='${version}' AND [name]='${name}'`;
+            return pool.request().query(query);
+        });
+    };
 
     getDatabaseForEdmAsync(edm) {
         return this.getDataDbAsync().then((pool) => {
             return new MsSqlDatabase({
                 edm: edm,
-                mssqlDatabase: pool,
+                connectionPool: pool,
                 schema: this.options.dataSchema
             });
         });
-    }
-
-    getMigrator() {
-        return new MsSqlMigrator();
     }
 
     dispose() {
@@ -107,9 +145,10 @@ export default class {
 
     _checkEdmDbExistsAsync(pool) {
         return new Promise((resolve, reject) => {
-            pool.request().query(`SELECT * FROM INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA = '${this.options.edmSchema}' 
-            AND TABLE_NAME = '${this.options.edmTable}'`).then((result) => {
+            let q = `SELECT * FROM INFORMATION_SCHEMA.TABLES ` + 
+            `WHERE TABLE_SCHEMA = '${this.options.edmSchema}' ` +
+            `AND TABLE_NAME = '${this.options.edmTable}'`;
+            pool.request().query(q).then((result) => {
                 if (result.recordset.length === 1) {
                     resolve(true);
                 } else {
@@ -127,7 +166,8 @@ export default class {
                 if (exists) {
                     return pool;
                 } else {
-                    return pool.query(generateEdmCreateSql(this.options)).then(() => {
+                    let q = generateEdmCreateSql(this.options);
+                    return pool.request().query(q).then(() => {
                         return pool;
                     });
                 }

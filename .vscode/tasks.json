@@ -8,6 +8,15 @@
     "suppressTaskName": true,
     "tasks": [
         {
+            "taskName": "clean",
+            "isBuildCommand": false,
+            "isTestCommand": false,
+            "args": [
+                "${workspaceRoot}/.clarity/clean.js",
+                "lib"
+            ]
+        },
+        {
             "taskName": "build",
             "isBuildCommand": true,
             "isTestCommand": false,

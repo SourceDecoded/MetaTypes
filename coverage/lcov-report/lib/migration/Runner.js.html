@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/migration/Runner.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">lib/migration/</a> Runner.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">76.86% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>93/121</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">52.38% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>22/42</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">78.79% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>26/33</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">75% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>78/104</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+&nbsp;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }();
+&nbsp;
+var _Validator = require("./../edm/Validator");
+&nbsp;
+var _Validator2 = _interopRequireDefault(_Validator);
+&nbsp;
+var _Migrator = require("./../edm/Migrator");
+&nbsp;
+var _Migrator2 = _interopRequireDefault(_Migrator);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
+&nbsp;
+function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
+&nbsp;
+var defaultOptions = {
+    edm: null,
+    history: [],
+    migrator: null,
+    decorators: []
+};
+&nbsp;
+var Runner = function () {
+    function Runner(options) {
+        _classCallCheck(this, Runner);
+&nbsp;
+        options = Object.assign({}, defaultOptions, options);
+&nbsp;
+        this.edm = options.edm;
+        this.migrator = options.migrator;
+        this.edmValidator = new _Validator2.default();
+        this.edmMigrator = new _Migrator2.default(this.edm);
+        this.decorators = options.decorators;
+&nbsp;
+        this._executeCommandAsync = this._executeCommandAsync.bind(this);
+        this._revertCommandAsync = this._revertCommandAsync.bind(this);
+&nbsp;
+        this._validateOptions(options);
+    }
+&nbsp;
+    _createClass(Runner, [{
+        key: "_executeCommandAsync",
+        value: function _executeCommandAsync(promise, command, consequentialCommands) {
+            var _this = this;
+&nbsp;
+            var actionName = command.execute.action + "Async";
+            var options = command.execute.options;
+            var migratorCommand = this.migrator[actionName];
+&nbsp;
+            return promise.then(function () {
+&nbsp;
+                _this._validateCommand(command);
+&nbsp;
+                if (typeof migratorCommand !== "function") {
+                    throw new Error("'" + _this.migrator.name + "' migrator doesn't support this command. " + actionName);
+                }
+&nbsp;
+                return _this.decorators.reduce(<span class="fstat-no" title="function not covered" >function (promise, decorator) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    return promise.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                        return _this._invokeMethodAsyncWithRecovery(decorator, actionName, [options]);</span>
+                    }).then(<span class="fstat-no" title="function not covered" >function (commands) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (Array.isArray(commands)) {</span>
+<span class="cstat-no" title="statement not covered" >                            commands.forEach(<span class="fstat-no" title="function not covered" >function (command) {</span></span>
+<span class="cstat-no" title="statement not covered" >                                consequentialCommands.push(command);</span>
+                            });
+                        }
+                    });
+                }, Promise.resolve());
+            }).then(function () {
+                return migratorCommand.apply(_this.migrator, [options]);
+            }).then(function (commands) {
+&nbsp;
+                if (Array.isArray(commands)) {
+                    commands.forEach(function (command) {
+                        consequentialCommands.push(command);
+                    });
+                }
+&nbsp;
+                return _this.edmMigrator[actionName](options);
+            }).catch(function (error) {
+                var executionError = new Error(error.message);
+                executionError.inner = error;
+&nbsp;
+                throw executionError;
+            });
+        }
+    }, {
+        key: "_invokeMethodAsyncWithRecovery",
+        value: <span class="fstat-no" title="function not covered" >function _invokeMethodAsyncWithRecovery(obj, methodName, args) {</span>
+<span class="cstat-no" title="statement not covered" >            if (obj &amp;&amp; typeof obj[methodName] === "function") {</span>
+<span class="cstat-no" title="statement not covered" >                var result = void 0;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                try {</span>
+<span class="cstat-no" title="statement not covered" >                    result = obj[methodName].apply(obj, args);</span>
+                } catch (error) {
+<span class="cstat-no" title="statement not covered" >                    result = null;</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (!(result instanceof Promise)) {</span>
+<span class="cstat-no" title="statement not covered" >                    result = Promise.resolve(result);</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return result.catch(<span class="fstat-no" title="function not covered" >function (error) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    return null;</span>
+                });
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return Promise.resolve();</span>
+        }
+    }, {
+        key: "_revertCommandAsync",
+        value: function _revertCommandAsync(promise, command) {
+            var _this2 = this;
+&nbsp;
+            var actionName = command.revert.action + "Async";
+            var migratorCommand = this.migrator[actionName];
+&nbsp;
+            return promise.then(function () {
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof migratorCommand !== "function") {
+<span class="cstat-no" title="statement not covered" >                    throw new Error("The " + _this2.migrator + " migrator doesn't support this command. " + actionName);</span>
+                }
+&nbsp;
+                return migratorCommand.apply(_this2.migrator, [command.revert.options]);
+            }).then(function () {
+                return _this2.edmMigrator[actionName](command.revert.options);
+            });
+        }
+    }, {
+        key: "_validateCommand",
+        value: function _validateCommand(command) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof command.id !== "string") {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Commands require an id.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (command.execute == null) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Commands require an execute object.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof command.execute.action !== "string") {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Commands require an execute object with an command property of type string.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (command.revert == null) {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Commands require an revert object.");</span>
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof command.revert.action !== "string") {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Commands require an revert object with an command property of type string.");</span>
+            }
+        }
+    }, {
+        key: "_validateEdm",
+        value: function _validateEdm(edm) {
+            this.edmValidator.validate(edm);
+        }
+    }, {
+        key: "_validateOptions",
+        value: function _validateOptions(options) {
+            this._validateEdm(options.edm);
+            this._validateMigrator(options.migrator);
+        }
+    }, {
+        key: "_validateMigrator",
+        value: function _validateMigrator(migrator) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof migrator.name !== "string") {
+<span class="cstat-no" title="statement not covered" >                throw new Error("Illegal Argument: Migrators need a name property.");</span>
+            }
+        }
+    }, {
+        key: "migrateAsync",
+        value: function migrateAsync(commands) {
+            var _this3 = this;
+&nbsp;
+            if (commands.length === 0) {
+                return Promise.resolve();
+            }
+&nbsp;
+            var commandsCopy = commands.slice();
+            var consequentialCommands = [];
+            var promise = Promise.resolve();
+&nbsp;
+            var _loop = function _loop() {
+                var command = commandsCopy.shift();
+&nbsp;
+                promise = _this3._executeCommandAsync(promise, command, consequentialCommands).catch(function (error) {
+                    commandsCopy.unshift(command);
+                    throw error;
+                });
+            };
+&nbsp;
+            while (commandsCopy.length &gt; 0) {
+                _loop();
+            }
+&nbsp;
+            return promise.then(function () {
+                return _this3.migrateAsync(consequentialCommands);
+            }).catch(function (error) {
+&nbsp;
+                var index = commands.length - commandsCopy.length;
+                var reverseCommands = commands.slice(0, index).reverse();
+&nbsp;
+                return reverseCommands.reduce(_this3._revertCommandAsync, Promise.resolve()).catch(<span class="fstat-no" title="function not covered" >function (revertError) {</span>
+<span class="cstat-no" title="statement not covered" >                    var modifiedError = Error("Failed to revert commands on a failed migration. Current edm state is corrupted.");</span>
+<span class="cstat-no" title="statement not covered" >                    modifiedError.revertError = revertError;</span>
+<span class="cstat-no" title="statement not covered" >                    modifiedError.innerError = error;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    throw modifiedError;</span>
+                }).then(function () {
+                    var modifiedError = new Error("Failed Migration. Successfully reverted commands.");
+                    modifiedError.innerError = error;
+&nbsp;
+                    throw modifiedError;
+                });
+            });
+        }
+    }]);
+&nbsp;
+    return Runner;
+}();
+&nbsp;
+exports.default = Runner;
+//# sourceMappingURL=Runner.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Oct 19 2017 15:59:11 GMT-0600 (MDT)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

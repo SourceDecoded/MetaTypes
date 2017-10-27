@@ -5,26 +5,37 @@ import SqliteDatabase from "../sqlite/Database";
 
 let generateCreateSql = function(){
     return `CREATE TABLE IF NOT EXISTS edm 
-    ("id" INT PRIMARY KEY AUTOINCREMENT,
+    ("id" INTEGER PRIMARY KEY AUTOINCREMENT,
      "json" TEXT,
      "name" TEXT,
-     "version" INT)`
+     "version" INTEGER)`
 };
+
+/*
+{
+    storageMode: ["file" || "memory"]
+    path: "path/to/data/dir/if/file",
+    edmDb: "filenameIfFileMode.sqlite",
+    dataDb: "filenameIfFileMode.sqlite"
+}
+*/
 
 export default class {
 
     constructor(options = {}) {
-        if (typeof options.path !== "string") {
+
+        if (options.storageMode === "file" && typeof options.path !== "string") {
             throw new Error("SqliteDriver needs a path to the data folder");
         }
 
         options.edmDb = options.edmDb || "glassEDM.sqlite3";
         options.dataDb = options.dataDb || "data.sqlite3";
+        options.storageMode = options.storageMode || "memory";
 
         this._edmDbPromise = null;
         this._dataDbPromise = null;
 
-        this._storageMode = "file";
+        this._storageMode = options.storageMode;
         this._storageModes = {
             "file": {
                 getEdmDbAsync:() => {
@@ -64,6 +75,12 @@ export default class {
         return this._dataDbPromise;
     }
 
+    getEdmAsync(name, version) {};
+
+    addEdmAsync(name, version) {};
+
+    deleteEdmAsync(name, version) {};
+
     getDatabaseForEdmAsync(edm){
         return this.getDataDbAsync().then((db) => {
             return new SqliteDatabase({
@@ -74,7 +91,7 @@ export default class {
     }
 
     getEdmListAsync() {
-        return _verifyEdmTableAsync().then((db) => {
+        return this._verifyEdmTableAsync().then((db) => {
             return db.all(`SELECT * FROM edm`);
         });
     }
