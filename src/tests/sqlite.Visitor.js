@@ -19,42 +19,53 @@ exports["sqlite.Visitor: IsEqualTo."] = () => {
     });
 
     let query = queryable.getQuery();
+    let sql = visitor.createSql(query);
 
-    let statement = visitor.createSelectStatement(query);
-
-    assert.equal(statement, 'SELECT "Source"."id" AS "Source___id", "Source"."string" AS "Source___string", "Source"."number" AS "Source___number", "Source"."date" AS "Source___date", "Source"."boolean" AS "Source___boolean", "Source"."float" AS "Source___float" FROM "Source" WHERE ("Source"."string" = \'Hello World\') LIMIT -1 OFFSET 0');
+    assert.equal(sql, `SELECT * FROM "Source" WHERE ("Source"."string" = 'Hello World') OFFSET 0 LIMIT -1`);
 }
 
-exports["sqlite.Visitor: Query nested object but don't bring back the data."] = () => {
+exports["sqlite.Visitor: Select."] = () => {
 
     let visitor = new Visitor("Source", edm);
     let queryable = new Queryable("Source");
 
-    queryable = queryable.where((expBuilder) => {
-        return expBuilder.property("foreigner").property("string").isEqualTo("Hello World");
-    });
-
-    let query = queryable.getQuery();
-
-    let statement = visitor.createSelectStatement(query);
-
-    assert.equal(statement, 'SELECT "Source"."id" AS "Source___id", "Source"."string" AS "Source___string", "Source"."number" AS "Source___number", "Source"."date" AS "Source___date", "Source"."boolean" AS "Source___boolean", "Source"."float" AS "Source___float" FROM "Source" LEFT JOIN "OtherForeign" ON "Source"."id" = "OtherForeign"."foreignKey" WHERE ("OtherForeign"."string" = \'Hello World\') LIMIT -1 OFFSET 0');
-}
-
-exports["sqlite.Visitor: Include nested object."] = () => {
-
-    let visitor = new Visitor("Source", edm);
-    let queryable = new Queryable("Source");
-
-    queryable = queryable.where((expBuilder) => {
+    queryable = queryable.select(["string"]).where((expBuilder) => {
         return expBuilder.property("string").isEqualTo("Hello World");
-    }).include((expBuilder) => {
-        return expBuilder.property("foreigner");
     });
 
     let query = queryable.getQuery();
+    let sql = visitor.createSql(query);
 
-    let statement = visitor.createSelectStatement(query);
+}
 
-    assert.equal(statement, 'SELECT "Source"."id" AS "Source___id", "Source"."string" AS "Source___string", "Source"."number" AS "Source___number", "Source"."date" AS "Source___date", "Source"."boolean" AS "Source___boolean", "Source"."float" AS "Source___float", "OtherForeign"."id" AS "OtherForeign___id", "OtherForeign"."foreignKey" AS "OtherForeign___foreignKey", "OtherForeign"."string" AS "OtherForeign___string", "OtherForeign"."indexedColumn" AS "OtherForeign___indexedColumn" FROM "Source" LEFT JOIN "OtherForeign" ON "Source"."id" = "OtherForeign"."foreignKey" WHERE ("Source"."string" = \'Hello World\') LIMIT -1 OFFSET 0');
+exports["sqlite.Visitor: isIn with array."] = () => {
+
+    let visitor = new Visitor("Source", edm);
+    let queryable = new Queryable("Source");
+
+    queryable = queryable.where((expBuilder) => {
+        return expBuilder.property("string").isIn(["John", "Doe"]);
+    });
+
+    let query = queryable.getQuery();
+    let sql = visitor.createSql(query);
+
+}
+
+exports["sqlite.Visitor: isIn with queryable."] = () => {
+
+    let visitor = new Visitor("Source", edm);
+    let queryable = new Queryable("Source");
+    let otherQueryable = new Queryable("OtherForeign").select(["string"]).where((expBuilder) => {
+        return expBuilder.property("string").startsWith("J");
+    });
+
+
+    queryable = queryable.where((expBuilder) => {
+        return expBuilder.property("string").isIn(otherQueryable);
+    });
+
+    let query = queryable.getQuery();
+    let sql = visitor.createSql(query);
+
 }
