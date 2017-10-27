@@ -88,8 +88,11 @@ export default class {
 
     getEdmAsync(name, version) {
         return this.getEdmDbAsync().then((pool) => {
-            return pool.request().query(`SELECT * FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
-                   `WHERE [version]='${version}' AND [name]='${name}'`).then((result) => {
+            let req = pool.request();
+            req.input("name", name);
+            req.input("value", value);
+            return req.query(`SELECT * FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
+                   `WHERE [version]=@version AND [name]=@name`).then((result) => {
                 if (result.recordset[0]) {
                     return JSON.parse(result.recordset[0].json);
                 } else {
@@ -109,18 +112,35 @@ export default class {
                 return Promise.reject(new Error("An EDM with that name and version already exists"));
             } else {
                 return this.getEdmDbAsync().then((pool) => {
-                    return pool.request().query(`INSERT INTO [${this.options.edmSchema}].[${this.options.edmTable}] ` + 
-                        `(name, version, json) VALUES ('${name}', '${version}', '${JSON.stringify(newEdm)}')`);
+                    let req = pool.request();
+                    req.input("name", name);
+                    req.input("version", version);
+                    req.input("json", JSON.stringify(newEdm));
+                    return req.query(`INSERT INTO [${this.options.edmSchema}].[${this.options.edmTable}] ` + 
+                        `(name, version, json) VALUES (@name, @version, @json)`);
                 });
             }
         });
     };
 
+    updateEdmAsync(newEdm) {
+        return this.getEdmDbAsync().then((pool) => {
+            let req = pool.request();
+            req.input('json', JSON.stringify(newEdm));
+            req.input('name', newEdm.name);
+            req.input('version', newEdm.version);
+            return req.query(`UPDATE [${this.options.edmSchema}].[${this.options.edmTable}] `+
+                `SET [json]=@json WHERE name=@name AND version=@version`);
+        });
+    };
+
     deleteEdmAsync(name, version) {
         return this.getEdmDbAsync().then((pool) => {
-            let query = `DELETE FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
-            `WHERE [version]='${version}' AND [name]='${name}'`;
-            return pool.request().query(query);
+            let req = pool.request();
+            req.input('version', version);
+            req.input('name', name);
+            return req.query(`DELETE FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
+                `WHERE [version]=@version AND [name]=@name`);
         });
     };
 
