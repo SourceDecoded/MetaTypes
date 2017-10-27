@@ -1,5 +1,4 @@
-import Visitor from "./Visitor";
-import EntityBuilder from "./EntityBuilder";
+import QueryBuilder from "QueryBuilder";
 
 export default class Provider {
     constructor(name, options = {}) {
@@ -14,18 +13,14 @@ export default class Provider {
         this.edm = options.edm;
         this.sqliteDatabase = options.sqliteDatabase;
         this.name = name;
-
-        this.entityBuilder = new EntityBuilder(name, this.edm);
+        this.queryBuilder = new QueryBuilder(this.edm);
     }
 
     toArrayAsync(queryable) {
         let query = queryable.getQuery();
-        let visitor = new Visitor(this.name, this.edm);
-        let statement = visitor.createSelectStatement(query);
+        let statement = this.queryBuilder.createStatement(query);
 
-        return this.sqliteDatabase.all(statement).then((results) => {
-            return this.entityBuilder.convert(results);
-        });
+        return this.sqliteDatabase.all(statement);
     }
 
     toArrayWithCountAsync(queryable) {
@@ -43,8 +38,7 @@ export default class Provider {
 
     countAsync(queryable) {
         let query = queryable.getQuery();
-        let visitor = new Visitor(this.name, this.edm);
-        let statement = visitor.createSelectStatementWithCount(query);
+        let statement = this.queryBuilder.createCountStatement(query);
 
         return this.sqliteDatabase.get(statement).then((result) => {
             return result.count;

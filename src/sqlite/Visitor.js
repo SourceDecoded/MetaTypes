@@ -35,30 +35,34 @@ export default class Visitor extends ExpressionVisitor {
         this.edm = edm;
         this.table = this._getTable(name);
 
-        this.dataConverter = {
-            convertString: (value) => {
-                return `'${this._escape(value)}'`;
-            },
-            convertContainsString: (value) => {
-                return `'%${this._escape(value)}%'`;
-            },
-            convertStartsWithString: (value) => {
-                return `'${this._escape(value)}%'`;
-            },
-            convertEndsWithString: (value) => {
-                return `'%${this._escape(value)}'`;
-            },
-            convertNumber: (value) => {
-                return value.toString();
-            },
-            convertBoolean: (value) => {
-                return value ? 1 : 0;
-            },
-            convertDate: (value) => {
-                return value.getTime();
-            }
-        }
+    }
 
+    _convertString(value) {
+        return `'${this._escape(value)}'`;
+    }
+
+    _convertContainsString(value) {
+        return `'%${this._escape(value)}%'`;
+    }
+
+    _convertStartsWithString(value) {
+        return `'${this._escape(value)}%'`;
+    }
+
+    _convertEndsWithString(value) {
+        return `'%${this._escape(value)}'`;
+    }
+
+    _convertNumber(value) {
+        return value.toString();
+    }
+
+    _convertBoolean(value) {
+        return value ? 1 : 0;
+    }
+
+    _convertDate(value) {
+        return value.getTime();
     }
 
     _escape(value) {
@@ -77,21 +81,6 @@ export default class Visitor extends ExpressionVisitor {
         return `"${value.replace(/\"/g, '""')}"`;
     }
 
-    _createSelectStatement(query) {
-        let mapping = query.select.value;
-        let keys = Object.keys(mapping);
-
-        if (keys.length === 0) {
-            return `SELECT * FROM ${this._escapeIdentifier(this.table.name)}`;
-        } else {
-            let columns = keys.map((key) => {
-                return `${this._escapeIdentifier(key)} AS ${this._escapeIdentifier(mapping[key])}`;
-            }).join(", ");
-
-            return `SELECT ${columns} FROM ${this._escapeIdentifier(this.table.name)}`;
-        }
-    }
-
     _getTable(name) {
         return this.edm.tables.find((table) => {
             return table.name === name;
@@ -100,13 +89,13 @@ export default class Visitor extends ExpressionVisitor {
 
     _sqlizePrimitive(value) {
         if (typeof value === "string") {
-            return this.dataConverter.convertString(value);
+            return this._convertString(value);
         } else if (typeof value === "number") {
-            return this.dataConverter.convertNumber(value);
+            return this._convertNumber(value);
         } else if (typeof value === "boolean") {
-            return this.dataConverter.convertBoolean(value);
+            return this._convertBoolean(value);
         } else if (value instanceof Date) {
-            return this.dataConverter.convertDate(value);
+            return this._convertDate(value);
         } else if (value == null) {
             return "NULL";
         } else {
@@ -154,28 +143,6 @@ export default class Visitor extends ExpressionVisitor {
         return expression.value;
     }
 
-    createSqlWithCount(query) {
-        let queryParts = [];
-        let countAlias = "count";
-
-        let sql = new SqlParts();
-        sql.select = `SELECT COUNT(*) AS count FROM ${this._escapeIdentifier(this.name)}`;
-        sql.where = this.parse(query.where);
-
-        return sql.toString();
-    }
-
-    createSql(query) {
-        let sql = new SqlParts();
-        sql.select = this._createSelectStatement(query);
-        sql.where = this.parse(query.where);
-        sql.orderBy = this.parse(query.orderBy);
-        sql.skip = this.skip(query.skip.value);
-        sql.take = this.take(query.take.value);
-
-        return sql.toString();
-    };
-
     date(expression) {
         return expression.value;
     }
@@ -185,7 +152,7 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     endsWith(left, right) {
-        return `${left} LIKE ${this.dataConverter.convertEndsWithString(right)}`;
+        return `${left} LIKE ${this._convertEndsWithString(right)}`;
     }
 
     isEqualTo(left, right) {
@@ -280,12 +247,8 @@ export default class Visitor extends ExpressionVisitor {
         return `(${visitor.createSql(query)})`;
     };
 
-    skip(value) {
-        return `OFFSET ${value}`
-    }
-
     startsWith(left, value) {
-        return `${left} LIKE ${this.dataConverter.convertStartsWithString(value)}`;
+        return `${left} LIKE ${this._convertStartsWithString(value)}`;
     }
 
     string(expression) {
@@ -293,15 +256,7 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     contains(left, value) {
-        return `${left} LIKE ${this.dataConverter.convertContainsString(value)}`;
-    }
-
-    take(value) {
-        if (value === Infinity) {
-            return `LIMIT -1`;
-        } else {
-            return `LIMIT ${value}`;
-        }
+        return `${left} LIKE ${this._convertContainsString(value)}`;
     }
 
     type(expression) {
