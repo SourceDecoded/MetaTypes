@@ -18,7 +18,7 @@ export default class Provider {
         this.connectionPool = options.connectionPool;
         this.schema = options.schema;
         this.name = name;
-        this.queryBuilder = new QueryBuilder(this.edm);
+        this.queryBuilder = new QueryBuilder(this.edm, options.schema);
     }
 
     toArrayAsync(queryable) {
@@ -28,7 +28,7 @@ export default class Provider {
         let request = this.connectionPool.request();
 
         return request.query(statement).then((results) => {
-            return this.entityBuilder.convert(results.recordset);
+            return results.recordset;
         });
     }
 

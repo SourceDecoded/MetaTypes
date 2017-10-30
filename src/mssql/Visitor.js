@@ -1,4 +1,5 @@
 import { ExpressionVisitor } from "queryablejs";
+import QueryBuilder from "./QueryBuilder";
 
 export default class Visitor extends ExpressionVisitor {
     constructor(name, edm, schema) {
@@ -66,13 +67,13 @@ export default class Visitor extends ExpressionVisitor {
 
     _sqlizePrimitive(value) {
         if (typeof value === "string") {
-            return this.dataConverter.convertString(value);
+            return this._convertString(value);
         } else if (typeof value === "number") {
-            return this.dataConverter.convertNumber(value);
+            return this._convertNumber(value);
         } else if (typeof value === "boolean") {
-            return this.dataConverter.convertBoolean(value);
+            return this._convertBoolean(value);
         } else if (value instanceof Date) {
-            return this.dataConverter.convertDate(value);
+            return this._convertDate(value);
         } else if (value == null) {
             return "NULL";
         } else {
@@ -215,7 +216,7 @@ export default class Visitor extends ExpressionVisitor {
 
     queryable(expression) {
         let query = expression.value;
-        let queryBuilder = new QueryBuilder(this.edm);
+        let queryBuilder = new QueryBuilder(this.edm, this.schema);
 
         return `(${queryBuilder.createStatement(query)})`;
     };

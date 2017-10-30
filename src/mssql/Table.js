@@ -1,6 +1,7 @@
 import TableStatementBuilder from "./TableStatementBuilder";
 import { Queryable } from "queryablejs";
 import Provider from "./Provider";
+import mssql from "mssql";
 
 export default class Table {
     constructor(name, options = {}) {
@@ -104,7 +105,7 @@ export default class Table {
             request.input("k"+index, key);
         });
 
-        return this.connectionPool.request().query(sql.statement).then(() => {
+        return request.query(sql.statement).then(() => {
             return entity;
         });
     }
@@ -115,7 +116,7 @@ export default class Table {
         let request = this.connectionPool.request();
 
         sql.values.forEach((value, index) => {
-            request.input("v" + index, value);
+            request.input("v"+index, value);
         });
 
         sql.keys.forEach((key, index) => {

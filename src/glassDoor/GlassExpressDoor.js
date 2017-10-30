@@ -65,6 +65,7 @@ export default class {
         // add a new EDM
         this.edmApp.post("/", (req, res, next) => {
             let {name, version, label} = req.body;
+            label = label || name;
             if(!name || !version) {
                 res.status(500).send("Name and version required");
             } else {

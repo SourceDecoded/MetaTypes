@@ -103,11 +103,11 @@ export default class TableStatementBuilder {
             throw new Error("Invalid Argument: delta cannot an empty object.");
         }
 
-        this.filterRelevantColumns(columns).forEach((column, index) => {
+        this.filterRelevantColumns(columns).forEach((column) => {
             var columnName = column.name;
 
             if (typeof delta[columnName] !== "undefined" && this.dataTypeMapping[column.type] != null) {
-                columnSet.push(this._escapeName(columnName) + `=@v${index}`);
+                columnSet.push(this._escapeName(columnName) + `=@v${values.length}`);
                 values.push(this.toMssqlValue(delta[columnName]));
             }
         });
@@ -130,7 +130,7 @@ export default class TableStatementBuilder {
         }
 
         const primaryKeysExpr = [];
-        const values = [];
+        const keys = [];
         const primaryKeys = this.getPrimaryKeys(this.table.columns);
 
         primaryKeys.forEach((primaryKey, index) => {
@@ -138,15 +138,15 @@ export default class TableStatementBuilder {
             if (entity[primaryKey] === null) {
                 primaryKeysExpr.push(this._escapeName(primaryKey) + " IS NULL");
             } else {
-                primaryKeysExpr.push(this._escapeName(primaryKey) + " @k"+index);
-                values.push(this.toMssqlValue(entity[primaryKey]));
+                primaryKeysExpr.push(this._escapeName(primaryKey) + `=@k${keys.length}`);
+                keys.push(this.toMssqlValue(entity[primaryKey]));
             }
 
         });
 
         return {
             statement: `DELETE FROM ${this._getQualifiedDbTableName(this.table.name)} WHERE ${primaryKeysExpr.join(" AND ")}`,
-            keys: values
+            keys: keys
         };
     }
 

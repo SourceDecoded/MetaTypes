@@ -71,7 +71,7 @@ export default class {
         }
 
         let handleQuery = function(query, req, res, next) {
-            var queryable = new Queryable("", query);
+            var queryable = new Queryable(req.table.name, query);
             req.table.asQueryable(req.user).merge(queryable).toArrayAsync().then((result) => {
                 res.send(result);
             }).catch((e) => {
