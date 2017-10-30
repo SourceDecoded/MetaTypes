@@ -28,48 +28,48 @@ export default class Provider {
         let query = queryable.getQuery();
         let innerQueries = query.where.getMatchingNodes(new ValueExpression("queryable"));
 
-        return innerQueries.reduce((queryableExpression) => {
+        return innerQueries.reduce((promise, queryableExpression) => {
             let query = queryableExpression.value;
             let queryable = new Queryable(query.type, query);
             let metaTable = this.metaDatabase.getTable(query.type);
             let previousQueryable = queryable;
 
-            return this.decorators.reduce((promise, decorator) => {
-                return promise.then((queryable) => {
-                    previousQueryable = queryable;
+            return promise.then(() => {
+                return this.decorators.reduce((promise, decorator) => {
+                    return promise.then((queryable) => {
+                        previousQueryable = queryable;
 
-                    let options = metaTable.decoratorOptions[decorator.name];
-                    let result = this._invokeMethodAsync(decorator, "refineQueryableAsync", [user, queryable, options])
+                        let options = metaTable.decoratorOptions[decorator.name];
+                        let result = this._invokeMethodAsync(decorator, "refineQueryableAsync", [user, queryable, options])
 
-                    if (result == null) {
-                        result = queryable;
-                    }
+                        if (result == null) {
+                            result = queryable;
+                        }
 
-                    if (!(result instanceof Promise)) {
-                        return Promise.resolve(result);
-                    }
+                        if (!(result instanceof Promise)) {
+                            return Promise.resolve(result);
+                        }
 
-                    return result;
-                }).then((queryable) => {
-                    if (!(queryable instanceof Queryable)) {
-                        return previousQueryable;
-                    }
+                        return result;
+                    }).then((queryable) => {
+                        if (!(queryable instanceof Queryable)) {
+                            return previousQueryable;
+                        }
 
-                    let modifiedQuery = query.getQuery();
-                    query.select = modifiedQuery.select;
-                    query.where = modifiedQuery.where;
-                    query.orderBy = modifiedQuery.orderBy;
-                    query.skip = modifiedQuery.skip;
-                    query.take = modifiedQuery.take;
-                    query.type = modifiedQuery.type;
+                        let modifiedQuery = query.getQuery();
+                        query.select = modifiedQuery.select;
+                        query.where = modifiedQuery.where;
+                        query.orderBy = modifiedQuery.orderBy;
+                        query.skip = modifiedQuery.skip;
+                        query.take = modifiedQuery.take;
+                        query.type = modifiedQuery.type;
 
-                    return queryable;
-                });
-            }, Promise.resolve(queryable));
+                        return queryable;
+                    });
+                }, Promise.resolve(queryable));
+            });
 
-
-
-        }, Queryable).then(() => {
+        }, Promise.resolve()).then(() => {
             return queryable;
         });
     }
@@ -102,6 +102,7 @@ export default class Provider {
                     }
                     return queryable;
                 });
+
             }, Promise.resolve(queryable));
 
         });
@@ -127,7 +128,7 @@ export default class Provider {
 
                     this._invokeMethodAsync(decorator, "mapAsync", [results]);
                 });
-                
+
             }, Promise.resolve(results));
         });
     }
