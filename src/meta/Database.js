@@ -32,6 +32,7 @@ export default class {
 
         database.getTables().forEach((table) => {
             this.tables[table.name] = new Table({
+                database: this,
                 table: table,
                 decorators: this.decorators,
                 fileSystem: this.fileSystem
