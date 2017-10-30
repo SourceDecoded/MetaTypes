@@ -20,6 +20,7 @@
     "body-parser": "^1.18.2",
     "connect-busboy": "0.0.2",
     "express": "^4.15.4",
+    "express-conditional-middleware": "^2.0.0",
     "fs-extra": "^3.0.1",
     "mssql": "^4.1.0",
     "queryablejs": "^0.0.15",

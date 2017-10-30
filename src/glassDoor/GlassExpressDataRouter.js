@@ -5,6 +5,7 @@ import { Queryable } from "queryablejs";
 import Guest from "../user/Guest";
 import Admin from "../user/Admin";
 import User from "../user/User";
+import conditional from "express-conditional-middleware";
 
 export default class {
     constructor(app, pane){
@@ -31,7 +32,11 @@ export default class {
             }
         });
 
-        handler.use(bodyParser.json());
+        handler.use(conditional( (req, res, next) => {
+            return !(req.get("X-Query"));
+        }, bodyParser.json()
+        ));
+
         handler.use(busboy());
 
         handler.use((req, res, next) => {
@@ -47,7 +52,10 @@ export default class {
                 req.table = table;
                 next();
             } else {
-                res.status(500).send(`Unknown model: ${model}`);
+                res.status(500).send({
+                    message:`Unknown model: ${model}`,
+                    developerMessage:null
+                });
             }
         });
 
@@ -58,7 +66,10 @@ export default class {
                 req.entity = result;
                 next();
             }).catch((e) => {
-                res.status(404).send(`Could not find id:${id} on ${req.table.name}`);              
+                res.status(404).send({
+                    message:`Could not find id:${id} on ${req.table.name}`,
+                    developerMessage: e.stack
+                });              
             });
         });
 
@@ -66,16 +77,25 @@ export default class {
             req.table.addEntityAsync(req.user, entity).then((result) => {
                 res.status(201).send(result);
             }).catch((e) => {
-                res.status(500).send(e);
+                res.status(500).send({
+                    message:`Add failed on ${req.table.name}`,
+                    developerMessage: e.stack
+                });
             });
         }
 
         let handleQuery = function(query, req, res, next) {
-            var queryable = new Queryable(req.table.name, query);
+            var queryable = new Queryable(req.table.name);
+            if (query) {
+                queryable = Queryable.fromJson(query);
+            }
             req.table.asQueryable(req.user).merge(queryable).toArrayAsync().then((result) => {
                 res.send(result);
             }).catch((e) => {
-                res.status(500).send(e);
+                res.status(500).send({
+                    message:`Could not query "${query}" on ${req.table.name}`,
+                    developerMessage: e.stack
+                });
             });
         }
 
@@ -101,14 +121,16 @@ export default class {
             req.table.getFileWriteStreamByIdAsync(req.user, req.params.id).then((stream) => {
                 res.send(stream);
             }).catch((e) => {
-                res.status(500).send(e);
+                res.status(500).send({
+                    message: `Failed to get file for ${req.params.id} on ${req.table.name}`,
+                    developerMessage: e.stack
+                });
             });
         });
 
         // POST new or query
         handler.post("/:model", (req, res, next) => {
             // cleverness award
-            // TODO: too clever?
             (req.get("X-Query") ? handleQuery : handleAdd)(req.body, req, res, next);
         });
 
@@ -117,7 +139,10 @@ export default class {
             req.table.updateEntityAsync(req.user, req.entity, req.body).then((result) => {
                 res.send(result);
             }).catch((e) => {
-                res.status(500).send(e);
+                res.status(500).send({
+                    message:`Failed to update id:${id} on ${req.table.name}`,
+                    developerMessage: e.stack
+                });
             });
         });
 
@@ -137,7 +162,10 @@ export default class {
                     });
                 });
             }).catch((e) => {
-                res.status(500).send(e);
+                res.status(500).send({
+                    message:`Failed upload file for id:${id} on ${req.table.name}`,
+                    developerMessage: e.stack
+                });
             });
         });
 
@@ -146,7 +174,10 @@ export default class {
             req.table.removeEntityAsync(req.user, req.entity).then((result) => {
                 res.status(200).end();
             }).catch((e) => {
-                res.status(500).send(e);
+                res.status(500).send({
+                    message:`Failed to delete id:${id} on ${req.table.name}`,
+                    developerMessage: e.stack
+                });
             });
         });
 
@@ -155,7 +186,10 @@ export default class {
             req.table.removeFileByIdAsync(req.user, req.params.id).then((result) => {
                 res.status(200).end();
             }).catch((e) => {
-                res.status(500).send(e);
+                res.status(500).send({
+                    message:`Failed to delete file for id:${id} on ${req.table.name}`,
+                    developerMessage: e.stack
+                });
             });
         });
 
