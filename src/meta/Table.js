@@ -11,13 +11,18 @@ const defaultDecorators = {
 
 export default class Table {
     constructor({
+        database = null,
         table = null,
         decorators = [],
         fileSystem = null
          } = {}) {
 
         if (table == null) {
-            throw new Error("Null Argument Exception: MetaTable needs to have a table.");
+            throw new Error("Null Argument Exception: Table needs to have a ITable.");
+        }
+
+        if (database == null) {
+            throw new Error("Null Argument Exception: Table needs to have a meta database.");
         }
 
         if (fileSystem == null) {
@@ -25,6 +30,7 @@ export default class Table {
         }
 
         this.table = table;
+        this.database = database;
         this.name = table.name;
         this.edm = table.edm;
         this.fileSystem = fileSystem;
@@ -246,7 +252,7 @@ export default class Table {
     getQueryProvider(user) {
         this._assertUser(user);
 
-        return new Provider(user, this);
+        return new Provider(user, this, this.database);
     }
 
     removeEntityAsync(user, entity) {

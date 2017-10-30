@@ -1,32 +1,5 @@
 import { ExpressionVisitor, Queryable } from "queryablejs";
-
-class SqlParts {
-    constructor() {
-        this.select = null;
-        this.where = null;
-        this.orderBy = null;
-        this.skip = 0;
-        this.take = Infinity;
-    }
-
-    toString() {
-        let parts = [];
-
-        parts.push(
-            this.select,
-            this.where,
-            this.orderBy,
-            this.take,
-            this.skip
-        );
-
-        parts = parts.filter((part) => {
-            return typeof part === "string" && part.length > 0;
-        });
-
-        return parts.join(" ");
-    }
-}
+import QueryBuilder from "./QueryBuilder";
 
 export default class Visitor extends ExpressionVisitor {
     constructor(name, edm) {
@@ -242,9 +215,9 @@ export default class Visitor extends ExpressionVisitor {
 
     queryable(expression) {
         let query = expression.value;
-        let visitor = new Visitor(queryable.type, this.edm);
+        let queryBuilder = new QueryBuilder(this.edm);
 
-        return `(${visitor.createSql(query)})`;
+        return `(${queryBuilder.createStatement(query)})`;
     };
 
     startsWith(left, value) {

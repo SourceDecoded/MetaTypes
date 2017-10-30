@@ -1,6 +1,6 @@
 import Visitor from "./Visitor";
 
-export class QueryBuilder {
+export default class QueryBuilder {
     constructor(edm) {
         this.edm = edm;
     }
@@ -50,20 +50,23 @@ export class QueryBuilder {
             if (Array.isArray(accumulator[orderBy.type])) {
                 accumulator[orderBy.type].push(orderBy.column);
             }
+            return accumulator;
         }, accumulator);
 
         let ascending = this._createAscendingExpression(accumulator.ASC);
         let desceding = this._createDescendingExpression(accumulator.DESC);
 
-        orderParts = [
+        let orderByClause = [
             ascending,
             desceding
         ].filter(this._isNotEmptyFilter).join(",");
 
-        return [
-            "ORDER BY",
-            orderParts
-        ].filter(this._isNotEmptyFilter).join(" ");
+        if (orderByClause.length > 0) {
+            return `ORDER BY ${orderByClause}`;
+        } else {
+            return orderByClause;
+        }
+
     }
 
     _createSelectStatement(query) {
@@ -89,7 +92,7 @@ export class QueryBuilder {
     _createWhereClause(query) {
         let visitor = new Visitor(query.type, this.edm);
 
-        return visitor.parse(query);
+        return visitor.parse(query.where);
     }
 
     _escapeIdentifier(value) {
