@@ -177,7 +177,7 @@ export default class Migrator {
             label: options.label,
             pluralLabel: options.pluralLabel,
             decorators: [],
-            columns: []
+            columns: options.columns
         });
 
         return resolvedPromise;

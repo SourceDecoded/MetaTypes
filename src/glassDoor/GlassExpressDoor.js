@@ -2,7 +2,6 @@
 // Implements GlassDoor to expose a GlassDb by HTTP
 import express from "express";
 import DataRouter from "./GlassExpressDataRouter";
-import EDMApp from "./GlassExpressEDMRouter";
 import bodyParser from "body-parser";
 
 export default class {
@@ -14,8 +13,6 @@ export default class {
         this.glass = options.glass;
         this.panes = {};
         this.entityRouters = {};
-        this.edmRouters = {};
-
         this.mainApp = express();
         this.dataApp = express();
         this.edmApp = express();
@@ -48,24 +45,17 @@ export default class {
         this.entityRouters[name + version] = router;
         router.attach();
 
-        let edmRouter = new EDMApp(this.edmApp, pane);
-        this.edmRouters[name + version] = edmRouter;
-        edmRouter.attach();
-
         this.panes[name + version] = pane;
     }
 
     removePane(pane) {
         let {name, version} = pane.edm;
         let myPane = this.panes[name + version];
-        let edmRouter = this.edmRouters[name + version];
         let entityRouter = this.entityRouters[name + version];
 
-        edmRouter.dispose();
         entityRouter.dispose();
 
         this.panes[name + version] = null;
-        this.edmRouters[name + version] = null;
         this.entityRouters[name + version] = null;
     }
 
@@ -100,6 +90,30 @@ export default class {
         
         // Let's not implement delete yet, we will need to have some
         // kind of premission set up around all this at some point
+
+        // run commands on an EDM
+        this.edmApp.post("/:name/:version", (req, res, next) => {
+            let {name, version} = req.params;
+            let commands = req.body;
+
+            let pane = this.panes[name+version];
+            if (!pane) {
+                res.status(404).send(`EDM ${name} version ${version} not found`);
+            }
+
+            if (!Array.isArray(req.body)) {
+                commands = [commands];
+            }
+
+            pane.migrationRunner.migrateAsync(commands).then(() => {
+                return this.glass.updateEdmAsync(pane.edm);
+            }).then(() => {
+                res.send('ok');
+            }).catch((e) => {
+                res.status(500).send(e.message);
+            });
+        });
+
     }
 
 }

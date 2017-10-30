@@ -44,7 +44,9 @@ export default class Migrator {
         });
         let query = builder.createTableStatement();
 
-        return this.connectionPool.request().query(query);
+        return this.connectionPool.request().query(query).then((result) => {
+            return [];
+        });
     }
 
     removeColumnAsync(edm, options = {}) {

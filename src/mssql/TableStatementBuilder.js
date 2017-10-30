@@ -106,7 +106,7 @@ export default class TableStatementBuilder {
 
             if (typeof delta[columnName] !== "undefined" && this.dataTypeMapping[column.type] != null) {
                 columnSet.push(this._escapeName(columnName) + " = ?");
-                values.push(this.toSqliteValue(delta[columnName]));
+                values.push(this.toMssqlValue(delta[columnName]));
             }
         });
 
@@ -138,7 +138,7 @@ export default class TableStatementBuilder {
                 primaryKeysExpr.push(this._escapeName(primaryKey) + " IS NULL");
             } else {
                 primaryKeysExpr.push(this._escapeName(primaryKey) + " = ?");
-                values.push(this.toSqliteValue(entity[primaryKey]));
+                values.push(this.toMssqlValue(entity[primaryKey]));
             }
 
         });

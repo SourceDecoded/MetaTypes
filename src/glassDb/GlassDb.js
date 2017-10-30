@@ -103,6 +103,15 @@ export default class {
         });
     }
 
+    updateEdmAsync(newEdm) {
+        let {name, version} = newEdm;
+        let thePane = this.glassPanes[name + version];
+        if (!thePane) {
+            return Promise.reject(`Not an active EDM: ${name} ${version}`);
+        }
+        return this._driver.updateEdmAsync(newEdm);
+    }
+
     _buildPanesAsync(edms) {
         return edms.reduce((previous, current) => {
             return previous.then(() => {
