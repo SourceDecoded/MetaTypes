@@ -95,12 +95,13 @@ export default class Visitor extends ExpressionVisitor {
         return `(${result})`;
     }
 
-    ascending(left) {
-        return `${left} ASC`;
-    }
-
     array(expression) {
         let array = expression.value;
+
+        if (!Array.isArray(array)){
+            throw new Error("Invalid query: The array value node needs to be an array.");
+        }
+
         let result = array.map((value) => {
             return this._sqlizePrimitive(value);
         }).join(", ");
@@ -116,12 +117,12 @@ export default class Visitor extends ExpressionVisitor {
         return expression.value;
     }
 
-    date(expression) {
-        return expression.value;
+    contains(left, value) {
+        return `${left} LIKE ${this._convertContainsString(value)}`;
     }
 
-    descending(left) {
-        return `${left} DESC`;
+    date(expression) {
+        return expression.value;
     }
 
     endsWith(left, right) {
@@ -192,17 +193,11 @@ export default class Visitor extends ExpressionVisitor {
             return "";
         }
 
-        return `(${result})`;
-    }
-
-    orderBy() {
-        let result = Array.from(arguments).join(", ");
-
-        if (result === "") {
-            return "";
+        if (children.length === 1) {
+            return result;
         }
 
-        return `ORDER BY ${result}`;
+        return `(${result})`;
     }
 
     property(expression) {
@@ -226,10 +221,6 @@ export default class Visitor extends ExpressionVisitor {
 
     string(expression) {
         return expression.value;
-    }
-
-    contains(left, value) {
-        return `${left} LIKE ${this._convertContainsString(value)}`;
     }
 
     type(expression) {

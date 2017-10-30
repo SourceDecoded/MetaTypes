@@ -1,5 +1,4 @@
-import Visitor from "./Visitor";
-import EntityBuilder from "./EntityBuilder";
+import QueryBuilder from "./QueryBuilder";
 
 export default class Provider {
     constructor(name, options = {}) {
@@ -19,14 +18,12 @@ export default class Provider {
         this.connectionPool = options.connectionPool;
         this.schema = options.schema;
         this.name = name;
-
-        this.entityBuilder = new EntityBuilder(name, this.edm);
+        this.queryBuilder = new QueryBuilder(this.edm);
     }
 
     toArrayAsync(queryable) {
         let query = queryable.getQuery();
-        let visitor = new Visitor(this.name, this.edm, this.schema);
-        let statement = visitor.createSelectStatement(query);
+        let statement = this.queryBuilder.createStatement(query);
 
         let request = this.connectionPool.request();
 
