@@ -109,7 +109,7 @@ export default class Table {
         });
     }
 
-    updateEntityAsync(entity, delta) {
+    updateEntityAsync(user, entity, delta) {
         var sql = this.tableStatementBuilder.createUpdateStatement(entity, delta);
 
         let request = this.connectionPool.request();

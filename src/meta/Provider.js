@@ -26,7 +26,8 @@ export default class Provider {
     _refineInnerQueriesAsync(queryable) {
         let user = this.user;
         let query = queryable.getQuery();
-        let innerQueries = query.where.getMatchingNodes(new ValueExpression("queryable"));
+        //let innerQueries = query.where.getMatchingNodes(new ValueExpression("queryable"));
+        let innerQueries = query.where.getMatchingNodes({type: "value", nodeName: "queryable"});
 
         return innerQueries.reduce((queryableExpression) => {
             let query = queryableExpression.value;

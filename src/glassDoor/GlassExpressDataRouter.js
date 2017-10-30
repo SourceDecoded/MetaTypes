@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import busboy from "connect-busboy";
-import Queryable from "queryablejs";
+import { Queryable } from "queryablejs";
 import Guest from "../user/Guest";
 import Admin from "../user/Admin";
 import User from "../user/User";

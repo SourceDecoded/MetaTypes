@@ -256,8 +256,8 @@ export default class TableStatementBuilder {
 
 
         const columnDefinitionsStatement = this.createColumnsDefinitionStatement();
-        //const foreignKeysStatement = this.createForeignKeysStatement(relationships);
         // not sure we want to be enforcing these in the DB.
+        //const foreignKeysStatement = this.createForeignKeysStatement(relationships);
         const foreignKeysStatement = "";
 
         if (columnDefinitionsStatement && foreignKeysStatement) {
