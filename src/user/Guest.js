@@ -1,7 +1,7 @@
 import User from "./User";
 
 export default class Guest extends User {
-    constructor(name) {
+    constructor() {
         super();
         this.id = "guest"
         this.name = "Guest";

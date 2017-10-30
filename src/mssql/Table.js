@@ -55,11 +55,14 @@ export default class Table {
 
     addEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createInsertStatement(entity);
+        var request = this.connectionPool.request();
 
-        return this.connectionPool.request().query(sql.statement, sql.values).then((result) => {
+        sql.values.forEach((value, index) => {
+            request.input("v"+index, value);
+        });
+
+        return request.query(sql.statement).then((result) => {
             let updatedEntity = this._clone(entity);
-
-            // TODO: might need to be recordsets[1][0].id;
             // This uses the SQL Server specific way to get an inserted id.
             updatedEntity[this._getPrimaryKeyName()] = result.recordset[0].id;
             return updatedEntity;
@@ -95,7 +98,13 @@ export default class Table {
     removeEntityAsync(entity) {
         var sql = this.tableStatementBuilder.createDeleteStatement(entity);
 
-        return this.connectionPool.request().query(sql.statement, sql.values).then(() => {
+        let request = this.connectionPool.request();
+
+        sql.keys.forEach((key, index) => {
+            request.input("k"+index, key);
+        });
+
+        return this.connectionPool.request().query(sql.statement).then(() => {
             return entity;
         });
     }
@@ -103,7 +112,17 @@ export default class Table {
     updateEntityAsync(entity, delta) {
         var sql = this.tableStatementBuilder.createUpdateStatement(entity, delta);
 
-        return this.connectionPool.request().query(sql.statement, sql.values).then((statement) => {
+        let request = this.connectionPool.request();
+
+        sql.values.forEach((value, index) => {
+            request.input("v" + index, value);
+        });
+
+        sql.keys.forEach((key, index) => {
+            request.input("k"+index, key);
+        });
+
+        return request.query(sql.statement).then((statement) => {
             return Object.assign({}, entity, delta);
         });
     }

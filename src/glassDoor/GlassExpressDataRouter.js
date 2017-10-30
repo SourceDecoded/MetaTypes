@@ -2,6 +2,9 @@ import express from "express";
 import bodyParser from "body-parser";
 import busboy from "connect-busboy";
 import Queryable from "queryablejs";
+import Guest from "../user/Guest";
+import Admin from "../user/Admin";
+import User from "../user/User";
 
 export default class {
     constructor(app, pane){
@@ -24,15 +27,17 @@ export default class {
                 next();
             } else {
                 res.status(500).send("This API is no longer valid");
+                next();
             }
         });
+
         handler.use(bodyParser.json());
         handler.use(busboy());
 
         handler.use((req, res, next) => {
             // add the user to req
             // TODO: actually add the user to req
-            req.user = {};
+            req.user = new Guest();
             next();
         });
 
@@ -49,16 +54,16 @@ export default class {
         handler.param("id", (req, res, next, id) => {
             let intId = parseInt(id, 10);
 
-            req.table.getEntityByIdAsync(user, id).then((result) => {
+            req.table.getEntityByIdAsync(req.user, id).then((result) => {
                 req.entity = result;
                 next();
             }).catch((e) => {
-                res.status(404).send(`Could not find id:${id} on ${table.name}`);                
+                res.status(404).send(`Could not find id:${id} on ${req.table.name}`);              
             });
         });
 
         let handleAdd = function(entity, req, res, next) {
-            req.table.addEntityAsync(entity).then((result) => {
+            req.table.addEntityAsync(req.user, entity).then((result) => {
                 res.status(201).send(result);
             }).catch((e) => {
                 res.status(500).send(e);
@@ -77,6 +82,7 @@ export default class {
         // GET by ID
         handler.get("/:model/:id", (req, res, next) => {
             res.send(req.entity);
+            next();
         });
         
         // GET query

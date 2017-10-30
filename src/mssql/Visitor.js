@@ -10,7 +10,7 @@ export default class Visitor extends ExpressionVisitor {
         this.joinClauses = [];
         this.tableTypes = new Map();
         this.isParsingInclude = false;
-        this.schema;
+        this.schema = schema;
 
         this.dataConverter = {
             convertString: (value) => {
@@ -38,6 +38,14 @@ export default class Visitor extends ExpressionVisitor {
 
     }
 
+    _getDbTableName(table) {
+        return `${table}__${this.edm.version.replace(/\./g, "_")}`;
+    }
+
+    _getQualifiedDbTableName() {
+        return `[${this.schema}].[${this._getDbTableName(this.table.name)}]`;
+    }
+
     _addJoinClause(clause) {
         let index = this.joinClauses.indexOf(clause);
         if (index === -1) {
@@ -54,11 +62,11 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     _buildLeftJoinStatementFromSource(relationship) {
-        return `LEFT JOIN ${this._escapeIdentifier(this.schema + "." + relationship.ofType)} ON ${this._escapeIdentifier(this.schema + "." + relationship.type)}.${this._escapeIdentifier(relationship.hasKey)} = ${this._escapeIdentifier(this.schema + "." + relationship.ofType)}.${this._escapeIdentifier(relationship.withForeignKey)}`;
+        return `LEFT JOIN [${this.schema}].[${relationship.ofType}] ON [${this.schema}].[${relationship.type}].[${relationship.hasKey}] = [${this.schema}].[${relationship.ofType}].[${relationship.withForeignKey}]`;
     }
 
     _buildLeftJoinStatementFromTarget(relationship) {
-        return `LEFT JOIN ${this._escapeIdentifier(this.schema + "." + relationship.type)} ON ${this._escapeIdentifier(this.schema + "." + relationship.ofType)}.${this._escapeIdentifier(relationship.withForeignKey)} = ${this._escapeIdentifier(this.schema + "." + relationship.type)}.${this._escapeIdentifier(relationship.hasKey)}`;
+        return `LEFT JOIN [${this.schema}].[${relationship.type}] ON [${this.schema}].[${relationship.ofType}].[${relationship.withForeignKey}] = [${this.schema}].[${relationship.type}].[${relationship.hasKey}]`;
     };
 
     _getNavigationProperties(edm, table) {
@@ -140,7 +148,7 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     _writeTableProperty(table, column) {
-        return this._escapeIdentifier(this.schema + "." + table) + "." + this._escapeIdentifier(column);
+        return `[${this.schema}].[${table}__${this.edm.version.replace(/\./g, "_")}].[${column}]`;
     }
 
     and() {
@@ -243,12 +251,10 @@ export default class Visitor extends ExpressionVisitor {
         }
 
         queryParts.push(
-            "SELECT " + columnAliases + " FROM " + this._escapeIdentifier(this.schema + "." + this.table.name),
+            "SELECT " + take + " " + columnAliases + " FROM " + this._getQualifiedDbTableName(),
             joinClause,
             where,
-            orderBy,
-            take,
-            skip
+            orderBy
         );
 
         return queryParts.filter((part) => {
@@ -328,7 +334,7 @@ export default class Visitor extends ExpressionVisitor {
             table.columns.forEach((column) => {
                 let columnName = column.name;
 
-                columns.push(this._escapeIdentifier(this.schema + "." + tableName) + "." + this._escapeIdentifier(columnName) + " AS " + this._escapeIdentifier(tableName + "___" + columnName));
+                columns.push(this._getQualifiedDbTableName() + "." + this._escapeIdentifier(columnName) + " AS " + this._escapeIdentifier(tableName + "___" + columnName));
             });
 
         });
@@ -443,9 +449,9 @@ export default class Visitor extends ExpressionVisitor {
 
     take(value) {
         if (value === Infinity) {
-            return "LIMIT -1";
+            return "";
         } else {
-            return "LIMIT" + value;
+            return `TOP(${value})`;
         }
     }
 

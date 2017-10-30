@@ -28,8 +28,10 @@ export default class Provider {
         let visitor = new Visitor(this.name, this.edm, this.schema);
         let statement = visitor.createSelectStatement(query);
 
-        return this.connectionPool.request().query(statement).then((results) => {
-            return this.entityBuilder.convert(results);
+        let request = this.connectionPool.request();
+
+        return request.query(statement).then((results) => {
+            return this.entityBuilder.convert(results.recordset);
         });
     }
 
@@ -51,8 +53,10 @@ export default class Provider {
         let visitor = new Visitor(this.name, this.edm, this.schema);
         let statement = visitor.createSelectStatementWithCount(query);
 
-        return this.sqliteDatabase.get(statement).then((result) => {
-            return result.count;
+        let request = this.connectionPool.request();
+
+        return request.query(statement).then((result) => {
+            return result.recordset[0].count;
         });
     }
 }

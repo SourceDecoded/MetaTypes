@@ -46,9 +46,8 @@ export default class TableStatementBuilder {
             throw new Error("Null Argument Exception: entity cannot be null or undefined.");
         }
 
-        const sqliteEntity = {};
-        const columns = [];
         const values = [];
+        const columns = [];
 
         this.filterRelevantColumns(this.table.columns).forEach((column) => {
             var columnName = column.name;
@@ -65,8 +64,11 @@ export default class TableStatementBuilder {
             }
         });
 
-        const columnsStatement = columns.join(", ");
-        const valuesStatement = new Array(values.length).fill("?").join(", ");
+        const columnsStatement = columns.join(",");
+
+        const valuesStatement = values.map((value, index) => {
+            return "@v"+index;
+        });
 
         if (values.length === 0) {
             return {
@@ -76,7 +78,7 @@ export default class TableStatementBuilder {
         }
 
         return {
-            statement: `INSERT INTO ${this._getQualifiedDbTableName(this.table.name)} (${columnsStatement}) VALUES (${valuesStatement}); SELECT SCOPE_IDENTITY() AS id`,
+            statement: `INSERT INTO ${this._getQualifiedDbTableName(this.table.name)} (${columnsStatement}) VALUES (${valuesStatement}); SELECT SCOPE_IDENTITY() AS id;`,
             values: values
         };
 
@@ -87,7 +89,7 @@ export default class TableStatementBuilder {
         const primaryKeyExpr = [];
         const primaryKeyValues = [];
         const columnSet = [];
-        const columns = table.columns;
+        const columns = this.table.columns;
 
         if (entity == null) {
             throw new Error("Null Argument Exception: entity cannot be null or undefined.");
@@ -101,25 +103,24 @@ export default class TableStatementBuilder {
             throw new Error("Invalid Argument: delta cannot an empty object.");
         }
 
-        this.filterRelevantColumns(columns).forEach((column) => {
+        this.filterRelevantColumns(columns).forEach((column, index) => {
             var columnName = column.name;
 
             if (typeof delta[columnName] !== "undefined" && this.dataTypeMapping[column.type] != null) {
-                columnSet.push(this._escapeName(columnName) + " = ?");
+                columnSet.push(this._escapeName(columnName) + `=@v${index}`);
                 values.push(this.toMssqlValue(delta[columnName]));
             }
         });
 
-        this.getPrimaryKeys(columns).forEach((key) => {
-            primaryKeyExpr.push(this._escapeName(key) + " = ?");
+        this.getPrimaryKeys(columns).forEach((key, index) => {
+            primaryKeyExpr.push(this._escapeName(key) + `=@k${index}`);
             primaryKeyValues.push(entity[key]);
         });
 
-        values = values.concat(primaryKeyValues);
-
         return {
             statement: `UPDATE ${this._getQualifiedDbTableName(this.table.name)} SET ${columnSet.join(", ")} WHERE ${primaryKeyExpr.join(" AND ")}`,
-            values: values
+            values: values,
+            keys: primaryKeyValues
         };
     }
 
@@ -132,12 +133,12 @@ export default class TableStatementBuilder {
         const values = [];
         const primaryKeys = this.getPrimaryKeys(this.table.columns);
 
-        primaryKeys.forEach((primaryKey) => {
+        primaryKeys.forEach((primaryKey, index) => {
 
             if (entity[primaryKey] === null) {
                 primaryKeysExpr.push(this._escapeName(primaryKey) + " IS NULL");
             } else {
-                primaryKeysExpr.push(this._escapeName(primaryKey) + " = ?");
+                primaryKeysExpr.push(this._escapeName(primaryKey) + " @k"+index);
                 values.push(this.toMssqlValue(entity[primaryKey]));
             }
 
@@ -145,7 +146,7 @@ export default class TableStatementBuilder {
 
         return {
             statement: `DELETE FROM ${this._getQualifiedDbTableName(this.table.name)} WHERE ${primaryKeysExpr.join(" AND ")}`,
-            values: values
+            keys: values
         };
     }
 

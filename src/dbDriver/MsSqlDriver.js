@@ -90,7 +90,7 @@ export default class {
         return this.getEdmDbAsync().then((pool) => {
             let req = pool.request();
             req.input("name", name);
-            req.input("value", value);
+            req.input("version", version);
             return req.query(`SELECT * FROM [${this.options.edmSchema}].[${this.options.edmTable}] ` +
                    `WHERE [version]=@version AND [name]=@name`).then((result) => {
                 if (result.recordset[0]) {

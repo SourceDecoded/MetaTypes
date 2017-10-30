@@ -108,6 +108,7 @@ export default class {
             pane.migrationRunner.migrateAsync(commands).then(() => {
                 return this.glass.updateEdmAsync(pane.edm);
             }).then(() => {
+                pane.metaDatabase.refreshTables();
                 res.send('ok');
             }).catch((e) => {
                 res.status(500).send(e.message);

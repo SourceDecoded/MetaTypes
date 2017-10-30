@@ -30,14 +30,19 @@ export default class {
         this.fileSystem = fileSystem;
         this.tables = {};
 
-        database.getTables().forEach((table) => {
+        
+        this.refreshTables();
+    }
+
+    refreshTables() {
+        this.database.refreshTables();
+        this.database.getTables().forEach((table) => {
             this.tables[table.name] = new Table({
                 table: table,
                 decorators: this.decorators,
                 fileSystem: this.fileSystem
             });
         });
-
     }
 
     getTable(name) {

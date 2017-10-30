@@ -29,15 +29,17 @@ export default class Database {
     }
 
     _createTables() {
+        this.edm.tables.forEach(table => this._createTable(table));
+    }
+
+    _createTable(table) {
         let options = {
             connectionPool: this.connectionPool,
             edm: this.edm,
             schema: this.schema
         };
 
-        this.edm.tables.forEach((table) => {
-            this.tables[table.name] = new Table(table.name, options);
-        });
+        this.tables[table.name] = new Table(table.name, options);
     }
 
     _getTableFromEdm(name) {
@@ -107,6 +109,10 @@ export default class Database {
         return Object.keys(this.tables).map((name) => {
             return this.tables[name];
         });
+    }
+
+    refreshTables() {
+        this._createTables();
     }
 
     getMigrator() {

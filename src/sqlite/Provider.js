@@ -1,5 +1,3 @@
-import QueryBuilder from "QueryBuilder";
-
 export default class Provider {
     constructor(name, options = {}) {
         if (options.sqliteDatabase == null) {
