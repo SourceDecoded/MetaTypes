@@ -8,10 +8,11 @@ import User from "../user/User";
 import conditional from "express-conditional-middleware";
 
 export default class {
-    constructor(app, pane){
+    constructor(app, pane, authenticator){
         this.enabled = true;
         this.pane = pane;
         this.app = app;
+        this.authenticator = authenticator;
     }
 
     // NOTE: sub-apps and routers can not be removed from an Express app stack,
@@ -40,10 +41,15 @@ export default class {
         handler.use(busboy());
 
         handler.use((req, res, next) => {
-            // add the user to req
-            // TODO: actually add the user to req
-            req.user = new Guest();
-            next();
+            this.authenticator.authenticateAsync(req).then((user) => {
+                req.user = user;
+                next();
+            }).catch((error) => {
+                res.status(403).send({
+                    "error":"Forbidden",
+                    "developerError":error.stack
+                });
+            });
         });
 
         handler.param("model", (req, res, next, model) => {

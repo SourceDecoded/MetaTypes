@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">78.51% </span>
+        <span class="strong">78.91% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>95/121</span>
+        <span class='fraction'>101/128</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">50% </span>
+        <span class="strong">52.08% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>21/42</span>
+        <span class='fraction'>25/48</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">78.79% </span>
+        <span class="strong">79.41% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>26/33</span>
+        <span class='fraction'>27/34</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">76.92% </span>
+        <span class="strong">77.48% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>80/104</span>
+        <span class='fraction'>86/111</span>
       </div>
     </div>
   </div>
@@ -271,13 +271,30 @@
 226
 227
 228
-229</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -383,6 +400,23 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -564,7 +598,7 @@ var Runner = function () {
                 return _this.decorators.reduce(<span class="fstat-no" title="function not covered" >function (promise, decorator) {</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                    return promise.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
-<span class="cstat-no" title="statement not covered" >                        return _this._invokeMethodAsyncWithRecovery(decorator, actionName, [options]);</span>
+<span class="cstat-no" title="statement not covered" >                        return _this._invokeMethodAsyncWithRecovery(decorator, actionName, [_this.edm, options]);</span>
                     }).then(<span class="fstat-no" title="function not covered" >function (commands) {</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                        if (Array.isArray(commands)) {</span>
@@ -575,7 +609,7 @@ var Runner = function () {
                     });
                 }, Promise.resolve());
             }).then(function () {
-                return migratorCommand.apply(_this.migrator, [_this.edm, options]);
+                return _this._invokeMethodAsync(_this.migrator, actionName, [_this.edm, options]);
             }).then(function (commands) {
 &nbsp;
                 <span class="missing-if-branch" title="if path not taken" >I</span>if (Array.isArray(commands)) {
@@ -584,7 +618,7 @@ var Runner = function () {
                     });
                 }
 &nbsp;
-                return _this.edmMigrator[actionName](options);
+                return _this._invokeMethodAsync(_this.edmMigrator, actionName, [options]);
             }).catch(function (error) {
                 var executionError = new Error(error.message);
                 executionError.inner = error;
@@ -611,6 +645,23 @@ var Runner = function () {
 <span class="cstat-no" title="statement not covered" >                return result.catch(<span class="fstat-no" title="function not covered" >function (error) {</span></span>
 <span class="cstat-no" title="statement not covered" >                    return null;</span>
                 });
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return Promise.resolve();</span>
+        }
+    }, {
+        key: "_invokeMethodAsync",
+        value: function _invokeMethodAsync(obj, methodName, args) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (obj &amp;&amp; typeof obj[methodName] === "function") {
+                var result = void 0;
+&nbsp;
+                result = obj[methodName].apply(obj, args);
+&nbsp;
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (!(result instanceof Promise)) {
+                    result = Promise.resolve(result);
+                }
+&nbsp;
+                return result;
             }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            return Promise.resolve();</span>
@@ -733,7 +784,7 @@ exports.default = Runner;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Oct 31 2017 10:57:20 GMT-0600 (MDT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Oct 31 2017 12:38:15 GMT-0600 (MDT)
 </div>
 </div>
 <script src="../prettify.js"></script>

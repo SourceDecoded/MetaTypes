@@ -36,7 +36,8 @@ let supportedDoors = {
                 "port":"9000"
             }
         }
-    ]
+    ],
+    "authenticator": (iAuthenticator)
 }
 */
 
@@ -44,6 +45,8 @@ export default class {
     constructor(options = {}) {
         this.glassPanes = {};
         this.glassDoors = [];
+        this.authenticator =  options.authenticator;
+        this.decorators = options.decorators;
 
         if (!options.dbDriver) {
             throw new Error("Need dbDriver info");
@@ -122,15 +125,12 @@ export default class {
 
     _buildPaneAsync(edm) {
         return this._driver.getDatabaseForEdmAsync(edm).then((db) => {
-            // TODO: instantiate decorators
-            let decorators = [];
-
             // TODO: instantiate filesystem
             let fileSystem = {};
 
             let metaOptions = {
                 database: db,
-                decorators: decorators,
+                decorators: this.decorators,
                 fileSystem: fileSystem
             };
 

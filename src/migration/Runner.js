@@ -41,7 +41,7 @@ export default class Runner {
             return this.decorators.reduce((promise, decorator) => {
 
                 return promise.then(() => {
-                    return this._invokeMethodAsyncWithRecovery(decorator, actionName, [options])
+                    return this._invokeMethodAsyncWithRecovery(decorator, actionName, [this.edm, options])
                 }).then((commands) => {
 
                     if (Array.isArray(commands)) {
@@ -55,7 +55,7 @@ export default class Runner {
             }, Promise.resolve());
 
         }).then(() => {
-            return migratorCommand.apply(this.migrator, [this.edm, options]);
+            return this._invokeMethodAsync(this.migrator, actionName, [this.edm, options]);
         }).then((commands) => {
 
             if (Array.isArray(commands)) {
@@ -64,7 +64,7 @@ export default class Runner {
                 });
             }
 
-            return this.edmMigrator[actionName](options);
+            return this._invokeMethodAsync(this.edmMigrator, actionName, [options]);
         }).catch((error) => {
             let executionError = new Error(error.message);
             executionError.inner = error;
@@ -90,6 +90,22 @@ export default class Runner {
             return result.catch((error) => {
                 return null;
             });
+        }
+
+        return Promise.resolve();
+    }
+
+    _invokeMethodAsync(obj, methodName, args) {
+        if (obj && typeof obj[methodName] === "function") {
+            let result;
+
+            result = obj[methodName].apply(obj, args);
+            
+            if (!(result instanceof Promise)) {
+                result = Promise.resolve(result);
+            }
+
+            return result;
         }
 
         return Promise.resolve();

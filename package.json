@@ -1,6 +1,6 @@
 {
   "name": "meta-database",
-  "version": "0.0.23",
+  "version": "0.0.25",
   "description": "Decorate data types with functionality.",
   "main": "./lib/index.js",
   "scripts": {

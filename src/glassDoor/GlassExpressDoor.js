@@ -3,6 +3,7 @@
 import express from "express";
 import DataRouter from "./GlassExpressDataRouter";
 import bodyParser from "body-parser";
+import GlassGuestAuthenticator from "./GlassGuestAuthenticator";
 
 export default class {
     constructor(options) {
@@ -17,6 +18,7 @@ export default class {
         this.dataApp = express();
         this.edmApp = express();
         this.edmApp.use(bodyParser.json());
+        this.authenticator = this.glass.authenticator || GlassGuestAuthenticator;
 
         this._nativeHTTPServer = this.mainApp.listen(this.port, this.address, (err) => {
             if (!err) {
@@ -41,7 +43,7 @@ export default class {
 
     addPane(pane) {
         let {name, version} = pane.edm;
-        let router = new DataRouter(this.dataApp, pane);
+        let router = new DataRouter(this.dataApp, pane, this.authenticator);
         this.entityRouters[name + version] = router;
         router.attach();
 

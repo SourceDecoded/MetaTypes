@@ -149,7 +149,7 @@ export default class Migrator {
 
         this.validator.validateDecorator(options.decorator);
 
-        if (this._hasDecorator(table, options.decorator.name)) {
+        if (this._hasDecorator(table.name, options.decorator.name)) {
             throw new Error(`The '${options.decorator.name}' decorator already exists on the '${options.tableName}' table.`);
         }
 
@@ -158,12 +158,12 @@ export default class Migrator {
         return resolvedPromise;
     }
 
-    addOneToOnRelationship(options) {
+    addOneToOneRelationshipAsync(options) {
         this.validator.validateOneToOneRelationship(options.relationship);
         this.edm.relationships.oneToOne.push(Object.assign({}, options.relationship));
     }
 
-    addOneToManyRelationship(options) {
+    addOneToManyRelationshipAsync(options) {
         this.validator.validateOneToManyRelationship(options.relationship);
         this.edm.relationships.oneToMany.push(Object.assign({}, options.relationship));
     }

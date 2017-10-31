@@ -12973,14 +12973,14 @@ var Migrator = function () {
             return resolvedPromise;
         }
     }, {
-        key: "addOneToOnRelationship",
-        value: function addOneToOnRelationship(options) {
+        key: "addOneToOneRelationshipAsync",
+        value: function addOneToOneRelationshipAsync(options) {
             this.validator.validateOneToOneRelationship(options.relationship);
             this.edm.relationships.oneToOne.push(Object.assign({}, options.relationship));
         }
     }, {
-        key: "addOneToManyRelationship",
-        value: function addOneToManyRelationship(options) {
+        key: "addOneToManyRelationshipAsync",
+        value: function addOneToManyRelationshipAsync(options) {
             this.validator.validateOneToManyRelationship(options.relationship);
             this.edm.relationships.oneToMany.push(Object.assign({}, options.relationship));
         }
@@ -28450,7 +28450,7 @@ var Runner = function () {
                 return _this.decorators.reduce(function (promise, decorator) {
 
                     return promise.then(function () {
-                        return _this._invokeMethodAsyncWithRecovery(decorator, actionName, [options]);
+                        return _this._invokeMethodAsyncWithRecovery(decorator, actionName, [_this.edm, options]);
                     }).then(function (commands) {
 
                         if (Array.isArray(commands)) {
@@ -28461,7 +28461,7 @@ var Runner = function () {
                     });
                 }, Promise.resolve());
             }).then(function () {
-                return migratorCommand.apply(_this.migrator, [_this.edm, options]);
+                return _this._invokeMethodAsync(_this.migrator, actionName, [_this.edm, options]);
             }).then(function (commands) {
 
                 if (Array.isArray(commands)) {
@@ -28470,7 +28470,7 @@ var Runner = function () {
                     });
                 }
 
-                return _this.edmMigrator[actionName](options);
+                return _this._invokeMethodAsync(_this.edmMigrator, actionName, [options]);
             }).catch(function (error) {
                 var executionError = new Error(error.message);
                 executionError.inner = error;
@@ -28497,6 +28497,23 @@ var Runner = function () {
                 return result.catch(function (error) {
                     return null;
                 });
+            }
+
+            return Promise.resolve();
+        }
+    }, {
+        key: "_invokeMethodAsync",
+        value: function _invokeMethodAsync(obj, methodName, args) {
+            if (obj && typeof obj[methodName] === "function") {
+                var result = void 0;
+
+                result = obj[methodName].apply(obj, args);
+
+                if (!(result instanceof Promise)) {
+                    result = Promise.resolve(result);
+                }
+
+                return result;
             }
 
             return Promise.resolve();
