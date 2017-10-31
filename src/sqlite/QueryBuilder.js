@@ -133,9 +133,6 @@ export default class QueryBuilder {
         let parts = [];
         let select = this._createSelectStatementWithCount(query);
         let where = this._createWhereClause(query);
-        let orderBy = this._createOrderByClause(query.orderBy);
-        let limit = this._createLimitClause(query.take);
-        let offset = this._createOffsetClause(query.skip);
 
         parts.push(
             select,

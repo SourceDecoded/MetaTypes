@@ -205,7 +205,7 @@ export default class Table {
         this._assertUser(user);
 
         let provider = this.getQueryProvider(user);
-        let queryable = new Queryable();
+        let queryable = new Queryable(this.table.name);
 
         queryable.provider = provider;
 

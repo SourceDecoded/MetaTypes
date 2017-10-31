@@ -1,12 +1,19 @@
 import Visitor from "./Visitor";
 
 export default class QueryBuilder {
-    constructor(edm) {
+    constructor(edm, schema) {
         this.edm = edm;
+        this.schema = schema;
+    }
+
+    _getQualifiedTableName(tableName) {
+        return `[${this.schema}].[${tableName}__${this.edm.version.replace(/\./g, "_")}]`;
     }
 
     _createAscendingExpression(columns) {
-        let ascending = columns.join(", ");
+        let ascending = columns.map((column) => {
+            return "[" + column + "]";
+        }).join(", ");
 
         if (ascending.length > 0) {
             ascending = `${ascending} ASC`;
@@ -16,7 +23,9 @@ export default class QueryBuilder {
     }
 
     _createDescendingExpression(columns) {
-        let desceding = columns.join(", ");
+        let desceding = columns.map((column) => {
+            return "[" + column + "]";
+        }).join(", ");
 
         if (desceding.length > 0) {
             desceding = `${desceding} DESC`;
@@ -27,16 +36,19 @@ export default class QueryBuilder {
 
     _createLimitClause(value) {
         if (value === Infinity) {
-            return `LIMIT -1`;
+            return "";
         } else if (typeof value === "number") {
-            return `LIMIT ${value}`;
+            return `FETCH NEXT (${value}) ROWS ONLY`;
         } else {
             return "";
         }
     }
 
     _createOffsetClause(value) {
-        return `OFFSET ${value}`;
+        if (typeof value !== "number") {
+            value = 0;
+        }
+        return `OFFSET ${value} ROWS`;
     }
 
     _createOrderByClause(orderBy) {
@@ -64,7 +76,7 @@ export default class QueryBuilder {
         if (orderByClause.length > 0) {
             return `ORDER BY ${orderByClause}`;
         } else {
-            return orderByClause;
+            return 'ORDER BY (SELECT NULL)';
         }
 
     }
@@ -75,22 +87,22 @@ export default class QueryBuilder {
         let keys = Object.keys(mapping);
 
         if (keys.length === 0) {
-            return `SELECT * FROM ${this._escapeIdentifier(tableName)}`;
+            return `SELECT * FROM ${this._getQualifiedTableName(tableName)}`;
         } else {
             let columns = keys.map((key) => {
                 return `${this._escapeIdentifier(key)} AS ${this._escapeIdentifier(mapping[key])}`;
             }).join(", ");
 
-            return `SELECT ${columns} FROM ${this._escapeIdentifier(tableName)}`;
+            return `SELECT ${columns} FROM ${this._getQualifiedTableName(tableName)}`;
         }
     }
 
     _createSelectStatementWithCount(tableName) {
-        return `SELECT COUNT(*) AS count FROM ${this._escapeIdentifier(tableName)}`;
+        return `SELECT COUNT(*) AS count FROM ${this._getQualifiedTableName(tableName)}`;
     }
 
     _createWhereClause(query) {
-        let visitor = new Visitor(query.type, this.edm);
+        let visitor = new Visitor(query.type, this.edm, this.schema);
 
         return visitor.parse(query.where);
     }
@@ -100,7 +112,7 @@ export default class QueryBuilder {
             return value;
         }
 
-        return `"${value.replace(/\"/g, '""')}"`;
+        return `[${value.replace(/\"/g, '""')}]`;
     }
 
     _isNotEmptyFilter(part) {
@@ -133,9 +145,6 @@ export default class QueryBuilder {
         let parts = [];
         let select = this._createSelectStatementWithCount(query);
         let where = this._createWhereClause(query);
-        let orderBy = this._createOrderByClause(query.orderBy);
-        let limit = this._createLimitClause(query.take);
-        let offset = this._createOffsetClause(query.skip);
 
         parts.push(
             select,
