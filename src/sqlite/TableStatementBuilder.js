@@ -10,8 +10,35 @@ export default class TableStatementBuilder {
         this.dataTypeMapping = dataTypeMapping;
     }
 
+    _createColumnDefinition(tableName, column) {
+        const sqliteDataType = this.dataTypeMapping[column.type];
+
+        if (sqliteDataType != null) {
+            let primaryKey = "";
+            
+            if (column.isPrimaryKey) {
+                primaryKey = " PRIMARY KEY";
+
+                if (column.isAutoIncrement) {
+                    primaryKey += " AUTOINCREMENT";
+                }
+
+            }
+
+            return `${this._escapeName(column.name)} ${this.dataTypeMapping[column.type] + primaryKey}`
+
+        } else {
+            throw new Error("Could not make a column definition.");
+        }
+    }
+
     _escapeName(name) {
         return `"${name.replace(/\"/g, '""')}"`;
+    }
+
+    createAddColumnStatement(tableName, column) {
+        let columnDefinition = this._createColumnDefinition(tableName, column);
+        return `ALTER TABLE ${tableName} ADD COLUMN ${columnDefinition}`;
     }
 
     createDropTableStatment(table) {
@@ -60,6 +87,10 @@ export default class TableStatementBuilder {
             statement: `INSERT INTO ${this._escapeName(table.name)} (${columnsStatement}) VALUES (${valuesStatement})`,
             values: values
         };
+
+    }
+
+    createUpdateColumnTransaction(table, previousColumn, newColumn) {
 
     }
 
@@ -138,41 +169,19 @@ export default class TableStatementBuilder {
         };
     }
 
-    createColumnDefinitionStatement(table, column) {
-        const sqliteDataType = this.dataTypeMapping[column.type];
-        const primaryKeyStatment = "";
-        const primaryKeys = this.getPrimaryKeys(table.columns);
-
-        if (sqliteDataType != null) {
-            let primaryKey = "";
-
-            if (column.isPrimaryKey) {
-
-                if (primaryKeys.length === 1) {
-                    primaryKey = " PRIMARY KEY";
-                }
-
-                if (column.isAutoIncrement) {
-                    primaryKey += " AUTOINCREMENT";
-                }
-            }
-
-            return `${this._escapeName(column.name)} ${this.dataTypeMapping[column.type] + primaryKey}`
-
-        } else {
-            return null;
-        }
+    createColumnDefinitionStatement(tableName, column) {
+        return this._createColumnDefinition(tableName, column);
     }
 
     createColumnsDefinitionStatement(table) {
         const columns = table.columns;
-        const columnsDefinition = columns.map((column) => {
-            return this.createColumnDefinitionStatement(table, column);
+        const columnDefinitions = columns.map((column) => {
+            return this.createColumnDefinitionStatement(table.name, column);
         }).filter((value) => {
             return value != null;
-        }).join(", ")
+        });
 
-        return columnsDefinition;
+        return columnDefinitions.join(", ");
     }
 
     createIndexStatement(table, column) {
@@ -243,11 +252,8 @@ export default class TableStatementBuilder {
         relationships = Object.assign({}, defaultRelationships, relationships);
 
         const columnDefinitionsStatement = this.createColumnsDefinitionStatement(table);
-        const foreignKeysStatement = this.createForeignKeysStatement(table, relationships);
 
-        if (columnDefinitionsStatement && foreignKeysStatement) {
-            return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} (${columnDefinitionsStatement}, ${foreignKeysStatement})`;
-        } else if (columnDefinitionsStatement) {
+        if (columnDefinitionsStatement) {
             return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)} (${columnDefinitionsStatement})`;
         } else {
             return `CREATE TABLE IF NOT EXISTS ${this._escapeName(table.name)}`;

@@ -38,7 +38,7 @@ exports["TableStatementBuilder.createTableStatement: With Relationships."] = () 
 
     assert.equal(
         tableStatement,
-        `CREATE TABLE IF NOT EXISTS "Foreign" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "foreignKey" INTEGER, FOREIGN KEY ("foreignKey") REFERENCES "Source" ("id"))`
+        `CREATE TABLE IF NOT EXISTS "Foreign" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "foreignKey" INTEGER)`
     )
 }
 
@@ -139,4 +139,20 @@ exports["TableStatementBuilder.createTableIndexesStatements: With custom indexes
 
     var indexStatements = builder.createTableIndexesStatements(otherForeignTable, relationships);
 
+}
+
+exports["TableStatementBuilder.createAddColumnStatement"] = () => {
+    var builder = new TableStatementBuilder();
+
+    var addColumnStatement = builder.createAddColumnStatement("Source", {
+        type: "String",
+        name: "property",
+        label: "Property",
+        isIndexed: true,
+        isNullable: true,
+        isAutoIncrement: false,
+        isPrimaryKey: false
+    });
+
+    assert.equal(addColumnStatement, `ALTER TABLE Source ADD COLUMN "property" TEXT`);
 }
