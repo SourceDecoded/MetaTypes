@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">63.16% </span>
+        <span class="strong">72.55% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>36/57</span>
+        <span class='fraction'>37/51</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">63.64% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>14/22</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">50% </span>
+        <span class="strong">61.54% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>7/14</span>
+        <span class='fraction'>8/13</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">52.5% </span>
+        <span class="strong">64.71% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>21/40</span>
+        <span class='fraction'>22/34</span>
       </div>
     </div>
   </div>
@@ -119,18 +119,7 @@
 74
 75
 76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+77</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,45 +133,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9×</span>
-<span class="cline-any cline-yes">9×</span>
-<span class="cline-any cline-yes">9×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">22×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -203,7 +182,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -225,13 +203,9 @@ Object.defineProperty(exports, "__esModule", {
 &nbsp;
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; <span class="missing-if-branch" title="else path not taken" >E</span>if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { <span class="missing-if-branch" title="else path not taken" >E</span>if (protoProps) defineProperties(Constructor.prototype, protoProps); <span class="missing-if-branch" title="if path not taken" >I</span>if (staticProps) <span class="cstat-no" title="statement not covered" >defineProperties(Constructor, staticProps); </span>return Constructor; }; }();
 &nbsp;
-var _Visitor = require("./Visitor");
+var _QueryBuilder = require("./QueryBuilder");
 &nbsp;
-var _Visitor2 = _interopRequireDefault(_Visitor);
-&nbsp;
-var _EntityBuilder = require("./EntityBuilder");
-&nbsp;
-var _EntityBuilder2 = _interopRequireDefault(_EntityBuilder);
+var _QueryBuilder2 = _interopRequireDefault(_QueryBuilder);
 &nbsp;
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
 &nbsp;
@@ -254,32 +228,26 @@ var Provider = function () {
         this.edm = options.edm;
         this.sqliteDatabase = options.sqliteDatabase;
         this.name = name;
-&nbsp;
-        this.entityBuilder = new _EntityBuilder2.default(name, this.edm);
+        this.queryBuilder = new _QueryBuilder2.default(this.edm);
     }
 &nbsp;
     _createClass(Provider, [{
         key: "toArrayAsync",
-        value: <span class="fstat-no" title="function not covered" >function toArrayAsync(queryable) {</span>
-<span class="cstat-no" title="statement not covered" >            var _this = this;</span>
+        value: function toArrayAsync(queryable) {
+            var query = queryable.getQuery();
+            var statement = this.queryBuilder.createStatement(query);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            var query = queryable.getQuery();</span>
-<span class="cstat-no" title="statement not covered" >            var visitor = new _Visitor2.default(this.name, this.edm);</span>
-<span class="cstat-no" title="statement not covered" >            var statement = visitor.createSelectStatement(query);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >            return this.sqliteDatabase.all(statement).then(<span class="fstat-no" title="function not covered" >function (results) {</span></span>
-<span class="cstat-no" title="statement not covered" >                return _this.entityBuilder.convert(results);</span>
-            });
+            return this.sqliteDatabase.all(statement);
         }
     }, {
         key: "toArrayWithCountAsync",
         value: <span class="fstat-no" title="function not covered" >function toArrayWithCountAsync(queryable) {</span>
-<span class="cstat-no" title="statement not covered" >            var _this2 = this;</span>
+<span class="cstat-no" title="statement not covered" >            var _this = this;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            var count = 0;</span>
 <span class="cstat-no" title="statement not covered" >            return this.countAsync(<span class="fstat-no" title="function not covered" >function (c) {</span></span>
 <span class="cstat-no" title="statement not covered" >                count = c;</span>
-<span class="cstat-no" title="statement not covered" >                return _this2.toArrayAsync(queryable);</span>
+<span class="cstat-no" title="statement not covered" >                return _this.toArrayAsync(queryable);</span>
             }).then(<span class="fstat-no" title="function not covered" >function (results) {</span>
 <span class="cstat-no" title="statement not covered" >                return {</span>
                     count: count,
@@ -291,8 +259,7 @@ var Provider = function () {
         key: "countAsync",
         value: <span class="fstat-no" title="function not covered" >function countAsync(queryable) {</span>
 <span class="cstat-no" title="statement not covered" >            var query = queryable.getQuery();</span>
-<span class="cstat-no" title="statement not covered" >            var visitor = new _Visitor2.default(this.name, this.edm);</span>
-<span class="cstat-no" title="statement not covered" >            var statement = visitor.createSelectStatementWithCount(query);</span>
+<span class="cstat-no" title="statement not covered" >            var statement = this.queryBuilder.createCountStatement(query);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            return this.sqliteDatabase.get(statement).then(<span class="fstat-no" title="function not covered" >function (result) {</span></span>
 <span class="cstat-no" title="statement not covered" >                return result.count;</span>
@@ -310,7 +277,7 @@ exports.default = Provider;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:31:25 GMT-0600 (MDT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Oct 31 2017 10:57:20 GMT-0600 (MDT)
 </div>
 </div>
 <script src="../prettify.js"></script>

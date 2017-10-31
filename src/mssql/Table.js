@@ -59,7 +59,7 @@ export default class Table {
         var request = this.connectionPool.request();
 
         sql.values.forEach((value, index) => {
-            request.input("v"+index, value);
+            request.input("v"+index, this._getMsSqlType(value), value);
         });
 
         return request.query(sql.statement).then((result) => {
@@ -102,7 +102,7 @@ export default class Table {
         let request = this.connectionPool.request();
 
         sql.keys.forEach((key, index) => {
-            request.input("k"+index, key);
+            request.input("k"+index, this._getMsSqlType(key), key);
         });
 
         return request.query(sql.statement).then(() => {
@@ -116,15 +116,36 @@ export default class Table {
         let request = this.connectionPool.request();
 
         sql.values.forEach((value, index) => {
-            request.input("v"+index, value);
+            request.input("v"+index, this._getMsSqlType(value), value);
         });
 
         sql.keys.forEach((key, index) => {
-            request.input("k"+index, key);
+            request.input("k"+index, this._getMsSqlType(key), key);
         });
 
         return request.query(sql.statement).then((statement) => {
             return Object.assign({}, entity, delta);
         });
+    }
+
+    _getMsSqlType(value) {
+        let type = typeof value;
+        if (type === "string") {
+            return mssql.NText;
+        } else if (type === "number") {
+            if (value % 1 === 0) {
+                return mssql.Int;
+            } else {
+                return mssql.Float;
+            }
+        } else if (type === "boolean") {
+            return mssql.Bit;
+        } else if (value instanceof Date) {
+            return mssql.DateTime;
+        } else if (value == null) {
+            return mssql.NVarChar;
+        } else {
+            throw new Error("Unknown value.");
+        }
     }
 }
