@@ -52,14 +52,14 @@ export default class {
             });
         });
 
-        handler.param("model", (req, res, next, model) => {
-            let table = this.pane.metaDatabase.getTable(model);
+        handler.param("table", (req, res, next, tableName) => {
+            let table = this.pane.metaDatabase.getTable(tableName);
             if (table) {
                 req.table = table;
                 next();
             } else {
                 res.status(500).send({
-                    message:`Unknown model: ${model}`,
+                    message:`Unknown table: ${tableName}`,
                     developerMessage:null
                 });
             }
@@ -95,7 +95,20 @@ export default class {
             if (query) {
                 queryable = Queryable.fromJson(query);
             }
-            req.table.asQueryable(req.user).merge(queryable).toArrayAsync().then((result) => {
+            let finalQueryable = req.table.asQueryable(req.user).merge(queryable);
+
+            let resultPromise;
+            if (req.query.count) {
+                resultPromise = finalQueryable.countAsync().then((count) => {
+                    return {count:count};
+                });
+            } else if (req.query.withCount) {
+                resultPromise = finalQueryable.toArrayWithCountAsync();
+            } else {
+                resultPromise = finalQueryable.toArrayAsync();
+            }
+
+            resultPromise.then((result) => {
                 res.send(result);
             }).catch((e) => {
                 res.status(500).send({
@@ -105,20 +118,130 @@ export default class {
             });
         }
 
+        // GET EDM action
+        handler.get('/@\*', (req, res, next) => {
+            let actionName = req.params[0];
+            let options = {};
+            options.query = req.query.q;
+            options.user = req.user;
+            this.pane.executeEdmActionAsync(actionName, options).then((result) => {
+                res.send(result);
+            }).catch((error) => {
+                res.status(404).send({
+                    "error":error.message,
+                    "actionScope":"edm",
+                    "actionName":actionName
+                });
+            });
+        });
+
+        // POST EDM action
+        handler.post('/@\*', (req, res, next) => {
+            let actionName = req.params[0];
+            let options = {};
+            options.query = req.query.q;
+            options.body = req.body;
+            options.user = req.user;
+            this.pane.executeEdmActionAsync(actionName, options).then((result) => {
+                res.send(result);
+            }).catch((error) => {
+                res.status(404).send({
+                    "error":error.message,
+                    "actionName":actionName
+                });
+            });
+        });
+
+        // GET table action
+        handler.get("/:table/@\*", (req, res, next) => {
+            let actionName = req.params[0];
+            let options = {};
+            options.query = req.query.q;
+            options.user = req.user;
+            this.pane.executeTableActionAsync(req.params.table, actionName, options).then((result) => {
+                res.send(result);
+            }).catch((error) => {
+                res.status(404).send({
+                    "error":error.message,
+                    "actionName":actionName,
+                    "actionScope":"table",
+                    "table":req.params.table
+                });
+            });
+        });
+
+        // POST table action
+        handler.post("/:table/@\*", (req, res, next) => {
+            let actionName = req.params[0];
+            let options = {};
+            options.query = req.query.q;
+            options.user = req.user;
+            options.body = req.body;
+            this.pane.executeTableActionAsync(req.params.table, actionName, options).then((result) => {
+                res.send(result);
+            }).catch((error) => {
+                res.status(404).send({
+                    "error":error.message,
+                    "actionName":actionName,
+                    "actionScope":"table",
+                    "table":req.params.table
+                });
+            });
+        });
+
+        // GET entity action
+        handler.get("/:table/:id/@\*", (req, res, next) => {
+            let actionName = req.params[0];
+            let options = {};
+            options.query = req.query.q;
+            options.user = req.user;
+            options.entity = req.entity;
+            this.pane.executeEntityActionAsync(req.params.table, actionName, options).then((result) => {
+                res.send(result);
+            }).catch((error) => {
+                res.status(404).send({
+                    "error":error.message,
+                    "actionName":actionName,
+                    "actionScope":"entity",
+                    "table":req.params.table
+                });
+            });
+        });
+
+        // POST entity action
+        handler.post("/:table/:id/@\*", (req, res, next) => {
+            let actionName = req.params[0];
+            let options = {};
+            options.query = req.query.q;
+            options.user = req.user;
+            options.body = req.body;
+            options.entity = req.entity;
+            this.pane.executeEntityActionAsync(req.params.table, actionName, options).then((result) => {
+                res.send(result);
+            }).catch((error) => {
+                res.status(404).send({
+                    "error":error.message,
+                    "actionName":actionName,
+                    "actionScope":"entity",
+                    "table":req.params.table
+                });
+            });
+        });
+
         // GET by ID
-        handler.get("/:model/:id", (req, res, next) => {
+        handler.get("/:table/:id", (req, res, next) => {
             res.send(req.entity);
             next();
         });
         
         // GET query
-        handler.get("/:model", (req, res, next) => {
+        handler.get("/:table", (req, res, next) => {
             handleQuery(req.query.q, req, res, next);
         });
 
         // GET file
         // TODO: what about MIME types and whatnot?
-        handler.get("/:model/:id/file", (req, res, next) => {
+        handler.get("/:table/:id/file", (req, res, next) => {
             // by convention, we can have a "fileType" property on any
             // entity that wants to make such known to a client.
             if (req.entity.fileType) {
@@ -135,13 +258,13 @@ export default class {
         });
 
         // POST new or query
-        handler.post("/:model", (req, res, next) => {
+        handler.post("/:table", (req, res, next) => {
             // cleverness award
             (req.get("X-Query") ? handleQuery : handleAdd)(req.body, req, res, next);
         });
 
         // POST update
-        handler.post("/:model/:id", (req, res, next) => {
+        handler.post("/:table/:id", (req, res, next) => {
             req.table.updateEntityAsync(req.user, req.entity, req.body).then((result) => {
                 res.send(result);
             }).catch((e) => {
@@ -153,7 +276,7 @@ export default class {
         });
 
         // POST file
-        handler.post("/:model/:id/file", (req, res, next) => {
+        handler.post("/:table/:id/file", (req, res, next) => {
             if (!req.busboy) {
                 res.status(500).send("No file found");
             }
@@ -176,7 +299,7 @@ export default class {
         });
 
         // DELETE entity
-        handler.delete("/:model/:id", (req, res, next) => {
+        handler.delete("/:table/:id", (req, res, next) => {
             req.table.removeEntityAsync(req.user, req.entity).then((result) => {
                 res.status(200).end();
             }).catch((e) => {
@@ -188,7 +311,7 @@ export default class {
         });
 
         // DELETE file
-        handler.delete("/:model/:id/file", (req, res, next) => {
+        handler.delete("/:table/:id/file", (req, res, next) => {
             req.table.removeFileByIdAsync(req.user, req.params.id).then((result) => {
                 res.status(200).end();
             }).catch((e) => {

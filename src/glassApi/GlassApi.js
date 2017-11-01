@@ -37,7 +37,29 @@ let supportedDoors = {
             }
         }
     ],
-    "authenticator": (iAuthenticator)
+    "authenticator": (iAuthenticator),
+    "actions":[
+        {
+            "name":"actionName",
+            "scope": "api" || "edm" || "table" || "entity",
+            "match": {
+                "edm":"edmName",
+                "version":"versionString" || "*",
+                "table":"post"
+            },
+            "executeAsync":(actionOptions)
+        }
+    ]
+}
+
+actionOptions {
+    "metaDatabase": metaDatabase || undefined,
+    "edm":edm || undefined,
+    "tableName": "name" || undefined,
+    "entity": entity || undefined,
+    "body": requestBody || undefined,
+    "query": requestQuery || undefined,
+    "user": user
 }
 */
 
@@ -47,6 +69,7 @@ export default class {
         this.glassDoors = [];
         this.authenticator =  options.authenticator;
         this.decorators = options.decorators;
+        this.actions = {"api":{}, "edm":{}, "table":{}, "entity":{}};
 
         if (!options.dbDriver) {
             throw new Error("Need dbDriver info");
@@ -59,6 +82,10 @@ export default class {
         }
         
         this._driver = new supportedDrivers[dbDriver.name](dbDriver.options);
+
+        options.actions.forEach((action) => {
+            this.registerAction(action);
+        });
 
         this._driver.getEdmListAsync().then((edms) => {
             return this._buildPanesAsync(edms);
@@ -115,6 +142,33 @@ export default class {
         return this._driver.updateEdmAsync(newEdm);
     }
 
+    registerAction(action) {
+        if (action.scope === "api") {
+            this.actions.api[action.name] = action;
+        } else if (action.scope === "edm") {
+            this.actions.edm[action.match.edm] = this.actions.edm[action.match.edm] || {};
+            this.actions.edm[action.match.edm][action.match.version] = this.actions.edm[action.match.edm][action.match.version] || {};
+            this.actions.edm[action.match.edm][action.match.version].edm[action.name] = action;
+        } else if (action.scope === "table") {
+            this.actions.table[action.match.edm] = this.actions.table[action.match.edm] || {};
+            this.actions.table[action.match.edm][action.match.version] = this.actions.table[action.match.edm][action.match.version] || {};
+            this.actions.table[action.match.edm][action.match.version][action.match.table] = this.actions.table[action.match.edm][action.match.version][action.match.table] || {};
+            this.actions.table[action.match.edm][action.match.version][action.match.table][action.name] = action;
+        } else if (action.scope === "entity") {
+            this.actions.entity[action.match.edm] = this.actions.table[action.match.edm] || {};
+            this.actions.entity[action.match.edm][action.match.version] = this.actions.entity[action.match.edm][action.match.version] || {};
+            this.actions.entity[action.match.edm][action.match.version][action.match.table] = this.actions.entity[action.match.edm][action.match.version][action.match.table] || {};
+            this.actions.entity[action.match.edm][action.match.version][action.match.table][action.name] = action;
+        }
+    }
+
+    executeApiActionAsync(actionName, options) {
+        if (!this.actions.api[actionName]) {
+            return Promise.reject("API action not found: " + actionName);
+        }
+        return this.actions.api[actionName].executeAsync(options);
+    }
+
     _buildPanesAsync(edms) {
         return edms.reduce((previous, current) => {
             return previous.then(() => {
@@ -128,6 +182,29 @@ export default class {
             // TODO: instantiate filesystem
             let fileSystem = {};
 
+            let actions = {"edm":{}, "table":{}, "entity":{}};
+
+            if (this.actions.edm[edm.name] && this.actions.edm[edm.name][edm.version]) {
+                Object.assign(actions.edm, this.actions.edm[edm.name][edm.version]);
+            }
+            if (this.actions.edm[edm.name] && this.actions.edm[edm.name]["*"]) {
+                Object.assign(actions.edm, this.actions.edm[edm.name]["*"]);
+            }
+
+            if (this.actions.table[edm.name] && this.actions.table[edm.name][edm.version]) {
+                Object.assign(actions.table, this.actions.table[edm.name][edm.version]);
+            }
+            if (this.actions.table[edm.name] && this.actions.table[edm.name]["*"]) {
+                Object.assign(actions.table, this.actions.table[edm.name]["*"]);
+            }
+
+            if (this.actions.entity[edm.name] && this.actions.entity[edm.name][edm.version]) {
+                Object.assign(actions.entity, this.actions.entity[edm.name][edm.version]);
+            }
+            if (this.actions.entity[edm.name] && this.actions.entity[edm.name]["*"]) {
+                Object.assign(actions.entity, this.actions.entity[edm.name]["*"]);
+            }
+
             let metaOptions = {
                 database: db,
                 decorators: this.decorators,
@@ -139,7 +216,8 @@ export default class {
             let paneOptions = {
                 metaDatabase: metaDatabase,
                 migrationRunner: new MigrationRunner({edm:edm, migrator: db.getMigrator()}),
-                edm: edm
+                edm: edm,
+                actions: actions
             };
 
             let pane = new GlassPane(paneOptions);

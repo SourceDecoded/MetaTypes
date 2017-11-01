@@ -9,15 +9,15 @@ import GuestUser from "./user/Guest";
 import User from "./user/User";
 import LocalFileSystem from "./util/LocalFileSystem";
 import MockFileSystem from "./mock/FileSystem";
-import GlassDb from "./glassDb/GlassDb";
+import GlassApi from "./glassApi/GlassApi";
 import GlassExpressDoor from "./glassDoor/GlassExpressDoor";
 import MsSqlDatabase from "./mssql/Database";
 import MsSqlTable from "./mssql/Table";
 import MsSqlProvider from "./mssql/Provider";
 
-// might only need GlassDb, but we'll export everything for now for just in case
+// might only need GlassApi, but we'll export everything for now for just in case
 export {
-    GlassDb,
+    GlassApi,
     MetaDatabase,
     MetaTable,
     SqliteDatabase,

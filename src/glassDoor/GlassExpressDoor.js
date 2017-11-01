@@ -9,7 +9,7 @@ export default class {
     constructor(options) {
         this.port = options.port || "8888";
         this.address = options.address || "127.0.0.1";
-        this.apiRoot = options.apiRoot || "/api";
+        this.apiRoot = options.apiRoot || "/data";
         this.edmRoot = options.edmRoot || "/edm";
         this.glass = options.glass;
         this.panes = {};
@@ -27,6 +27,32 @@ export default class {
                 console.log(`ExpressDoor is listening on ${this.address}:${this.port} `);
                 console.log(`Data API mounted at ${this.apiRoot}`);
                 console.log(`EDM API mounted at ${this.edmRoot}`);
+
+                this.mainApp.get('/@\*', (req, res, next) => {
+                    let options = {
+                        query: req.query.q
+                    };
+                    let actionName = req.params[0];
+                    this.glass.executeApiActionAsync(actionName, options).then((result) => {
+                        res.send(result);
+                    }).catch((error) => {
+                        res.status(404).send({error: error.message});
+                    });
+                });
+
+                this.mainApp.post('/@\*', (req, res, next) => {
+                    let options = {
+                        query: req.query.q,
+                        body: req.body
+                    };
+                    let actionName = req.params[0];
+                    this.glass.executeApiActionAsync(actionName, options).then((result) => {
+                        res.send(result);
+                    }).catch((error) => {
+                        res.status(404).send({error: error.message});
+                    });
+                });
+
                 this._init();
             } else {
                 throw err;

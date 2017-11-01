@@ -34,7 +34,7 @@ export default class Provider {
 
     toArrayWithCountAsync(queryable) {
         let count = 0;
-        return this.countAsync((c) => {
+        return this.countAsync(queryable).then((c) => {
             count = c;
             return this.toArrayAsync(queryable);
         }).then((results) => {
@@ -42,13 +42,12 @@ export default class Provider {
                 count: count,
                 results: results
             }
-        })
+        });
     }
 
     countAsync(queryable) {
         let query = queryable.getQuery();
-        let visitor = new Visitor(this.name, this.edm, this.schema);
-        let statement = visitor.createSelectStatementWithCount(query);
+        let statement = this.queryBuilder.createCountStatement(query);
 
         let request = this.connectionPool.request();
 

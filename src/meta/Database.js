@@ -7,7 +7,8 @@ export default class {
     constructor({
         decorators = [],
         database = null,
-        fileSystem = null
+        fileSystem = null,
+        actions = null
          } = {}) {
 
         if (!Array.isArray(decorators)) {
@@ -30,7 +31,6 @@ export default class {
         this.fileSystem = fileSystem;
         this.tables = {};
 
-        
         this.refreshTables();
     }
 
