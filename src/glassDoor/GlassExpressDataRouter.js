@@ -280,8 +280,8 @@ export default class {
             (req.get("X-Query") ? handleQuery : handleAdd)(req.body, req, res, next);
         });
 
-        // POST update
-        handler.post("/:table/:id", (req, res, next) => {
+        // PATCH update
+        handler.patch("/:table/:id", (req, res, next) => {
             this._parseDates(req.body, req.params.table);
             req.table.updateEntityAsync(req.user, req.entity, req.body).then((result) => {
                 res.send(result);
@@ -347,7 +347,7 @@ export default class {
         this.pane.edm.tables.filter((table) => {
             return table.name === tableName;
         })[0].columns.filter((column) => {
-            return type === "Date";
+            return column.type === "Date";
         }).forEach((column) => {
             let timestamp = Date.parse(entity[column.name]);
             if (! isNaN(timestamp)) {

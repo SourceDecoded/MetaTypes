@@ -103,16 +103,19 @@ export default class TableStatementBuilder {
             throw new Error("Invalid Argument: delta cannot an empty object.");
         }
 
-        this.filterRelevantColumns(columns).forEach((column) => {
-            var columnName = column.name;
+        let primaryKeys = this.getPrimaryKeys(columns);
 
-            if (typeof delta[columnName] !== "undefined" && this.dataTypeMapping[column.type] != null) {
+        this.filterRelevantColumns(columns).filter((column) => {
+            return primaryKeys.indexOf(column.name) === -1;
+        }).forEach((column) => {
+            var columnName = column.name;
+            if (typeof delta[columnName] !== "undefined") {
                 columnSet.push(this._escapeName(columnName) + `=@v${values.length}`);
                 values.push(delta[columnName]);
             }
         });
 
-        this.getPrimaryKeys(columns).forEach((key, index) => {
+        primaryKeys.forEach((key, index) => {
             primaryKeyExpr.push(this._escapeName(key) + `=@k${index}`);
             primaryKeyValues.push(entity[key]);
         });

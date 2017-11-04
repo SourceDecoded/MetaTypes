@@ -1458,7 +1458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1794,15 +1794,15 @@ var _ValueExpression = __webpack_require__(2);
 
 var _ValueExpression2 = _interopRequireDefault(_ValueExpression);
 
-var _JsonQueryConverter = __webpack_require__(7);
+var _QueryConverter = __webpack_require__(6);
 
-var _JsonQueryConverter2 = _interopRequireDefault(_JsonQueryConverter);
+var _QueryConverter2 = _interopRequireDefault(_QueryConverter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var jsonQueryConverter = new _JsonQueryConverter2.default();
+var queryConverter = new _QueryConverter2.default();
 
 var Queryable = function () {
     function Queryable(type) {
@@ -2181,7 +2181,7 @@ var Queryable = function () {
     }], [{
         key: "fromJson",
         value: function fromJson(jsonQuery) {
-            var query = jsonQueryConverter.convert(jsonQuery);
+            var query = queryConverter.convert(jsonQuery);
             return new Queryable(query.type, query);
         }
     }]);
@@ -2435,7 +2435,100 @@ exports.default = OperationExpressionBuilder;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.OperationExpression = exports.ValueExpression = exports.ExpressionVisitor = exports.ExpressionBuilder = exports.Expression = exports.Queryable = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _OperationExpression = __webpack_require__(1);
+
+var _OperationExpression2 = _interopRequireDefault(_OperationExpression);
+
+var _ValueExpression = __webpack_require__(2);
+
+var _ValueExpression2 = _interopRequireDefault(_ValueExpression);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var QueryBuilder = function () {
+    function QueryBuilder() {
+        _classCallCheck(this, QueryBuilder);
+    }
+
+    _createClass(QueryBuilder, [{
+        key: "_convertNode",
+        value: function _convertNode(node) {
+            var _this = this;
+
+            if (node == null) {
+                return node;
+            }
+
+            if (node.type === "value") {
+
+                if (node.nodeName === "queryable") {
+                    node.value.where = this._convertNode(node.value.where);
+                    return new _ValueExpression2.default(node.nodeName, node.value);
+                } else {
+                    return new _ValueExpression2.default(node.nodeName, node.value);
+                }
+            } else if (node.type === "operation") {
+                var operationExpression = new _OperationExpression2.default(node.nodeName);
+
+                if (!Array.isArray(node.children)) {
+                    throw new Error("Invalid Operation Node. It didn't contain a children property of type array.");
+                }
+
+                node.children.forEach(function (childNode) {
+                    var expression = _this._convertNode(childNode);
+                    operationExpression.children.push(expression);
+                });
+
+                return operationExpression;
+            } else if (node.type == null) {
+                return node;
+            }
+        }
+    }, {
+        key: "convertJson",
+        value: function convertJson(json) {
+            var object = JSON.parse(json);
+            return this.convertObject(object);
+        }
+    }, {
+        key: "convertObject",
+        value: function convertObject(object) {
+            var _this2 = this;
+
+            return Object.keys(object).reduce(function (query, key) {
+                query[key] = _this2._convertNode(object[key]);
+                return query;
+            }, {});
+        }
+    }, {
+        key: "convert",
+        value: function convert(json) {
+            return this.convertJson(json);
+        }
+    }]);
+
+    return QueryBuilder;
+}();
+
+exports.default = QueryBuilder;
+//# sourceMappingURL=QueryConverter.js.map
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.QueryConverter = exports.OperationExpression = exports.ValueExpression = exports.ExpressionVisitor = exports.ExpressionBuilder = exports.Expression = exports.Queryable = undefined;
 
 var _Queryable = __webpack_require__(4);
 
@@ -2461,6 +2554,10 @@ var _OperationExpression = __webpack_require__(1);
 
 var _OperationExpression2 = _interopRequireDefault(_OperationExpression);
 
+var _QueryConverter = __webpack_require__(6);
+
+var _QueryConverter2 = _interopRequireDefault(_QueryConverter);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.Queryable = _Queryable2.default;
@@ -2469,92 +2566,8 @@ exports.ExpressionBuilder = _ExpressionBuilder2.default;
 exports.ExpressionVisitor = _ExpressionVisitor2.default;
 exports.ValueExpression = _ValueExpression2.default;
 exports.OperationExpression = _OperationExpression2.default;
+exports.QueryConverter = _QueryConverter2.default;
 //# sourceMappingURL=index.js.map
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _OperationExpression = __webpack_require__(1);
-
-var _OperationExpression2 = _interopRequireDefault(_OperationExpression);
-
-var _ValueExpression = __webpack_require__(2);
-
-var _ValueExpression2 = _interopRequireDefault(_ValueExpression);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var JsonQueryBuilder = function () {
-    function JsonQueryBuilder() {
-        _classCallCheck(this, JsonQueryBuilder);
-    }
-
-    _createClass(JsonQueryBuilder, [{
-        key: "_convertNode",
-        value: function _convertNode(node) {
-            var _this = this;
-
-            if (node == null) {
-                return node;
-            }
-
-            if (node.type === "value") {
-                if (node.nodeName === "queryable") {
-                    node.value.where = this._convertNode(node.value.where);
-                    var _valueExpression = new _ValueExpression2.default(node.nodeName, node.value);
-                } else {
-                    var _valueExpression2 = new _ValueExpression2.default(node.nodeName, node.value);
-                }
-
-                return valueExpression;
-            } else if (node.type === "operation") {
-                var operationExpression = new _OperationExpression2.default(node.nodeName);
-
-                if (!Array.isArray(node.children)) {
-                    throw new Error("Invalid Operation Node. It didn't contain a children property of type array.");
-                }
-
-                node.children.forEach(function (childNode) {
-                    var expression = _this._convertNode(childNode);
-                    operationExpression.children.push(expression);
-                });
-
-                return operationExpression;
-            } else if (node.type == null) {
-                return node;
-            }
-        }
-    }, {
-        key: "convert",
-        value: function convert(json) {
-            var _this2 = this;
-
-            var object = JSON.parse(json);
-
-            return Object.keys(object).reduce(function (query, key) {
-                query[key] = _this2._convertNode(object[key]);
-                return query;
-            }, {});
-        }
-    }]);
-
-    return JsonQueryBuilder;
-}();
-
-exports.default = JsonQueryBuilder;
-//# sourceMappingURL=JsonQueryConverter.js.map
 
 /***/ }),
 /* 8 */
@@ -12494,22 +12507,6 @@ var Provider = function () {
 
             return this._refineQueryableAsync(queryable).then(function (queryable) {
                 return _this3.provider.toArrayAsync(queryable);
-            }).then(function (results) {
-                // We need to save the previous results just in case the decorator doesn't implement
-                // the life-cycle or it returns something that isn't an array.
-                var previousResults = results;
-
-                return _this3.decorators.reduce(function (promise, decorator) {
-                    return promise.then(function (results) {
-                        if (!Array.isArray(results) || results.length !== previousResults.length) {
-                            results = previousResults;
-                        }
-
-                        previousResults = results;
-
-                        _this3._invokeMethodAsync(decorator, "mapAsync", [results]);
-                    });
-                }, Promise.resolve(results));
             });
         }
     }, {
@@ -18283,9 +18280,9 @@ var TableStatementBuilder = function () {
                     columns.push(_this._escapeName(columnName));
 
                     if (entity[columnName] === null) {
-                        values.push(_this.toMssqlValue(defaultValue));
+                        values.push(defaultValue);
                     } else {
-                        values.push(_this.toMssqlValue(entity[columnName]));
+                        values.push(entity[columnName]);
                     }
                 }
             });
@@ -18331,16 +18328,19 @@ var TableStatementBuilder = function () {
                 throw new Error("Invalid Argument: delta cannot an empty object.");
             }
 
-            this.filterRelevantColumns(columns).forEach(function (column) {
-                var columnName = column.name;
+            var primaryKeys = this.getPrimaryKeys(columns);
 
-                if (typeof delta[columnName] !== "undefined" && _this2.dataTypeMapping[column.type] != null) {
+            this.filterRelevantColumns(columns).filter(function (column) {
+                return primaryKeys.indexOf(column.name) === -1;
+            }).forEach(function (column) {
+                var columnName = column.name;
+                if (typeof delta[columnName] !== "undefined") {
                     columnSet.push(_this2._escapeName(columnName) + ("=@v" + values.length));
-                    values.push(_this2.toMssqlValue(delta[columnName]));
+                    values.push(delta[columnName]);
                 }
             });
 
-            this.getPrimaryKeys(columns).forEach(function (key, index) {
+            primaryKeys.forEach(function (key, index) {
                 primaryKeyExpr.push(_this2._escapeName(key) + ("=@k" + index));
                 primaryKeyValues.push(entity[key]);
             });
@@ -18370,7 +18370,7 @@ var TableStatementBuilder = function () {
                     primaryKeysExpr.push(_this3._escapeName(primaryKey) + " IS NULL");
                 } else {
                     primaryKeysExpr.push(_this3._escapeName(primaryKey) + ("=@k" + keys.length));
-                    keys.push(_this3.toMssqlValue(entity[primaryKey]));
+                    keys.push(entity[primaryKey]);
                 }
             });
 
@@ -18586,26 +18586,6 @@ var TableStatementBuilder = function () {
                 return column.name;
             });
         }
-
-        // TODO: update for MSSQL
-
-    }, {
-        key: "toMssqlValue",
-        value: function toMssqlValue(value) {
-            if (typeof value === "string") {
-                return value;
-            } else if (typeof value === "number") {
-                return value;
-            } else if (typeof value === "boolean") {
-                return value ? 1 : 0;
-            } else if (value instanceof Date) {
-                return value.getTime();
-            } else if (value == null) {
-                return null;
-            } else {
-                throw new Error("Unknown value.");
-            }
-        }
     }]);
 
     return TableStatementBuilder;
@@ -18632,7 +18612,7 @@ exports.default = {
     "Decimal": "decimal(18,4)",
     "Double": "decimal(26,8)",
     "Integer": "int",
-    "Date": "int",
+    "Date": "datetime2",
     "Enum": "smallint"
 };
 //# sourceMappingURL=dataTypeMapping.js.map
@@ -28696,7 +28676,7 @@ var _class = function (_EventEmitter) {
             } else if (action.scope === "edm") {
                 this.actions.edm[action.match.edm] = this.actions.edm[action.match.edm] || {};
                 this.actions.edm[action.match.edm][action.match.version] = this.actions.edm[action.match.edm][action.match.version] || {};
-                this.actions.edm[action.match.edm][action.match.version].edm[action.name] = action;
+                this.actions.edm[action.match.edm][action.match.version][action.name] = action;
             } else if (action.scope === "table") {
                 this.actions.table[action.match.edm] = this.actions.table[action.match.edm] || {};
                 this.actions.table[action.match.edm][action.match.version] = this.actions.table[action.match.edm][action.match.version] || {};
@@ -43050,6 +43030,7 @@ var Visitor = function (_ExpressionVisitor) {
         _this.edm = edm;
         _this.table = _this._getTable(name);
         _this.schema = schema;
+        _this.queryConverter = new _queryablejs.QueryConverter();
 
         return _this;
     }
@@ -43298,7 +43279,7 @@ var Visitor = function (_ExpressionVisitor) {
     }, {
         key: "queryable",
         value: function queryable(expression) {
-            var query = expression.value;
+            var query = this.queryConverter.convert(JSON.stringify(expression.value));
             var queryBuilder = new _QueryBuilder2.default(this.edm, this.schema);
 
             return "(" + queryBuilder.createStatement(query) + ")";
@@ -52942,7 +52923,7 @@ var _class = function () {
 
             handler.use(function (req, res, next) {
                 if (!(req.method === "OPTIONS")) {
-                    _this.authenticator.authenticateAsync(req).then(function (user) {
+                    _this.authenticator.authenticateAsync(req, _this.pane.metaDatabase).then(function (user) {
                         req.user = user;
                         next();
                     }).catch(function (error) {
@@ -52984,6 +52965,8 @@ var _class = function () {
             });
 
             var handleAdd = function handleAdd(entity, req, res, next) {
+                _this._parseDates(entity, req.params.table);
+
                 req.table.addEntityAsync(req.user, entity).then(function (result) {
                     res.status(201).send(result);
                 }).catch(function (e) {
@@ -53167,8 +53150,9 @@ var _class = function () {
                 (req.get("X-Query") ? handleQuery : handleAdd)(req.body, req, res, next);
             });
 
-            // POST update
-            handler.post("/:table/:id", function (req, res, next) {
+            // PATCH update
+            handler.patch("/:table/:id", function (req, res, next) {
+                _this._parseDates(req.body, req.params.table);
                 req.table.updateEntityAsync(req.user, req.entity, req.body).then(function (result) {
                     res.send(result);
                 }).catch(function (e) {
@@ -53227,6 +53211,20 @@ var _class = function () {
             });
 
             this.app.use("/" + this.pane.edm.name + "/" + this.pane.edm.version, handler);
+        }
+    }, {
+        key: "_parseDates",
+        value: function _parseDates(entity, tableName) {
+            this.pane.edm.tables.filter(function (table) {
+                return table.name === tableName;
+            })[0].columns.filter(function (column) {
+                return column.type === "Date";
+            }).forEach(function (column) {
+                var timestamp = Date.parse(entity[column.name]);
+                if (!isNaN(timestamp)) {
+                    entity[column.name] = new Date(timestamp);
+                }
+            });
         }
     }]);
 

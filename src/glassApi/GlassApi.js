@@ -156,7 +156,7 @@ export default class extends EventEmitter {
         } else if (action.scope === "edm") {
             this.actions.edm[action.match.edm] = this.actions.edm[action.match.edm] || {};
             this.actions.edm[action.match.edm][action.match.version] = this.actions.edm[action.match.edm][action.match.version] || {};
-            this.actions.edm[action.match.edm][action.match.version].edm[action.name] = action;
+            this.actions.edm[action.match.edm][action.match.version][action.name] = action;
         } else if (action.scope === "table") {
             this.actions.table[action.match.edm] = this.actions.table[action.match.edm] || {};
             this.actions.table[action.match.edm][action.match.version] = this.actions.table[action.match.edm][action.match.version] || {};
