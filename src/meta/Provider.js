@@ -114,23 +114,6 @@ export default class Provider {
 
         return this._refineQueryableAsync(queryable).then((queryable) => {
             return this.provider.toArrayAsync(queryable);
-        }).then((results) => {
-            // We need to save the previous results just in case the decorator doesn't implement
-            // the life-cycle or it returns something that isn't an array.
-            let previousResults = results;
-
-            return this.decorators.reduce((promise, decorator) => {
-                return promise.then((results) => {
-                    if (!Array.isArray(results) || results.length !== previousResults.length) {
-                        results = previousResults;
-                    }
-
-                    previousResults = results;
-
-                    this._invokeMethodAsync(decorator, "mapAsync", [results]);
-                });
-
-            }, Promise.resolve(results));
         });
     }
 
