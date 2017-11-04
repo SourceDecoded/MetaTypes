@@ -1,5 +1,5 @@
 // GlassExpress
-// Implements GlassDoor to expose a GlassDb by HTTP
+// Implements GlassDoor to expose a GlassApi by HTTP
 import express from "express";
 import DataRouter from "./GlassExpressDataRouter";
 import bodyParser from "body-parser";

@@ -57,9 +57,9 @@ export default class TableStatementBuilder {
                 columns.push(this._escapeName(columnName));
 
                 if (entity[columnName] === null) {
-                    values.push(this.toMssqlValue(defaultValue));
+                    values.push(defaultValue);
                 } else {
-                    values.push(this.toMssqlValue(entity[columnName]));
+                    values.push(entity[columnName]);
                 }
             }
         });
@@ -108,7 +108,7 @@ export default class TableStatementBuilder {
 
             if (typeof delta[columnName] !== "undefined" && this.dataTypeMapping[column.type] != null) {
                 columnSet.push(this._escapeName(columnName) + `=@v${values.length}`);
-                values.push(this.toMssqlValue(delta[columnName]));
+                values.push(delta[columnName]);
             }
         });
 
@@ -139,7 +139,7 @@ export default class TableStatementBuilder {
                 primaryKeysExpr.push(this._escapeName(primaryKey) + " IS NULL");
             } else {
                 primaryKeysExpr.push(this._escapeName(primaryKey) + `=@k${keys.length}`);
-                keys.push(this.toMssqlValue(entity[primaryKey]));
+                keys.push(entity[primaryKey]);
             }
 
         });
@@ -333,23 +333,6 @@ export default class TableStatementBuilder {
         }).map((column) => {
             return column.name;
         });
-    }
-
-    // TODO: update for MSSQL
-    toMssqlValue(value) {
-        if (typeof value === "string") {
-            return value;
-        } else if (typeof value === "number") {
-            return value;
-        } else if (typeof value === "boolean") {
-            return value ? 1 : 0;
-        } else if (value instanceof Date) {
-            return value.getTime();
-        } else if (value == null) {
-            return null;
-        } else {
-            throw new Error("Unknown value.");
-        }
     }
 
 }

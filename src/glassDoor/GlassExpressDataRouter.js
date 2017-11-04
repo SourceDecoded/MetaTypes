@@ -33,23 +33,37 @@ export default class {
             }
         });
 
-        handler.use(conditional( (req, res, next) => {
-            return !(req.get("X-Query"));
-        }, bodyParser.json()
+        handler.use((req, res, next) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Methods", "GET, PATCH, POST, DELETE");
+            res.header("Access-Control-Allow-Headers", "X-Query, Access-Control, Authorization, Content-Type");
+            next();
+        });
+
+        handler.use(conditional(
+            (req, res, next) => {
+                return (req.get("X-Query"));
+            }, bodyParser.text({
+                "type":"application/json"
+            }), bodyParser.json()
         ));
 
         handler.use(busboy());
 
         handler.use((req, res, next) => {
-            this.authenticator.authenticateAsync(req).then((user) => {
-                req.user = user;
-                next();
-            }).catch((error) => {
-                res.status(403).send({
-                    "error":"Forbidden",
-                    "developerError":error.stack
+            if (!(req.method === "OPTIONS")) {
+                this.authenticator.authenticateAsync(req, this.pane.metaDatabase).then((user) => {
+                    req.user = user;
+                    next();
+                }).catch((error) => {
+                    res.status(403).send({
+                        "error":"Forbidden",
+                        "developerError":error.stack
+                    });
                 });
-            });
+            } else {
+                next();
+            }
         });
 
         handler.param("table", (req, res, next, tableName) => {
@@ -80,6 +94,9 @@ export default class {
         });
 
         let handleAdd = function(entity, req, res, next) {
+            
+            this._parseDates(entity, req.params.table);
+
             req.table.addEntityAsync(req.user, entity).then((result) => {
                 res.status(201).send(result);
             }).catch((e) => {
@@ -265,6 +282,7 @@ export default class {
 
         // POST update
         handler.post("/:table/:id", (req, res, next) => {
+            this._parseDates(req.body, req.params.table);
             req.table.updateEntityAsync(req.user, req.entity, req.body).then((result) => {
                 res.send(result);
             }).catch((e) => {
@@ -323,6 +341,20 @@ export default class {
         });
 
         this.app.use(`/${this.pane.edm.name}/${this.pane.edm.version}`, handler);
+    }
+
+    _parseDates(entity, tableName) {
+        this.pane.edm.tables.filter((table) => {
+            return table.name === req.params.table;
+        })[0].columns.filter((column) => {
+            return type === "Date";
+        }).forEach((column) => {
+            let timestamp = Date.parse(entity[column.name]);
+            if (! isNaN(timestamp)) {
+                entity[column.name] = new Date(timestamp);
+            }
+        });
+
     }
 
 

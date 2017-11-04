@@ -6,6 +6,7 @@ import MetaDatabase from "../meta/Database";
 import MsSqlDriver from "../dbDriver/MsSqlDriver";
 import SqliteDriver from "../dbDriver/SqliteDriver";
 import ExpressDoor from "../glassDoor/GlassExpressDoor";
+import EventEmitter from "events";
 
 let supportedDrivers = {
     "sqlite": SqliteDriver,
@@ -63,12 +64,13 @@ actionOptions {
 }
 */
 
-export default class {
+export default class extends EventEmitter {
     constructor(options = {}) {
+        super();
         this.glassPanes = {};
         this.glassDoors = [];
         this.authenticator =  options.authenticator;
-        this.decorators = options.decorators;
+        this.decorators = options.decorators || [];
         this.actions = {"api":{}, "edm":{}, "table":{}, "entity":{}};
 
         if (!options.dbDriver) {
@@ -83,14 +85,20 @@ export default class {
         
         this._driver = new supportedDrivers[dbDriver.name](dbDriver.options);
 
-        options.actions.forEach((action) => {
-            this.registerAction(action);
-        });
-
+        if (options.actions) {
+            options.actions.forEach((action) => {
+                this.registerAction(action);
+            });
+        }
+        
         this._driver.getEdmListAsync().then((edms) => {
             return this._buildPanesAsync(edms);
         }).then(() => {
             return this._openDoorsAsync(options.doors);
+        }).then(() => {
+            this.emit("ready");
+        }).catch((error) => {
+            this.emit("error", error);
         });
     }
 
@@ -226,7 +234,7 @@ export default class {
         });
     }
 
-    _openDoorsAsync(doorsConfig) {
+    _openDoorsAsync(doorsConfig = []) {
         if (doorsConfig.length === 0) {
             console.warn("GlassDB is running, but there is no way to access it. Include one or more doors in the options.");
         }

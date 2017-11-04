@@ -14,6 +14,7 @@ import GlassExpressDoor from "./glassDoor/GlassExpressDoor";
 import MsSqlDatabase from "./mssql/Database";
 import MsSqlTable from "./mssql/Table";
 import MsSqlProvider from "./mssql/Provider";
+import MsSqlDriver from "./dbDriver/MsSqlDriver";
 
 // might only need GlassApi, but we'll export everything for now for just in case
 export {
@@ -31,5 +32,6 @@ export {
     GlassExpressDoor,
     MsSqlDatabase,
     MsSqlTable,
-    MsSqlProvider
+    MsSqlProvider,
+    MsSqlDriver
 };

@@ -1,4 +1,4 @@
-import { ExpressionVisitor } from "queryablejs";
+import { ExpressionVisitor, QueryConverter } from "queryablejs";
 import QueryBuilder from "./QueryBuilder";
 
 export default class Visitor extends ExpressionVisitor {
@@ -8,6 +8,7 @@ export default class Visitor extends ExpressionVisitor {
         this.edm = edm;
         this.table = this._getTable(name);
         this.schema = schema;
+        this.queryConverter = new QueryConverter();
 
     }
 
@@ -215,7 +216,7 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     queryable(expression) {
-        let query = expression.value;
+        let query = this.queryConverter.convert(JSON.stringify(expression.value));
         let queryBuilder = new QueryBuilder(this.edm, this.schema);
 
         return `(${queryBuilder.createStatement(query)})`;

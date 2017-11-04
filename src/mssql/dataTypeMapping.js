@@ -6,6 +6,6 @@ export default {
     "Decimal": "decimal(18,4)",
     "Double": "decimal(26,8)",
     "Integer": "int",
-    "Date": "int",
+    "Date": "datetime2",
     "Enum": "smallint"
 }
