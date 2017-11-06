@@ -13,7 +13,7 @@ export default class Visitor extends ExpressionVisitor {
     }
 
     _convertString(value) {
-        return `'${this._escape(value)}'`;
+        return `N'${this._escape(value)}'`;
     }
 
     _convertContainsString(value) {
@@ -138,6 +138,8 @@ export default class Visitor extends ExpressionVisitor {
     isEqualTo(left, right) {
         if (right === null) {
             return `${left} IS NULL`;
+        } else if (typeof right === "string") {
+            return `${left} LIKE ${this._sqlizePrimitive(right)}`;
         } else {
             return `${left} = ${this._sqlizePrimitive(right)}`;
         }

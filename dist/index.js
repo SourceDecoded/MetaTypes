@@ -18872,7 +18872,7 @@ var QueryBuilder = function () {
             var limit = this._createLimitClause(query.take);
             var offset = this._createOffsetClause(query.skip);
 
-            parts.push(select, where, orderBy, limit, offset);
+            parts.push(select, where, orderBy, offset, limit);
 
             parts = parts.filter(this._isNotEmptyFilter);
 
@@ -43038,7 +43038,7 @@ var Visitor = function (_ExpressionVisitor) {
     _createClass(Visitor, [{
         key: "_convertString",
         value: function _convertString(value) {
-            return "'" + this._escape(value) + "'";
+            return "N'" + this._escape(value) + "'";
         }
     }, {
         key: "_convertContainsString",
@@ -43186,6 +43186,8 @@ var Visitor = function (_ExpressionVisitor) {
         value: function isEqualTo(left, right) {
             if (right === null) {
                 return left + " IS NULL";
+            } else if (typeof right === "string") {
+                return left + " LIKE " + this._sqlizePrimitive(right);
             } else {
                 return left + " = " + this._sqlizePrimitive(right);
             }

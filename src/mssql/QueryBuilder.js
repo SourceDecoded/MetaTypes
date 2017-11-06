@@ -12,24 +12,16 @@ export default class QueryBuilder {
 
     _createAscendingExpression(columns) {
         let ascending = columns.map((column) => {
-            return "[" + column + "]";
+            return "[" + column + "] ASC";
         }).join(", ");
-
-        if (ascending.length > 0) {
-            ascending = `${ascending} ASC`;
-        }
 
         return ascending;
     }
 
     _createDescendingExpression(columns) {
         let desceding = columns.map((column) => {
-            return "[" + column + "]";
+            return "[" + column + "] DESC";
         }).join(", ");
-
-        if (desceding.length > 0) {
-            desceding = `${desceding} DESC`;
-        }
 
         return desceding;
     }
@@ -131,8 +123,8 @@ export default class QueryBuilder {
             select,
             where,
             orderBy,
-            limit,
-            offset
+            offset,
+            limit
         );
 
         parts = parts.filter(this._isNotEmptyFilter);
