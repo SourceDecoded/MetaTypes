@@ -6,6 +6,7 @@ import MetaDatabase from "../meta/Database";
 import MsSqlDriver from "../dbDriver/MsSqlDriver";
 import SqliteDriver from "../dbDriver/SqliteDriver";
 import ExpressDoor from "../glassDoor/GlassExpressDoor";
+import LocalFileSystem from "../util/LocalFileSystem";
 import EventEmitter from "events";
 
 let supportedDrivers = {
@@ -13,7 +14,9 @@ let supportedDrivers = {
     "mssql": MsSqlDriver
 };
 
-let supportedFilesystems = {};
+let supportedFileSystems = {
+    "localFileSystem": LocalFileSystem
+};
 
 let supportedDoors = {
     "express": ExpressDoor
@@ -84,6 +87,8 @@ export default class extends EventEmitter {
         }
         
         this._driver = new supportedDrivers[dbDriver.name](dbDriver.options);
+
+        this._fileSystem = new supportedFileSystems[options.fileSystem.name](options.fileSystem.options);
 
         if (options.actions) {
             options.actions.forEach((action) => {
@@ -187,9 +192,6 @@ export default class extends EventEmitter {
 
     _buildPaneAsync(edm) {
         return this._driver.getDatabaseForEdmAsync(edm).then((db) => {
-            // TODO: instantiate filesystem
-            let fileSystem = {};
-
             let actions = {"edm":{}, "table":{}, "entity":{}};
 
             if (this.actions.edm[edm.name] && this.actions.edm[edm.name][edm.version]) {
@@ -216,7 +218,7 @@ export default class extends EventEmitter {
             let metaOptions = {
                 database: db,
                 decorators: this.decorators,
-                fileSystem: fileSystem
+                fileSystem: this._fileSystem
             };
 
             let metaDatabase = new MetaDatabase(metaOptions);
