@@ -88,7 +88,7 @@ export default class QueryBuilder {
     }
 
     _createSelectStatementWithCount(query) {
-        return `SELECT COUNT(*) AS count FROM ${this.namer.getQualifiedTableName(tableName)}`;
+        return `SELECT COUNT(*) AS count FROM ${this.namer.getQualifiedTableName(query.type)}`;
     }
 
     _createWhereClause(query) {
