@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">59.54% </span>
+        <span class="strong">61.36% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>78/131</span>
+        <span class='fraction'>81/132</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">40% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>26/65</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">53.85% </span>
+        <span class="strong">56% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>28/52</span>
+        <span class='fraction'>28/50</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">53.77% </span>
+        <span class="strong">56.07% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>57/106</span>
+        <span class='fraction'>60/107</span>
       </div>
     </div>
   </div>
@@ -357,19 +357,13 @@
 312
 313
 314
-315
-316
-317
-318
-319
-320
-321</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+315</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">41×</span>
+<span class="cline-any cline-yes">39×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -378,6 +372,10 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -398,7 +396,7 @@
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">5×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -454,19 +452,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -697,6 +685,10 @@ var _QueryBuilder = require("./QueryBuilder");
 &nbsp;
 var _QueryBuilder2 = _interopRequireDefault(_QueryBuilder);
 &nbsp;
+var _TableNameHelper = require("./TableNameHelper");
+&nbsp;
+var _TableNameHelper2 = _interopRequireDefault(_TableNameHelper);
+&nbsp;
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
 &nbsp;
 function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
@@ -718,7 +710,7 @@ var Visitor = function (_ExpressionVisitor) {
         _this.table = _this._getTable(name);
         _this.schema = schema;
         _this.queryConverter = new _queryablejs.QueryConverter();
-&nbsp;
+        _this.namer = new _TableNameHelper2.default({ edm: edm, schema: schema });
         return _this;
     }
 &nbsp;
@@ -772,21 +764,11 @@ var Visitor = function (_ExpressionVisitor) {
 <span class="cstat-no" title="statement not covered" >            return "[" + value + "]";</span>
         }
     }, {
-        key: "_getQualifiedDbTableName",
-        value: <span class="fstat-no" title="function not covered" >function _getQualifiedDbTableName() {</span>
-<span class="cstat-no" title="statement not covered" >            return "[" + this.schema + "].[" + this._getDbTableName(this.table.name) + "]";</span>
-        }
-    }, {
         key: "_getTable",
         value: function _getTable(name) {
             return this.edm.tables.find(function (table) {
                 return table.name === name;
             });
-        }
-    }, {
-        key: "_getDbTableName",
-        value: <span class="fstat-no" title="function not covered" >function _getDbTableName(table) {</span>
-<span class="cstat-no" title="statement not covered" >            return table + "__" + this.edm.version.replace(/\./g, "_");</span>
         }
     }, {
         key: "_sqlizePrimitive",
@@ -807,8 +789,8 @@ var Visitor = function (_ExpressionVisitor) {
         }
     }, {
         key: "_writeTableProperty",
-        value: function _writeTableProperty(table, column) {
-            return "[" + this.schema + "].[" + table + "__" + this.edm.version.replace(/\./g, "_") + "].[" + column + "]";
+        value: function _writeTableProperty(tableName, column) {
+            return this.namer.getQualifiedTableName(tableName) + ".[" + column + "]";
         }
     }, {
         key: "and",
@@ -1009,7 +991,7 @@ exports.default = Visitor;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Nov 07 2017 09:00:36 GMT-0700 (MST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2017 13:55:31 GMT-0700 (MST)
 </div>
 </div>
 <script src="../prettify.js"></script>

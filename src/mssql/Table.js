@@ -131,7 +131,7 @@ export default class Table {
     _getMsSqlType(value) {
         let type = typeof value;
         if (type === "string") {
-            return mssql.NText;
+            return mssql.NVarChar;
         } else if (type === "number") {
             if (value % 1 === 0) {
                 return mssql.Int;

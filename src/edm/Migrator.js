@@ -1,6 +1,6 @@
 import Validator from "./Validator";
 
-const resolvedPromise = Promise.resolve;
+const resolvedPromise = Promise.resolve();
 
 const isEqualTo = (left, right) => {
     let leftKeys = Object.keys(left);
@@ -153,9 +153,7 @@ export default class Migrator {
             throw new Error(`The '${options.decorator.name}' decorator already exists on the '${options.tableName}' table.`);
         }
 
-        table.decorators.push(Object.assign({}, options.decorator));
-
-        return resolvedPromise;
+        return table.addDecoratorAsync(Object.assign({}, options.decorator));
     }
 
     addOneToOneRelationshipAsync(options) {
@@ -207,13 +205,7 @@ export default class Migrator {
             throw new Error(`The ${options.tableName} doesn't have the ${options.decorator.name} to update.`);
         }
 
-        let index = table.decorators.findIndex((decorator) => {
-            return decorator.name === options.decorator.name;
-        });
-
-        table.decorators.splice(index, 1);
-
-        return resolvedPromise;
+        return table.removeDecoratorAync(options.decorator.name);
     }
 
     removeTableAsync(options = {}) {

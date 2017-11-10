@@ -1,5 +1,5 @@
 export default {
-    "String": "ntext",
+    "String": "nvarchar(max)",
     "Number": "int",
     "Boolean": "bit",
     "Float": "float(53)",

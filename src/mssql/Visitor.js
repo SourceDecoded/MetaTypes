@@ -1,5 +1,6 @@
 import { ExpressionVisitor, QueryConverter } from "queryablejs";
 import QueryBuilder from "./QueryBuilder";
+import TableNameHelper from "./TableNameHelper";
 
 export default class Visitor extends ExpressionVisitor {
     constructor(name, edm, schema) {
@@ -9,7 +10,7 @@ export default class Visitor extends ExpressionVisitor {
         this.table = this._getTable(name);
         this.schema = schema;
         this.queryConverter = new QueryConverter();
-
+        this.namer = new TableNameHelper({edm:edm, schema:schema});
     }
 
     _convertString(value) {
@@ -52,18 +53,10 @@ export default class Visitor extends ExpressionVisitor {
         return `[${value}]`;
     }
 
-    _getQualifiedDbTableName() {
-        return `[${this.schema}].[${this._getDbTableName(this.table.name)}]`;
-    }
-
     _getTable(name) {
         return this.edm.tables.find((table) => {
             return table.name === name;
         });
-    }
-
-    _getDbTableName(table) {
-        return `${table}__${this.edm.version.replace(/\./g, "_")}`;
     }
 
     _sqlizePrimitive(value) {
@@ -82,8 +75,8 @@ export default class Visitor extends ExpressionVisitor {
         }
     }
 
-    _writeTableProperty(table, column) {
-        return `[${this.schema}].[${table}__${this.edm.version.replace(/\./g, "_")}].[${column}]`;
+    _writeTableProperty(tableName, column) {
+        return `${this.namer.getQualifiedTableName(tableName)}.[${column}]`;
     }
 
     and() {

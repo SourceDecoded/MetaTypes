@@ -79,6 +79,10 @@ export default class Database {
         tablesWalked.push(table);
     }
 
+    addTable(table) {
+        this._createTable(table);
+    }
+
     createAsync() {
         let buildOrder = this._getTableBuildOrder();
 

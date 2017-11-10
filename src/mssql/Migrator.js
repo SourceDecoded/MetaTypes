@@ -1,4 +1,5 @@
 import TableStatementBuilder from "./TableStatementBuilder";
+import TableNameHelper from "./TableNameHelper";
 
 export default class Migrator {
     constructor(iDb) {
@@ -8,17 +9,14 @@ export default class Migrator {
         this.name = "MsSqlMigrator";
     }
 
-    _getQualifiedDbTableName(table, version) {
-        return `[${this.schema}].[${table}__${version.replace(/\./g, "_")}]`;
-    }
-
     addColumnAsync(edm, options = {}) {
         let metaTable = this.iDb.getTable(options.tableName).table;
+        let namer = new TableNameHelper({edm:edm, schema:this.schema});
         let builder = new TableStatementBuilder(metaTable, {
             edm: edm,
             schema: this.schema
         });
-        let query = `ALTER TABLE ${this._getQualifiedDbTableName(options.tableName, edm.version)} ADD `;
+        let query = `ALTER TABLE ${namer.getQualifiedTableName(options.tableName)} ADD `;
         query += builder.createColumnDefinitionStatement(options.column);
 
         return this.connectionPool.request().query(query);

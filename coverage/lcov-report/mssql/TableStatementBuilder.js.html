@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">34.81% </span>
+        <span class="strong">35.16% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>63/181</span>
+        <span class='fraction'>64/182</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">30% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>21/70</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">35.85% </span>
+        <span class="strong">33.33% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>19/53</span>
+        <span class='fraction'>17/51</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">29.27% </span>
+        <span class="strong">29.7% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>48/164</span>
+        <span class='fraction'>49/165</span>
       </div>
     </div>
   </div>
@@ -431,24 +431,23 @@
 386
 387
 388
-389
-390
-391
-392
-393
-394</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+389</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">23×</span>
+<span class="cline-any cline-yes">21×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -461,6 +460,7 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">8×</span>
@@ -471,16 +471,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -841,6 +831,10 @@ var _dataTypeMapping = require("./dataTypeMapping");
 &nbsp;
 var _dataTypeMapping2 = _interopRequireDefault(_dataTypeMapping);
 &nbsp;
+var _TableNameHelper = require("./TableNameHelper");
+&nbsp;
+var _TableNameHelper2 = _interopRequireDefault(_TableNameHelper);
+&nbsp;
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
 &nbsp;
 function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
@@ -858,6 +852,7 @@ var TableStatementBuilder = function () {
         this.table = table;
         this.edm = options.edm;
         this.schema = options.schema;
+        this.namer = new _TableNameHelper2.default({ edm: options.edm, schema: options.schema });
     }
 &nbsp;
     _createClass(TableStatementBuilder, [{
@@ -868,27 +863,17 @@ var TableStatementBuilder = function () {
     }, {
         key: "_wrapIfTableExists",
         value: function _wrapIfTableExists(table, query) {
-            return "IF NOT (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES \n            WHERE TABLE_SCHEMA = '" + this.schema + "' AND TABLE_NAME = '" + this._getDbTableName(table.name) + "'))\n            BEGIN\n            " + query + "\n            END";
-        }
-    }, {
-        key: "_getDbTableName",
-        value: function _getDbTableName(table) {
-            return table + "__" + this.edm.version.replace(/\./g, "_");
-        }
-    }, {
-        key: "_getQualifiedDbTableName",
-        value: function _getQualifiedDbTableName(table) {
-            return "[" + this.schema + "].[" + this._getDbTableName(table) + "]";
+            return "IF NOT (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES \n            WHERE TABLE_SCHEMA = '" + this.schema + "' AND TABLE_NAME = '" + this.namer.getTablePart(table.name) + "'))\n            BEGIN\n            " + query + "\n            END";
         }
     }, {
         key: "getQualifiedDbTableName",
         value: <span class="fstat-no" title="function not covered" >function getQualifiedDbTableName() {</span>
-<span class="cstat-no" title="statement not covered" >            return _getQualifiedDbTableName(table.name);</span>
+<span class="cstat-no" title="statement not covered" >            return namer.getQualifiedTableName(table.name);</span>
         }
     }, {
         key: "createDropTableStatement",
         value: <span class="fstat-no" title="function not covered" >function createDropTableStatement() {</span>
-<span class="cstat-no" title="statement not covered" >            return "IF OBJECT_ID('" + this.schema + "." + this._getDbTableName(this.table.name) + "', 'U') IS NOT NULL DROP TABLE " + this._getQualifiedDbTableName(this.table.name) + ";";</span>
+<span class="cstat-no" title="statement not covered" >            return "IF OBJECT_ID('" + this.schema + "." + this.namer.getTablePart(this.table.name) + "', 'U') IS NOT NULL DROP TABLE " + this.namer.getQualifiedTableName(this.table.name) + ";";</span>
         }
     }, {
         key: "createInsertStatement",
@@ -925,13 +910,13 @@ var TableStatementBuilder = function () {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (values.length === 0) {</span>
 <span class="cstat-no" title="statement not covered" >                return {</span>
-                    statement: "INSERT INTO " + this._getQualifiedDbTableName(this.table.name) + " () VALUES (); SELECT SCOPE_IDENTITY() AS id;",
+                    statement: "INSERT INTO " + this.namer.getQualifiedTableName(this.table.name) + " () VALUES (); SELECT SCOPE_IDENTITY() AS id;",
                     values: values
                 };
             }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            return {</span>
-                statement: "INSERT INTO " + this._getQualifiedDbTableName(this.table.name) + " (" + columnsStatement + ") VALUES (" + valuesStatement + "); SELECT SCOPE_IDENTITY() AS id;",
+                statement: "INSERT INTO " + this.namer.getQualifiedTableName(this.table.name) + " (" + columnsStatement + ") VALUES (" + valuesStatement + "); SELECT SCOPE_IDENTITY() AS id;",
                 values: values
             };
         }
@@ -976,7 +961,7 @@ var TableStatementBuilder = function () {
             });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            return {</span>
-                statement: "UPDATE " + this._getQualifiedDbTableName(this.table.name) + " SET " + columnSet.join(", ") + " WHERE " + primaryKeyExpr.join(" AND "),
+                statement: "UPDATE " + this.namer.getQualifiedTableName(this.table.name) + " SET " + columnSet.join(", ") + " WHERE " + primaryKeyExpr.join(" AND "),
                 values: values,
                 keys: primaryKeyValues
             };
@@ -1005,7 +990,7 @@ var TableStatementBuilder = function () {
             });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            return {</span>
-                statement: "DELETE FROM " + this._getQualifiedDbTableName(this.table.name) + " WHERE " + primaryKeysExpr.join(" AND "),
+                statement: "DELETE FROM " + this.namer.getQualifiedTableName(this.table.name) + " WHERE " + primaryKeysExpr.join(" AND "),
                 keys: keys
             };
         }
@@ -1052,7 +1037,7 @@ var TableStatementBuilder = function () {
     }, {
         key: "createIndexStatement",
         value: <span class="fstat-no" title="function not covered" >function createIndexStatement(column) {</span>
-<span class="cstat-no" title="statement not covered" >            return "IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'" + this._getQualifiedDbTableName(this.table.name) + "') AND name = N'index_" + column.replace(/\"/g, '""') + "')\n                  CREATE INDEX index_" + column.replace(/\"/g, '""') + " ON " + this._getQualifiedDbTableName(this.table.name) + " (" + this._escapeName(column) + ")";</span>
+<span class="cstat-no" title="statement not covered" >            return "IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'" + this.namer.getQualifiedTableName(this.table.name) + "') AND name = N'index_" + column.replace(/\"/g, '""') + "')\n                  CREATE INDEX index_" + column.replace(/\"/g, '""') + " ON " + this.namer.getQualifiedTableName(this.table.name) + " (" + this._escapeName(column) + ")";</span>
         }
     }, {
         key: "createTableIndexesStatements",
@@ -1105,7 +1090,7 @@ var TableStatementBuilder = function () {
     }, {
         key: "createForeignKeyStatement",
         value: <span class="fstat-no" title="function not covered" >function createForeignKeyStatement(relationship) {</span>
-<span class="cstat-no" title="statement not covered" >            return "CONSTRAINT [c_" + relationship.ofType + "." + this._getDbTableName(relationship.withForeignKey) + "_to_" + this._getDbTableName(relationship.type) + "." + relationship.hasKey + "] FOREIGN KEY([" + this._getDbTableName(relationship.withForeignKey) + "]) REFERENCES " + this._getQualifiedDbTableName(relationship.type) + " ([" + relationship.hasKey + "])";</span>
+<span class="cstat-no" title="statement not covered" >            return "CONSTRAINT [c_" + relationship.ofType + "." + this.namer.getTablePart(relationship.withForeignKey) + "_to_" + this.namer.getTablePart(relationship.type) + "." + relationship.hasKey + "] FOREIGN KEY([" + this.namer.getTablePart(relationship.withForeignKey) + "]) REFERENCES " + this.namer.getQualifiedTableName(relationship.type) + " ([" + relationship.hasKey + "])";</span>
         }
     }, {
         key: "createPrimaryKeyStatement",
@@ -1135,11 +1120,11 @@ var TableStatementBuilder = function () {
             var foreignKeysStatement = "";
 &nbsp;
             <span class="missing-if-branch" title="if path not taken" >I</span>if (columnDefinitionsStatement &amp;&amp; foreignKeysStatement) {
-<span class="cstat-no" title="statement not covered" >                return this._wrapIfTableExists(this.table, "CREATE TABLE " + this._getQualifiedDbTableName(this.table.name) + " (" + columnDefinitionsStatement + ", " + foreignKeysStatement + ")");</span>
+<span class="cstat-no" title="statement not covered" >                return this._wrapIfTableExists(this.table, "CREATE TABLE " + this.namer.getQualifiedTableName(this.table.name) + " (" + columnDefinitionsStatement + ", " + foreignKeysStatement + ")");</span>
             } else <span class="missing-if-branch" title="else path not taken" >E</span>if (columnDefinitionsStatement) {
-                return this._wrapIfTableExists(this.table, "CREATE TABLE " + this._getQualifiedDbTableName(this.table.name) + " (" + columnDefinitionsStatement + ")");
+                return this._wrapIfTableExists(this.table, "CREATE TABLE " + this.namer.getQualifiedTableName(this.table.name) + " (" + columnDefinitionsStatement + ")");
             } else {
-<span class="cstat-no" title="statement not covered" >                return this._wrapIfTableExists(this.table, "CREATE TABLE " + this._getQualifiedDbTableName(this.table.name));</span>
+<span class="cstat-no" title="statement not covered" >                return this._wrapIfTableExists(this.table, "CREATE TABLE " + this.namer.getQualifiedTableName(this.table.name));</span>
             }
         }
     }, {
@@ -1228,7 +1213,7 @@ exports.default = TableStatementBuilder;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Nov 07 2017 09:00:36 GMT-0700 (MST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2017 13:55:31 GMT-0700 (MST)
 </div>
 </div>
 <script src="../prettify.js"></script>

@@ -44,6 +44,12 @@ export default class Table {
                 return tableDecorator.name === decorator.name
             }) > -1;
         });
+
+        this.decorators.reduce((previous, current) => {
+            return previous.then(() => {
+                return current.activatedAsync(this.database);
+            });
+        }, Promise.resolve());
     }
 
     _approveEntityToBeRemovedAsync(user, entity) {
@@ -189,6 +195,11 @@ export default class Table {
         });
     }
 
+    addDecoratorAsync(decorator) {
+        this.decorators.push(decorator);
+        return decorator.activatedAsync(this.database);
+    }
+
     addEntityAsync(user, entity) {
         this._assertUser(user);
 
@@ -253,6 +264,16 @@ export default class Table {
         this._assertUser(user);
 
         return new Provider(user, this, this.database);
+    }
+
+    removeDecoratorAsync(decoratorName) {
+        let index = this.decorators.findIndex((decorator) => {
+            return decorator.name === decoratorName;
+        });
+
+        table.decorators.splice(index, 1);
+
+        return Promise.resolve();
     }
 
     removeEntityAsync(user, entity) {

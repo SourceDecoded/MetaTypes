@@ -1,4 +1,5 @@
 import dataTypeMapping from "./dataTypeMapping";
+import TableNameHelper from "./TableNameHelper";
 
 const defaultRelationships = {
     oneToOne: [],
@@ -11,6 +12,7 @@ export default class TableStatementBuilder {
         this.table = table;
         this.edm = options.edm;
         this.schema = options.schema;
+        this.namer = new TableNameHelper({edm:options.edm, schema:options.schema});
     }
 
     _escapeName(name) {
@@ -19,26 +21,18 @@ export default class TableStatementBuilder {
 
     _wrapIfTableExists(table, query) {
         return `IF NOT (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA = '${this.schema}' AND TABLE_NAME = '${this._getDbTableName(table.name)}'))
+            WHERE TABLE_SCHEMA = '${this.schema}' AND TABLE_NAME = '${this.namer.getTablePart(table.name)}'))
             BEGIN
             ${query}
             END`
     }
 
-    _getDbTableName(table) {
-        return `${table}__${this.edm.version.replace(/\./g, "_")}`;
-    }
-
-    _getQualifiedDbTableName(table) {
-        return `[${this.schema}].[${this._getDbTableName(table)}]`;
-    }
-
     getQualifiedDbTableName() {
-        return _getQualifiedDbTableName(table.name);
+        return namer.getQualifiedTableName(table.name);
     }
 
     createDropTableStatement() {
-        return `IF OBJECT_ID('${this.schema}.${this._getDbTableName(this.table.name)}', 'U') IS NOT NULL DROP TABLE ${this._getQualifiedDbTableName(this.table.name)};`
+        return `IF OBJECT_ID('${this.schema}.${this.namer.getTablePart(this.table.name)}', 'U') IS NOT NULL DROP TABLE ${this.namer.getQualifiedTableName(this.table.name)};`
     }
 
     createInsertStatement(entity) {
@@ -72,13 +66,13 @@ export default class TableStatementBuilder {
 
         if (values.length === 0) {
             return {
-                statement: `INSERT INTO ${this._getQualifiedDbTableName(this.table.name)} () VALUES (); SELECT SCOPE_IDENTITY() AS id;`,
+                statement: `INSERT INTO ${this.namer.getQualifiedTableName(this.table.name)} () VALUES (); SELECT SCOPE_IDENTITY() AS id;`,
                 values: values
             };
         }
 
         return {
-            statement: `INSERT INTO ${this._getQualifiedDbTableName(this.table.name)} (${columnsStatement}) VALUES (${valuesStatement}); SELECT SCOPE_IDENTITY() AS id;`,
+            statement: `INSERT INTO ${this.namer.getQualifiedTableName(this.table.name)} (${columnsStatement}) VALUES (${valuesStatement}); SELECT SCOPE_IDENTITY() AS id;`,
             values: values
         };
 
@@ -121,7 +115,7 @@ export default class TableStatementBuilder {
         });
 
         return {
-            statement: `UPDATE ${this._getQualifiedDbTableName(this.table.name)} SET ${columnSet.join(", ")} WHERE ${primaryKeyExpr.join(" AND ")}`,
+            statement: `UPDATE ${this.namer.getQualifiedTableName(this.table.name)} SET ${columnSet.join(", ")} WHERE ${primaryKeyExpr.join(" AND ")}`,
             values: values,
             keys: primaryKeyValues
         };
@@ -148,7 +142,7 @@ export default class TableStatementBuilder {
         });
 
         return {
-            statement: `DELETE FROM ${this._getQualifiedDbTableName(this.table.name)} WHERE ${primaryKeysExpr.join(" AND ")}`,
+            statement: `DELETE FROM ${this.namer.getQualifiedTableName(this.table.name)} WHERE ${primaryKeysExpr.join(" AND ")}`,
             keys: keys
         };
     }
@@ -191,8 +185,8 @@ export default class TableStatementBuilder {
     }
 
     createIndexStatement(column) {
-        return `IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'${this._getQualifiedDbTableName(this.table.name)}') AND name = N'index_${column.replace(/\"/g, '""')}')
-                  CREATE INDEX index_${column.replace(/\"/g, '""')} ON ${this._getQualifiedDbTableName(this.table.name)} (${this._escapeName(column)})`;
+        return `IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'${this.namer.getQualifiedTableName(this.table.name)}') AND name = N'index_${column.replace(/\"/g, '""')}')
+                  CREATE INDEX index_${column.replace(/\"/g, '""')} ON ${this.namer.getQualifiedTableName(this.table.name)} (${this._escapeName(column)})`;
     }
 
     createTableIndexesStatements(relationships) {
@@ -239,7 +233,7 @@ export default class TableStatementBuilder {
     }
 
     createForeignKeyStatement(relationship) {
-        return `CONSTRAINT [c_${relationship.ofType}.${this._getDbTableName(relationship.withForeignKey)}_to_${this._getDbTableName(relationship.type)}.${relationship.hasKey}] FOREIGN KEY([${this._getDbTableName(relationship.withForeignKey)}]) REFERENCES ${this._getQualifiedDbTableName(relationship.type)} ([${relationship.hasKey}])`;
+        return `CONSTRAINT [c_${relationship.ofType}.${this.namer.getTablePart(relationship.withForeignKey)}_to_${this.namer.getTablePart(relationship.type)}.${relationship.hasKey}] FOREIGN KEY([${this.namer.getTablePart(relationship.withForeignKey)}]) REFERENCES ${this.namer.getQualifiedTableName(relationship.type)} ([${relationship.hasKey}])`;
     }
 
     createPrimaryKeyStatement() {
@@ -265,13 +259,13 @@ export default class TableStatementBuilder {
 
         if (columnDefinitionsStatement && foreignKeysStatement) {
             return this._wrapIfTableExists(this.table,
-                `CREATE TABLE ${this._getQualifiedDbTableName(this.table.name)} (${columnDefinitionsStatement}, ${foreignKeysStatement})`);
+                `CREATE TABLE ${this.namer.getQualifiedTableName(this.table.name)} (${columnDefinitionsStatement}, ${foreignKeysStatement})`);
         } else if (columnDefinitionsStatement) {
             return this._wrapIfTableExists(this.table,
-                `CREATE TABLE ${this._getQualifiedDbTableName(this.table.name)} (${columnDefinitionsStatement})`);
+                `CREATE TABLE ${this.namer.getQualifiedTableName(this.table.name)} (${columnDefinitionsStatement})`);
         } else {
             return this._wrapIfTableExists(this.table,
-                `CREATE TABLE ${this._getQualifiedDbTableName(this.table.name)}`);
+                `CREATE TABLE ${this.namer.getQualifiedTableName(this.table.name)}`);
         }
 
     }

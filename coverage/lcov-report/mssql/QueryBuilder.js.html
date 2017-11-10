@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">79.55% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>70/88</span>
+        <span class='fraction'>72/90</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">63.33% </span>
@@ -30,18 +30,18 @@
         <span class='fraction'>19/30</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">79.17% </span>
+        <span class="strong">78.26% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>19/24</span>
+        <span class='fraction'>18/23</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">77.46% </span>
+        <span class="strong">78.08% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>55/71</span>
+        <span class='fraction'>57/73</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -222,13 +222,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -238,14 +242,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5×</span>
@@ -401,6 +401,10 @@ var _Visitor = require("./Visitor");
 &nbsp;
 var _Visitor2 = _interopRequireDefault(_Visitor);
 &nbsp;
+var _TableNameHelper = require("./TableNameHelper");
+&nbsp;
+var _TableNameHelper2 = _interopRequireDefault(_TableNameHelper);
+&nbsp;
 function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
 &nbsp;
 function _classCallCheck(instance, Constructor) { <span class="missing-if-branch" title="if path not taken" >I</span>if (!(instance instanceof Constructor)) { <span class="cstat-no" title="statement not covered" >throw new TypeError("Cannot call a class as a function"); </span>} }
@@ -411,14 +415,10 @@ var QueryBuilder = function () {
 &nbsp;
         this.edm = edm;
         this.schema = schema;
+        this.namer = new _TableNameHelper2.default({ edm: edm, schema: schema });
     }
 &nbsp;
     _createClass(QueryBuilder, [{
-        key: "_getQualifiedTableName",
-        value: function _getQualifiedTableName(tableName) {
-            return "[" + this.schema + "].[" + tableName + "__" + this.edm.version.replace(/\./g, "_") + "]";
-        }
-    }, {
         key: "_createAscendingExpression",
         value: function _createAscendingExpression(columns) {
             var ascending = columns.map(<span class="fstat-no" title="function not covered" >function (column) {</span>
@@ -492,19 +492,19 @@ var QueryBuilder = function () {
             var keys = Object.keys(mapping);
 &nbsp;
             if (keys.length === 0) {
-                return "SELECT * FROM " + this._getQualifiedTableName(tableName);
+                return "SELECT * FROM " + this.namer.getQualifiedTableName(tableName);
             } else {
                 var columns = keys.map(function (key) {
                     return _this._escapeIdentifier(key) + " AS " + _this._escapeIdentifier(mapping[key]);
                 }).join(", ");
 &nbsp;
-                return "SELECT " + columns + " FROM " + this._getQualifiedTableName(tableName);
+                return "SELECT " + columns + " FROM " + this.namer.getQualifiedTableName(tableName);
             }
         }
     }, {
         key: "_createSelectStatementWithCount",
         value: <span class="fstat-no" title="function not covered" >function _createSelectStatementWithCount(query) {</span>
-<span class="cstat-no" title="statement not covered" >            return "SELECT COUNT(*) AS count FROM " + this._getQualifiedTableName(query.type);</span>
+<span class="cstat-no" title="statement not covered" >            return "SELECT COUNT(*) AS count FROM " + this.namer.getQualifiedTableName(tableName);</span>
         }
     }, {
         key: "_createWhereClause",
@@ -568,7 +568,7 @@ exports.default = QueryBuilder;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Nov 07 2017 09:00:36 GMT-0700 (MST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 10 2017 13:55:31 GMT-0700 (MST)
 </div>
 </div>
 <script src="../prettify.js"></script>

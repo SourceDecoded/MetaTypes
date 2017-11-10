@@ -1,6 +1,6 @@
 {
   "name": "meta-database",
-  "version": "0.0.36",
+  "version": "0.0.40",
   "description": "Decorate data types with functionality.",
   "main": "./lib/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "express-conditional-middleware": "^2.0.0",
     "fs-extra": "^3.0.1",
     "mssql": "^4.1.0",
-    "queryablejs": "^0.0",
+    "queryablejs": "^0.0.22",
     "sqlite": "^2.8.0"
   }
 }

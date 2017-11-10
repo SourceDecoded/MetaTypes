@@ -1,13 +1,11 @@
 import Visitor from "./Visitor";
+import TableNameHelper from "./TableNameHelper";
 
 export default class QueryBuilder {
     constructor(edm, schema) {
         this.edm = edm;
         this.schema = schema;
-    }
-
-    _getQualifiedTableName(tableName) {
-        return `[${this.schema}].[${tableName}__${this.edm.version.replace(/\./g, "_")}]`;
+        this.namer = new TableNameHelper({edm:edm, schema:schema});
     }
 
     _createAscendingExpression(columns) {
@@ -79,18 +77,18 @@ export default class QueryBuilder {
         let keys = Object.keys(mapping);
 
         if (keys.length === 0) {
-            return `SELECT * FROM ${this._getQualifiedTableName(tableName)}`;
+            return `SELECT * FROM ${this.namer.getQualifiedTableName(tableName)}`;
         } else {
             let columns = keys.map((key) => {
                 return `${this._escapeIdentifier(key)} AS ${this._escapeIdentifier(mapping[key])}`;
             }).join(", ");
 
-            return `SELECT ${columns} FROM ${this._getQualifiedTableName(tableName)}`;
+            return `SELECT ${columns} FROM ${this.namer.getQualifiedTableName(tableName)}`;
         }
     }
 
     _createSelectStatementWithCount(query) {
-        return `SELECT COUNT(*) AS count FROM ${this._getQualifiedTableName(query.type)}`;
+        return `SELECT COUNT(*) AS count FROM ${this.namer.getQualifiedTableName(tableName)}`;
     }
 
     _createWhereClause(query) {
