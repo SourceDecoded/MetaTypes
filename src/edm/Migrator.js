@@ -153,7 +153,9 @@ export default class Migrator {
             throw new Error(`The '${options.decorator.name}' decorator already exists on the '${options.tableName}' table.`);
         }
 
-        return table.addDecoratorAsync(Object.assign({}, options.decorator));
+        table.decorators.push(Object.assign({}, options.decorator));
+
+        return resolvedPromise;
     }
 
     addOneToOneRelationshipAsync(options) {
@@ -205,7 +207,12 @@ export default class Migrator {
             throw new Error(`The ${options.tableName} doesn't have the ${options.decorator.name} to update.`);
         }
 
-        return table.removeDecoratorAync(options.decorator.name);
+        let index = table.decorators.findIndex((decorator) => {
+            return decorator.name === options.decorator.name;
+        });
+        table.decorators.splice(index,1);
+        
+        return resolvedPromise;
     }
 
     removeTableAsync(options = {}) {

@@ -9,7 +9,7 @@ export default class {
         database = null,
         fileSystem = null,
         actions = null
-         } = {}) {
+    } = {}) {
 
         if (!Array.isArray(decorators)) {
             throw new Error("Invalid Argument: decorators needs to be an array.");

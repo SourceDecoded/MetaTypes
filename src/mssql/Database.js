@@ -119,8 +119,8 @@ export default class Database {
         this._createTables();
     }
 
-    getMigrator() {
-        return new Migrator(this);
+    getMigrator(metaDatabase) {
+        return new Migrator(this, metaDatabase);
     }
 
 }

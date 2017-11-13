@@ -2,17 +2,18 @@ import TableStatementBuilder from "./TableStatementBuilder";
 import TableNameHelper from "./TableNameHelper";
 
 export default class Migrator {
-    constructor(iDb) {
+    constructor(iDb, metaDb) {
         this.schema = iDb.schema;
         this.iDb = iDb;
         this.connectionPool = iDb.connectionPool;
         this.name = "MsSqlMigrator";
+        this.metaDb = metaDb;
     }
 
     addColumnAsync(edm, options = {}) {
-        let metaTable = this.iDb.getTable(options.tableName).table;
+        let edmTable = this.iDb.getTable(options.tableName).table;
         let namer = new TableNameHelper({edm:edm, schema:this.schema});
-        let builder = new TableStatementBuilder(metaTable, {
+        let builder = new TableStatementBuilder(edmTable, {
             edm: edm,
             schema: this.schema
         });
@@ -23,7 +24,12 @@ export default class Migrator {
     }
 
     addDecoratorAsync(edm, options = {}) {
-        // nothing to do here
+        let metaTable = this.metaDb.getTable(options.tableName);
+        if (metaTable) {
+            return metaTable.addDecoratorAsync(options.decorator);
+        } else {
+            return Promise.resolve();
+        }
     }
 
     addOneToOneRelationshipAsync(edm, options = {}) {
@@ -51,6 +57,12 @@ export default class Migrator {
     }
 
     removeDecoratorAsync(edm, options = {}) {
+        let metaTable = this.metaDb.getTable(options.tableName);
+        if (metaTable) {
+            return metaTable.removeDecoratorAsync(options.decorator);
+        } else {
+            return Promise.resolve();
+        }
     }
 
     removeOneToOneRelationshipCommand(edm, options = {}){
