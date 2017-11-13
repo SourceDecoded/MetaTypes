@@ -11,7 +11,7 @@ const defaultDecorators = {
 
 export default class Table {
     constructor({
-        database = null,
+        metaDatabase = null,
         table = null,
         decorators = [],
         fileSystem = null
@@ -21,8 +21,8 @@ export default class Table {
             throw new Error("Null Argument Exception: Table needs to have a ITable.");
         }
 
-        if (database == null) {
-            throw new Error("Null Argument Exception: Table needs to have a meta database.");
+        if (metaDatabase == null) {
+            throw new Error("Null Argument Exception: Table needs to have a metaDatabase.");
         }
 
         if (fileSystem == null) {
@@ -30,7 +30,7 @@ export default class Table {
         }
 
         this.table = table;
-        this.database = database;
+        this.metaDatabase = metaDatabase;
         this.name = table.name;
         this.edm = table.edm;
         this.fileSystem = fileSystem;
@@ -47,7 +47,7 @@ export default class Table {
 
         this.decorators.reduce((previous, current) => {
             return previous.then(() => {
-                return current.activatedAsync(this.database);
+                return current.activatedAsync(this.metaDatabase);
             });
         }, Promise.resolve());
     }
@@ -196,8 +196,11 @@ export default class Table {
     }
 
     addDecoratorAsync(decorator) {
-        this.decorators.push(decorator);
-        return decorator.activatedAsync(this.database);
+        let decoratorInstance = this.metaDatabase.decorators.find((instance) => {
+            return instance.name === decorator.name;
+        });
+        this.decorators.push(decoratorInstance);
+        return decoratorInstance.activatedAsync(this.metaDatabase);
     }
 
     addEntityAsync(user, entity) {
@@ -263,7 +266,7 @@ export default class Table {
     getQueryProvider(user) {
         this._assertUser(user);
 
-        return new Provider(user, this, this.database);
+        return new Provider(user, this, this.metaDatabase);
     }
 
     removeDecoratorAsync(decoratorName) {

@@ -11987,7 +11987,7 @@ var _class = function () {
             this.database.refreshTables();
             this.database.getTables().forEach(function (table) {
                 _this.tables[table.name] = new _Table2.default({
-                    database: _this,
+                    metaDatabase: _this,
                     table: table,
                     decorators: _this.decorators,
                     fileSystem: _this.fileSystem
@@ -12055,8 +12055,8 @@ var Table = function () {
         var _this = this;
 
         var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-            _ref$database = _ref.database,
-            database = _ref$database === undefined ? null : _ref$database,
+            _ref$metaDatabase = _ref.metaDatabase,
+            metaDatabase = _ref$metaDatabase === undefined ? null : _ref$metaDatabase,
             _ref$table = _ref.table,
             table = _ref$table === undefined ? null : _ref$table,
             _ref$decorators = _ref.decorators,
@@ -12070,8 +12070,8 @@ var Table = function () {
             throw new Error("Null Argument Exception: Table needs to have a ITable.");
         }
 
-        if (database == null) {
-            throw new Error("Null Argument Exception: Table needs to have a meta database.");
+        if (metaDatabase == null) {
+            throw new Error("Null Argument Exception: Table needs to have a metaDatabase.");
         }
 
         if (fileSystem == null) {
@@ -12079,7 +12079,7 @@ var Table = function () {
         }
 
         this.table = table;
-        this.database = database;
+        this.metaDatabase = metaDatabase;
         this.name = table.name;
         this.edm = table.edm;
         this.fileSystem = fileSystem;
@@ -12096,7 +12096,7 @@ var Table = function () {
 
         this.decorators.reduce(function (previous, current) {
             return previous.then(function () {
-                return current.activatedAsync(_this.database);
+                return current.activatedAsync(_this.metaDatabase);
             });
         }, Promise.resolve());
     }
@@ -12282,8 +12282,11 @@ var Table = function () {
     }, {
         key: "addDecoratorAsync",
         value: function addDecoratorAsync(decorator) {
-            this.decorators.push(decorator);
-            return decorator.activatedAsync(this.database);
+            var decoratorInstance = this.metaDatabase.decorators.find(function (instance) {
+                return instance.name === decorator.name;
+            });
+            this.decorators.push(decoratorInstance);
+            return decoratorInstance.activatedAsync(this.metaDatabase);
         }
     }, {
         key: "addEntityAsync",
@@ -12364,7 +12367,7 @@ var Table = function () {
         value: function getQueryProvider(user) {
             this._assertUser(user);
 
-            return new _Provider2.default(user, this, this.database);
+            return new _Provider2.default(user, this, this.metaDatabase);
         }
     }, {
         key: "removeDecoratorAsync",
@@ -28865,7 +28868,7 @@ var _class = function (_EventEmitter) {
 
                 var paneOptions = {
                     metaDatabase: metaDatabase,
-                    migrationRunner: new _Runner2.default({ edm: edm, migrator: db.getMigrator() }),
+                    migrationRunner: new _Runner2.default({ edm: edm, migrator: db.getMigrator(metaDatabase) }),
                     edm: edm,
                     actions: actions
                 };
@@ -53268,7 +53271,7 @@ var _class = function () {
                     res.send(result);
                 }).catch(function (e) {
                     res.status(500).send({
-                        message: "Failed to update id:" + id + " on " + req.table.name,
+                        message: "Failed to update id:" + req.params.id + " on " + req.table.name,
                         developerMessage: e.stack
                     });
                 });
@@ -53291,7 +53294,7 @@ var _class = function () {
                     });
                 }).catch(function (e) {
                     res.status(500).send({
-                        message: "Failed upload file for id:" + id + " on " + req.table.name,
+                        message: "Failed upload file for id:" + req.params.id + " on " + req.table.name,
                         developerMessage: e.stack
                     });
                 });
@@ -53303,7 +53306,7 @@ var _class = function () {
                     res.status(200).end();
                 }).catch(function (e) {
                     res.status(500).send({
-                        message: "Failed to delete id:" + id + " on " + req.table.name,
+                        message: "Failed to delete id:" + req.params.id + " on " + req.table.name,
                         developerMessage: e.stack
                     });
                 });
@@ -53315,7 +53318,7 @@ var _class = function () {
                     res.status(200).end();
                 }).catch(function (e) {
                     res.status(500).send({
-                        message: "Failed to delete file for id:" + id + " on " + req.table.name,
+                        message: "Failed to delete file for id:" + req.params.id + " on " + req.table.name,
                         developerMessage: e.stack
                     });
                 });

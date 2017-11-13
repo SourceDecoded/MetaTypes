@@ -287,7 +287,7 @@ export default class {
                 res.send(result);
             }).catch((e) => {
                 res.status(500).send({
-                    message: `Failed to update id:${id} on ${req.table.name}`,
+                    message: `Failed to update id:${req.params.id} on ${req.table.name}`,
                     developerMessage: e.stack
                 });
             });
@@ -310,7 +310,7 @@ export default class {
                 });
             }).catch((e) => {
                 res.status(500).send({
-                    message: `Failed upload file for id:${id} on ${req.table.name}`,
+                    message: `Failed upload file for id:${req.params.id} on ${req.table.name}`,
                     developerMessage: e.stack
                 });
             });
@@ -322,7 +322,7 @@ export default class {
                 res.status(200).end();
             }).catch((e) => {
                 res.status(500).send({
-                    message: `Failed to delete id:${id} on ${req.table.name}`,
+                    message: `Failed to delete id:${req.params.id} on ${req.table.name}`,
                     developerMessage: e.stack
                 });
             });
@@ -334,7 +334,7 @@ export default class {
                 res.status(200).end();
             }).catch((e) => {
                 res.status(500).send({
-                    message: `Failed to delete file for id:${id} on ${req.table.name}`,
+                    message: `Failed to delete file for id:${req.params.id} on ${req.table.name}`,
                     developerMessage: e.stack
                 });
             });

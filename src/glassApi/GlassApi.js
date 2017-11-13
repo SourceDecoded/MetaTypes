@@ -225,7 +225,7 @@ export default class extends EventEmitter {
 
             let paneOptions = {
                 metaDatabase: metaDatabase,
-                migrationRunner: new MigrationRunner({edm:edm, migrator: db.getMigrator()}),
+                migrationRunner: new MigrationRunner({edm:edm, migrator: db.getMigrator(metaDatabase)}),
                 edm: edm,
                 actions: actions
             };

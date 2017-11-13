@@ -7,13 +7,13 @@ Glass API presents an automatically generated API with minimal configuration, th
 
 ## Meta Database
 Meta Database offers a sensible mechanism for adding functionality to your data model, through "decorators". Meta Database invokes lifecycle callbacks on the decorators at certain data events:
-* prepareEntityToBeAddedAsync
-* validateEntityToBeAddedAsync
-* entityAddedAsync
-* refineQueryableAsync
-* approveEntityToBeRemovedAsync
-* entityRemovedAsync
-* entityUpdatedAsync
-* prepareEntityToBeUpdatedAsync
-* validateEntityToBeUpdatedAsync
-
+* prepareEntityToBeAddedAsync(tableName, entity, options)
+* validateEntityToBeAddedAsync(tableName, entity, options)
+* entityAddedAsync(tableName, entity, options)
+* refineQueryableAsync(user, queryable)
+* approveEntityToBeRemovedAsync(tableName, entity, options)
+* entityRemovedAsync(tableName, entity, options)
+* entityUpdatedAsync(tableName, entity, delta, options)
+* prepareEntityToBeUpdatedAsync(tableName, entity, delta, options)
+* validateEntityToBeUpdatedAsync(tableName, entity, delta, options)
+Note that the options object always contains at least a user key representing the currently authenticated user.

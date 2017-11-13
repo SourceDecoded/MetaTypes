@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">15.68% </span>
+        <span class="strong">15.51% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>29/185</span>
+        <span class='fraction'>29/187</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">12.9% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>8/62</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.17% </span>
+        <span class="strong">6.1% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/81</span>
+        <span class='fraction'>5/82</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">8.93% </span>
+        <span class="strong">8.82% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>15/168</span>
+        <span class='fraction'>15/170</span>
       </div>
     </div>
   </div>
@@ -461,7 +461,10 @@
 416
 417
 418
-419</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+419
+420
+421
+422</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -725,6 +728,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -913,8 +919,8 @@ var Table = function () {
 <span class="cstat-no" title="statement not covered" >        var _this = this;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        var _ref = arguments.length &gt; 0 &amp;&amp; arguments[0] !== undefined ? arguments[0] : {},</span>
-            _ref$database = _ref.database,
-            database = _ref$database === undefined ? null : _ref$database,
+            _ref$metaDatabase = _ref.metaDatabase,
+            metaDatabase = _ref$metaDatabase === undefined ? null : _ref$metaDatabase,
             _ref$table = _ref.table,
             table = _ref$table === undefined ? null : _ref$table,
             _ref$decorators = _ref.decorators,
@@ -928,8 +934,8 @@ var Table = function () {
 <span class="cstat-no" title="statement not covered" >            throw new Error("Null Argument Exception: Table needs to have a ITable.");</span>
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (database == null) {</span>
-<span class="cstat-no" title="statement not covered" >            throw new Error("Null Argument Exception: Table needs to have a meta database.");</span>
+<span class="cstat-no" title="statement not covered" >        if (metaDatabase == null) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new Error("Null Argument Exception: Table needs to have a metaDatabase.");</span>
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (fileSystem == null) {</span>
@@ -937,7 +943,7 @@ var Table = function () {
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        this.table = table;</span>
-<span class="cstat-no" title="statement not covered" >        this.database = database;</span>
+<span class="cstat-no" title="statement not covered" >        this.metaDatabase = metaDatabase;</span>
 <span class="cstat-no" title="statement not covered" >        this.name = table.name;</span>
 <span class="cstat-no" title="statement not covered" >        this.edm = table.edm;</span>
 <span class="cstat-no" title="statement not covered" >        this.fileSystem = fileSystem;</span>
@@ -954,7 +960,7 @@ var Table = function () {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        this.decorators.reduce(<span class="fstat-no" title="function not covered" >function (previous, current) {</span></span>
 <span class="cstat-no" title="statement not covered" >            return previous.then(<span class="fstat-no" title="function not covered" >function () {</span></span>
-<span class="cstat-no" title="statement not covered" >                return current.activatedAsync(_this.database);</span>
+<span class="cstat-no" title="statement not covered" >                return current.activatedAsync(_this.metaDatabase);</span>
             });
         }, Promise.resolve());
     }
@@ -1140,8 +1146,11 @@ var Table = function () {
     }, {
         key: "addDecoratorAsync",
         value: <span class="fstat-no" title="function not covered" >function addDecoratorAsync(decorator) {</span>
-<span class="cstat-no" title="statement not covered" >            this.decorators.push(decorator);</span>
-<span class="cstat-no" title="statement not covered" >            return decorator.activatedAsync(this.database);</span>
+<span class="cstat-no" title="statement not covered" >            var decoratorInstance = this.metaDatabase.decorators.find(<span class="fstat-no" title="function not covered" >function (instance) {</span></span>
+<span class="cstat-no" title="statement not covered" >                return instance.name === decorator.name;</span>
+            });
+<span class="cstat-no" title="statement not covered" >            this.decorators.push(decoratorInstance);</span>
+<span class="cstat-no" title="statement not covered" >            return decoratorInstance.activatedAsync(this.metaDatabase);</span>
         }
     }, {
         key: "addEntityAsync",
@@ -1222,7 +1231,7 @@ var Table = function () {
         value: <span class="fstat-no" title="function not covered" >function getQueryProvider(user) {</span>
 <span class="cstat-no" title="statement not covered" >            this._assertUser(user);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            return new _Provider2.default(user, this, this.database);</span>
+<span class="cstat-no" title="statement not covered" >            return new _Provider2.default(user, this, this.metaDatabase);</span>
         }
     }, {
         key: "removeDecoratorAsync",
@@ -1303,7 +1312,7 @@ exports.default = Table;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Nov 13 2017 13:35:14 GMT-0700 (MST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Nov 13 2017 16:20:43 GMT-0700 (MST)
 </div>
 </div>
 <script src="../prettify.js"></script>
