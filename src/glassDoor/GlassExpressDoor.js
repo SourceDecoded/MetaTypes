@@ -89,6 +89,35 @@ export default class {
 
     _init() {
 
+        this.edmApp.use((req, res, next) => {
+            if (!(req.method === "OPTIONS")) {
+                this.authenticator.authenticateAsync(req).then((user) => {
+                    req.user = user;
+                    next();
+                }).catch((error) => {
+                    next();
+                });
+            } else {
+                next();
+            }
+        });
+
+        this.edmApp.use((req, res, next) => {
+            if (req.method === "GET") {
+                if (this.authenticator.userCanReadEdm(req.user)) {
+                    next();
+                } else {
+                    res.status(403).send("User unauthorized to read EDM");
+                }
+            } else if(req.method === "POST") {
+                if (this.authenticator.userCanModifyEdm(req.user)) {
+                    next();
+                } else {
+                    res.status(403).send("User unauthorized to modify EDM");
+                }
+            }
+        });
+
         // Set up Express handlers for dealing with EDMs
         // add a new EDM
         this.edmApp.post("/", (req, res, next) => {

@@ -13357,7 +13357,9 @@ var Migrator = function () {
                 throw new Error("The '" + options.decorator.name + "' decorator already exists on the '" + options.tableName + "' table.");
             }
 
-            return table.addDecoratorAsync(Object.assign({}, options.decorator));
+            table.decorators.push(Object.assign({}, options.decorator));
+
+            return resolvedPromise;
         }
     }, {
         key: "addOneToOneRelationshipAsync",
@@ -13420,7 +13422,12 @@ var Migrator = function () {
                 throw new Error("The " + options.tableName + " doesn't have the " + options.decorator.name + " to update.");
             }
 
-            return table.removeDecoratorAync(options.decorator.name);
+            var index = table.decorators.findIndex(function (decorator) {
+                return decorator.name === options.decorator.name;
+            });
+            table.decorators.splice(index, 1);
+
+            return resolvedPromise;
         }
     }, {
         key: "removeTableAsync",
@@ -18121,8 +18128,8 @@ var Database = function () {
         }
     }, {
         key: "getMigrator",
-        value: function getMigrator() {
-            return new _Migrator2.default(this);
+        value: function getMigrator(metaDatabase) {
+            return new _Migrator2.default(this, metaDatabase);
         }
     }]);
 
@@ -19058,13 +19065,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Migrator = function () {
-    function Migrator(iDb) {
+    function Migrator(iDb, metaDb) {
         _classCallCheck(this, Migrator);
 
         this.schema = iDb.schema;
         this.iDb = iDb;
         this.connectionPool = iDb.connectionPool;
         this.name = "MsSqlMigrator";
+        this.metaDb = metaDb;
     }
 
     _createClass(Migrator, [{
@@ -19072,9 +19080,9 @@ var Migrator = function () {
         value: function addColumnAsync(edm) {
             var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-            var metaTable = this.iDb.getTable(options.tableName).table;
+            var edmTable = this.iDb.getTable(options.tableName).table;
             var namer = new _TableNameHelper2.default({ edm: edm, schema: this.schema });
-            var builder = new _TableStatementBuilder2.default(metaTable, {
+            var builder = new _TableStatementBuilder2.default(edmTable, {
                 edm: edm,
                 schema: this.schema
             });
@@ -19086,9 +19094,14 @@ var Migrator = function () {
     }, {
         key: "addDecoratorAsync",
         value: function addDecoratorAsync(edm) {
-            // nothing to do here
-
             var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+            var metaTable = this.metaDb.getTable(options.tableName);
+            if (metaTable) {
+                return metaTable.addDecoratorAsync(options.decorator);
+            } else {
+                return Promise.resolve();
+            }
         }
     }, {
         key: "addOneToOneRelationshipAsync",
@@ -19129,6 +19142,13 @@ var Migrator = function () {
         key: "removeDecoratorAsync",
         value: function removeDecoratorAsync(edm) {
             var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+            var metaTable = this.metaDb.getTable(options.tableName);
+            if (metaTable) {
+                return metaTable.removeDecoratorAsync(options.decorator);
+            } else {
+                return Promise.resolve();
+            }
         }
     }, {
         key: "removeOneToOneRelationshipCommand",
@@ -19500,6 +19520,35 @@ var _class = function () {
         key: "_init",
         value: function _init() {
             var _this2 = this;
+
+            this.edmApp.use(function (req, res, next) {
+                if (!(req.method === "OPTIONS")) {
+                    _this2.authenticator.authenticateAsync(req).then(function (user) {
+                        req.user = user;
+                        next();
+                    }).catch(function (error) {
+                        next();
+                    });
+                } else {
+                    next();
+                }
+            });
+
+            this.edmApp.use(function (req, res, next) {
+                if (req.method === "GET") {
+                    if (_this2.authenticator.userCanReadEdm(req.user)) {
+                        next();
+                    } else {
+                        res.status(403).send("User unauthorized to read EDM");
+                    }
+                } else if (req.method === "POST") {
+                    if (_this2.authenticator.userCanModifyEdm(req.user)) {
+                        next();
+                    } else {
+                        res.status(403).send("User unauthorized to modify EDM");
+                    }
+                }
+            });
 
             // Set up Express handlers for dealing with EDMs
             // add a new EDM
@@ -57136,7 +57185,19 @@ var _class = function () {
     _createClass(_class, null, [{
         key: "authenticateAsync",
         value: function authenticateAsync(request) {
+            console.warn("You are using the default authenticator. This isn't safe!");
             return Promise.resolve(new _Guest2.default());
+        }
+    }, {
+        key: "userCanModifyEdm",
+        value: function userCanModifyEdm(user) {
+            console.warn("You are using the default authenticator. This isn't safe!");
+            return true;
+        }
+    }, {
+        key: "userCanReadEdm",
+        value: function userCanReadEdm(user) {
+            return true;
         }
     }]);
 
